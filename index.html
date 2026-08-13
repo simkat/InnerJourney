@@ -204,6 +204,72 @@ section.view.active{display:block}
   color:var(--lotus);margin-bottom:4px}
 .sandesh .sd-text{font-size:14.5px;color:var(--mist);line-height:1.5}
 .sandesh .sd-sub{font-size:12px;color:var(--dim);margin-top:3px}
+
+/* ── virtue today panel ── */
+.virtue-today{border:1px solid var(--line2);border-radius:var(--r);
+  padding:18px;background:linear-gradient(145deg,rgba(217,138,166,.09),rgba(131,184,160,.06))}
+.vt-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
+.vt-eye{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--lotus);margin-bottom:3px}
+.vt-name{font-family:'Spectral',serif;font-size:22px;font-weight:500;color:var(--mist)}
+.vt-ring-wrap{position:relative;width:54px;height:54px;flex:0 0 auto;display:flex;align-items:center;justify-content:center}
+.vt-ring{width:54px;height:54px;position:absolute;top:0;left:0}
+.vt-ring-label{font-size:12px;font-weight:600;color:var(--dawn);position:relative;z-index:1}
+.vt-prayer-label,.vt-ideas-label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--faint);margin:12px 0 5px}
+.vt-prayer{font-family:'Spectral',serif;font-style:italic;font-size:16px;
+  line-height:1.7;color:var(--mist)}
+.vt-ideas{display:flex;flex-direction:column;gap:7px;margin-bottom:4px}
+.vt-idea{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--mist);
+  background:var(--night);border:1px solid var(--line);border-radius:10px;padding:9px 12px;line-height:1.45}
+.vt-idea .vi-icon{flex:0 0 auto;font-size:16px}
+.vt-foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;flex-wrap:wrap;gap:10px}
+.vt-tab-link{font-size:13px;color:var(--dawn);cursor:pointer;background:none;border:none;font:inherit}
+.vt-tab-link:hover{text-decoration:underline}
+
+/* ── virtue grid (Virtues tab) ── */
+.virtue-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:4px}
+.v-card{background:var(--night);border:1px solid var(--line);border-radius:12px;
+  padding:14px 15px;cursor:pointer;transition:border-color .15s}
+.v-card:hover{border-color:var(--line2)}
+.v-card.active-week{border-color:var(--dawn-line);background:var(--dawn-soft)}
+.v-card.embedded{border-color:rgba(131,184,160,.4);background:rgba(131,184,160,.06)}
+.v-card .vc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.v-card .vc-name{font-family:'Spectral',serif;font-size:17px;font-weight:500;color:var(--mist)}
+.v-card .vc-week{font-size:11px;color:var(--faint);margin-top:2px}
+.vc-ring-wrap{position:relative;width:42px;height:42px;flex:0 0 auto;display:flex;align-items:center;justify-content:center}
+.vc-ring{width:42px;height:42px;position:absolute}
+.vc-ring-label{font-size:11px;font-weight:600;color:var(--dawn);position:relative;z-index:1}
+.v-card.embedded .vc-ring-label{color:var(--leaf)}
+.v-card .vc-bar{height:4px;border-radius:4px;background:rgba(255,255,255,.06);margin-top:10px;overflow:hidden}
+.v-card .vc-bar span{display:block;height:100%;background:linear-gradient(90deg,var(--dawn),var(--lotus));transition:width .3s}
+.v-card.embedded .vc-bar span{background:linear-gradient(90deg,var(--leaf),#b8e8d4)}
+.v-card .vc-status{font-size:11.5px;color:var(--faint);margin-top:7px}
+.v-card.embedded .vc-status{color:var(--leaf)}
+.v-card.active-week .vc-status{color:var(--dawn)}
+
+/* virtue detail panel */
+.vd-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px}
+.vd-name{font-family:'Spectral',serif;font-size:24px;font-weight:500}
+.vd-desc{color:var(--dim);font-size:14px;line-height:1.6;margin-bottom:16px;
+  border-left:2px solid var(--line2);padding-left:12px;font-style:italic}
+.vd-section{font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:var(--faint);margin:16px 0 8px}
+.vd-prayers{display:flex;flex-direction:column;gap:6px}
+.vd-prayer{background:var(--night);border:1px solid var(--line);border-radius:9px;
+  padding:10px 13px;font-family:'Spectral',serif;font-style:italic;font-size:14.5px;
+  color:var(--mist);line-height:1.6}
+.vd-prayer.today-prayer{border-color:var(--dawn-line);background:var(--dawn-soft)}
+.vd-ideas-list{display:flex;flex-direction:column;gap:8px}
+.vd-idea{display:flex;gap:11px;align-items:flex-start;background:var(--night);
+  border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+.vd-idea .di-icon{font-size:18px;flex:0 0 auto}
+.vd-idea .di-body .di-title{font-size:14px;font-weight:600;color:var(--mist);margin-bottom:2px}
+.vd-idea .di-body .di-text{font-size:13px;color:var(--dim);line-height:1.5}
+.vd-log{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+.vd-day{display:flex;align-items:center;gap:10px;font-size:13px}
+.vd-day .dd-dot{width:10px;height:10px;border-radius:50%;background:var(--line2);flex:0 0 auto}
+.vd-day.done .dd-dot{background:var(--leaf)}
+.vd-day .dd-date{color:var(--faint);width:80px}
+.vd-day .dd-note{color:var(--dim)}
 .stem{width:2px;background:linear-gradient(var(--dawn),var(--lotus));border-radius:2px;position:relative;flex:0 0 auto;margin-left:8px}
 .phases{flex:1;display:flex;flex-direction:column;gap:16px}
 .phase{position:relative}
@@ -246,6 +312,7 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
     <button class="tab active" data-view="today">Today</button>
     <button class="tab" data-view="insights">Insights</button>
     <button class="tab" data-view="questions">Questions</button>
+    <button class="tab" data-view="virtues">Virtues</button>
     <button class="tab" data-view="progress">Progress</button>
     <button class="tab" data-view="everyone">Everyone</button>
     <button class="tab" data-view="data">Backup</button>
@@ -296,9 +363,30 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
       </div>
     </div>
 
+    <!-- this week's virtue -->
+    <div class="virtue-today" id="virtue-today-card">
+      <div class="vt-head">
+        <div>
+          <div class="vt-eye">This week's virtue</div>
+          <div class="vt-name" id="vt-name"></div>
+        </div>
+        <div class="vt-ring-wrap"><svg class="vt-ring" viewBox="0 0 44 44"><circle cx="22" cy="22" r="18" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="4"/><circle id="vt-ring-arc" cx="22" cy="22" r="18" fill="none" stroke="var(--dawn)" stroke-width="4" stroke-linecap="round" stroke-dasharray="113" stroke-dashoffset="113" transform="rotate(-90 22 22)"/></svg><span class="vt-ring-label" id="vt-ring-label">0/7</span></div>
+      </div>
+      <div class="vt-prayer-label">Today's prayer</div>
+      <div class="vt-prayer" id="vt-prayer"></div>
+      <div class="vt-ideas-label">Where to practise today</div>
+      <div class="vt-ideas" id="vt-ideas"></div>
+      <div class="vt-foot">
+        <label class="invo-check" id="vt-check-wrap">
+          <input type="checkbox" id="vt-check" /> <span id="vt-check-label">Practised today</span>
+        </label>
+        <a class="vt-tab-link" id="vt-tab-link">See full virtue →</a>
+      </div>
+    </div>
+
     <!-- pre-sit checklist -->
     <div class="presit" id="presit">
-      <h3>⚙ Before you sit — two checks</h3>
+      <h3>⚙ Before you sit — checks</h3>
       <label class="presit-item" id="pi-breath">
         <input type="checkbox" id="pi-breath-cb" />
         <div>
@@ -311,6 +399,13 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
         <div>
           <div class="pi-text">Hand mudra held slightly above the legs</div>
           <div class="pi-sub">Keep the mudra raised a little, not resting heavily on the thighs — sustain this for at least 10 minutes to drop into a deeper state.</div>
+        </div>
+      </label>
+      <label class="presit-item" id="pi-divineform" style="display:none">
+        <input type="checkbox" id="pi-divineform-cb" />
+        <div>
+          <div class="pi-text">🌸 Did you connect to your Divine Form using the picture?</div>
+          <div class="pi-sub">Before closing the eyes, gaze softly at your chosen picture — let the form enter the heart, not just the eyes. Then carry that living presence into the sit.</div>
         </div>
       </label>
     </div>
@@ -400,6 +495,18 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
   </section>
 
   <!-- PROGRESS -->
+  <!-- VIRTUES VIEW -->
+  <section class="view" id="view-virtues">
+    <div class="card">
+      <h2>The Nine Virtues</h2>
+      <p class="sub">One virtue per week. Track your daily practice, accumulate insights, and embed each quality before moving to the next.</p>
+      <div id="virtue-grid"></div>
+    </div>
+    <div class="card" id="virtue-detail-card" style="display:none">
+      <div id="virtue-detail"></div>
+    </div>
+  </section>
+
   <section class="view" id="view-progress">
     <div class="card">
       <h2>The path so far</h2>
@@ -971,18 +1078,378 @@ function renderPracticeReminder(){
   $("#pr-sub").textContent=week.sub+" (Day "+dayInWeek+" of 7 for "+week.label+")";
 }
 
-/* ---- pre-sit checklist (session only — not stored, just a nudge) ---- */
+/* ================================================================
+   VIRTUE SYSTEM
+   9 virtues × 7 days each = 63-day embedded practice.
+   Each virtue has: a one-line definition, 7 daily prayers,
+   7 creative practice ideas (with icon + place + how),
+   and a "embedded" marker when 7 days are logged.
+   ================================================================ */
+const VIRTUES = [
+  {
+    key:"sincerity", name:"Sincerity", week:1,
+    skool:"https://www.skool.com/inner-journey-school/classroom/4a0770a8?md=c61ab49ea64f48dfab29a3470d7c125c",
+    desc:"Sincerity is the alignment of your inner state with your outer expression — saying what you mean, meaning what you say, and living without the gap between the two.",
+    prayers:[
+      "May I speak only what I truly feel today, without the mask of what seems acceptable.",
+      "Let me meet this day as I actually am — not as I wish to appear.",
+      "May sincerity be the ground beneath every word and action, whether anyone is watching or not.",
+      "Let me close the gap between my inner life and what I show the world, even by one honest inch.",
+      "May I be real with myself first, so I can be real with others.",
+      "Where I am tempted to perform, may I pause and choose honesty instead.",
+      "Let sincerity be the quiet thread that runs through everything I do today — seen or unseen.",
+    ],
+    ideas:[
+      {icon:"🪞",place:"Morning mirror",how:"Before you leave the bathroom, say one true thing to yourself — not affirmation, not criticism. Something you actually know. 'I am nervous about the meeting.' 'I did not sleep enough.' Simple truth."},
+      {icon:"📱",place:"Next message you type",how:"Before sending any text or email, ask: does this say what I actually mean? Rewrite the first one that doesn't."},
+      {icon:"🍽️",place:"Family meal",how:"When asked 'how was your day?' — resist the default 'fine'. Give one real answer, even briefly."},
+      {icon:"🧘",place:"Start of your sit",how:"Spend the first 60 seconds of meditation just checking in: how are you actually? Drop the spiritual pretence. Begin from truth."},
+      {icon:"🏢",place:"Work meeting",how:"Notice once today where you say something to smooth the room rather than because it's true. Note it privately — no need to correct, just see it."},
+      {icon:"🚶",place:"A walk",how:"Walk without your phone. Notice what you actually think about when there is nothing performing to. That stream of thought is the sincere you."},
+      {icon:"📓",place:"Evening journal",how:"Write one sentence that begins: 'What I didn't say today but meant was…'"},
+    ],
+  },
+  {
+    key:"commitment", name:"Commitment", week:2,
+    skool:"https://www.skool.com/inner-journey-school/classroom/4a0770a8?md=438fdf7a4acd4c70b8e2de786788ef74",
+    desc:"Commitment is continuing to do what you said you would do, long after the mood that made the vow has passed.",
+    prayers:[
+      "May I show up today not because I feel like it, but because I said I would.",
+      "Let commitment be less about willpower and more about love for what matters.",
+      "May I treat my practice as a promise I keep to the deepest part of myself.",
+      "Where the mood is low, may commitment be the floor I stand on anyway.",
+      "Let me notice what I abandon when it gets difficult — and gently return.",
+      "May I see each act of follow-through, however small, as an offering.",
+      "Let today's sit be the proof that my word to myself means something.",
+    ],
+    ideas:[
+      {icon:"⏰",place:"Before bed",how:"Set your alarm for the same time tomorrow as you sat today. Commitment lives in the preparation, not just the act."},
+      {icon:"📋",place:"One task you've been avoiding",how:"Give it five minutes. Not to finish it — just to begin. Commitment is the act of starting, again and again."},
+      {icon:"🤝",place:"A promise to someone else",how:"Follow through on one small thing you said you'd do — a reply, a call, an errand — without being reminded."},
+      {icon:"🧘",place:"When you want to end the sit early",how:"Stay for two more minutes past the point you want to leave. That extra two minutes is where commitment is actually built."},
+      {icon:"🌧️",place:"On a difficult morning",how:"Sit anyway. Even five minutes. Note in your log: 'difficult day, sat anyway.' That entry is worth ten easy sits."},
+      {icon:"📖",place:"Your Sat Sandesh page",how:"Read it on the one morning you least feel like it. Let commitment carry you when inspiration does not."},
+      {icon:"🌱",place:"Something you planted but forgot",how:"Water a plant, tend a relationship, return to a project — something living that needs your consistent attention to survive."},
+    ],
+  },
+  {
+    key:"patience", name:"Patience", week:3,
+    skool:"https://www.skool.com/inner-journey-school/classroom/4a0770a8?md=3361ace55ed54fc0b8ef05d7e2572b6e",
+    desc:"Patience is remaining steady while life unfolds on its own timeline, without forcing it onto yours.",
+    prayers:[
+      "May I stop rushing the river today — it knows its own way to the sea.",
+      "Let me hold what is unresolved without trying to resolve it before its time.",
+      "May patience make me wider, not smaller — large enough to wait without anxiety.",
+      "Let me remember: the lotus does not hurry. It rises at exactly the right moment.",
+      "May I breathe into every delay, queue, and waiting room as an opportunity, not an obstacle.",
+      "Let me notice where impatience lives in my body today — jaw, chest, hands — and soften there.",
+      "May I trust that what is growing beneath the surface does not need my interference to bloom.",
+    ],
+    ideas:[
+      {icon:"☕",place:"Making tea or coffee",how:"Do it slowly. Don't multitask. Watch the water boil. Patience begins with the smallest things."},
+      {icon:"🚦",place:"Any queue or traffic",how:"Instead of checking your phone, breathe. Use the wait as a 5-breath practice. The queue becomes a meditation bell."},
+      {icon:"👂",place:"A conversation",how:"Let the other person finish completely before you begin to form your response. True patience is listening without the next sentence already loaded."},
+      {icon:"🌱",place:"Your own progress",how:"Look back at where you were six weeks ago, not where you think you should be today. Growth is rarely visible in the present tense."},
+      {icon:"😤",place:"When something irritates you",how:"Count to seven before responding. Not to suppress — to create a space where choice lives instead of reaction."},
+      {icon:"📵",place:"First 30 minutes of the day",how:"No phone. Let the morning arrive at its own pace. Patience with the morning trains patience with everything else."},
+      {icon:"🎨",place:"An unfinished project",how:"Work on something you cannot finish today — a sketch, a plan, a piece of writing. Practice beginning without demanding completion."},
+    ],
+  },
+  {
+    key:"acceptance", name:"Acceptance", week:4,
+    skool:"https://www.skool.com/inner-journey-school/classroom/4a0770a8?md=eb8eb08749b94061af19d92be85bf869",
+    desc:"Acceptance is meeting what is actually here — not what should be here — without immediate resistance or the need to change it.",
+    prayers:[
+      "May I stop arguing with what is already true, and begin from there.",
+      "Let me accept this day as it arrives, not as I ordered it.",
+      "May acceptance soften what resistance has made rigid in me.",
+      "Let me hold even the difficult parts of today with an open hand, not a clenched fist.",
+      "May I stop waiting for circumstances to be better before I allow myself to be at peace.",
+      "Let me practise saying 'this is what is' — and feel how much energy that frees.",
+      "May I accept myself exactly as I am today, as the starting point, not the problem.",
+    ],
+    ideas:[
+      {icon:"🌦️",place:"The weather",how:"Whatever it is — accept it physically. Go outside in it for five minutes without complaint. Acceptance is a bodily practice before it is a mental one."},
+      {icon:"😔",place:"An emotion you don't like",how:"Name it: 'I am feeling frustrated.' Don't try to fix or suppress it. Sit with it for 60 seconds the way you'd sit with a guest."},
+      {icon:"📰",place:"A news story that upsets you",how:"Read it, feel it — then notice the moment you start resisting reality. 'This shouldn't be.' Acceptance doesn't mean approval; it means acknowledging what is."},
+      {icon:"🪟",place:"Someone else's behaviour",how:"Notice one moment today where you want someone to be different. Instead of pushing against it, ask: 'what if this is exactly who they are right now?'"},
+      {icon:"🧘",place:"A distracted sit",how:"When the meditation is scattered, accept it as the meditation you are actually having, not the one you planned. The acceptance itself is the practice."},
+      {icon:"🔲",place:"An unmet expectation",how:"When something doesn't go as planned, say quietly: 'This is the new starting point.' Write that down if it helps."},
+      {icon:"💬",place:"Feedback or criticism",how:"Receive one piece of feedback today without defending yourself. Let it land, even if just for a moment."},
+    ],
+  },
+  {
+    key:"tolerance", name:"Tolerance", week:5,
+    skool:"https://www.skool.com/inner-journey-school/classroom/4a0770a8?md=ec24ab7aa4674424829ab288c198c851",
+    desc:"Tolerance is the ability to remain open and non-reactive in the presence of what is different, difficult, or disagreeable.",
+    prayers:[
+      "May I hold difference today without needing to make it wrong.",
+      "Let me be large enough that contrast does not disturb me.",
+      "May I remember that what irritates me most in others often lives quietly in me too.",
+      "Let tolerance make me curious today, where I would otherwise be dismissive.",
+      "May I stay in the room — literally and figuratively — when I want to leave.",
+      "Let me practise the pause between trigger and response as my daily sadhana.",
+      "May I find one thing to appreciate in the person I find most difficult today.",
+    ],
+    ideas:[
+      {icon:"🗣️",place:"A disagreement",how:"Let someone hold a view you don't share without trying to change them. Ask one genuine question instead. Tolerance is curiosity about the other."},
+      {icon:"🍲",place:"A food you dislike",how:"Eat one bite of something you normally avoid. Physical tolerance trains the same muscle as emotional tolerance."},
+      {icon:"📺",place:"Media you disagree with",how:"Read or watch five minutes of something from a perspective you usually dismiss. Notice the discomfort — that is exactly where tolerance grows."},
+      {icon:"🚇",place:"Public transport or a crowd",how:"Be present in a noisy, chaotic space without withdrawing into your phone. Let the world be as it is for ten minutes."},
+      {icon:"🪞",place:"Your own flaws",how:"Name one personal flaw you're impatient with. 'I am still quick to judge.' Be tolerant of that — self-tolerance comes first."},
+      {icon:"👨‍👩‍👧",place:"A family interaction",how:"Let a family member be exactly who they are — with their habits, their repetitions, their quirks — without correcting or withdrawing."},
+      {icon:"🧘",place:"An uncomfortable sensation in the sit",how:"When the knee aches or the back tightens, stay. Don't move for two more minutes. Physical tolerance in practice trains it everywhere."},
+    ],
+  },
+  {
+    key:"caring", name:"Caring", week:6,
+    skool:"https://www.skool.com/inner-journey-school/classroom/4a0770a8?md=1aa5b05229654079a40b5715d4442a76",
+    desc:"Caring is giving your genuine attention and warmth to another without the need for them to deserve it first.",
+    prayers:[
+      "May I do one thing today not for recognition, but purely because someone needs it.",
+      "Let me notice what needs tending around me — and tend it.",
+      "May caring flow from me naturally today, as breathing flows, without effort or expectation.",
+      "Let me give the warmth I would wish to receive, freely and without account.",
+      "May I be the person today who asks 'are you alright?' and actually waits for the answer.",
+      "Let caring begin with my own body and heart, so I can offer it outward from fullness, not depletion.",
+      "May I remember that small acts of care — a look, a word, a moment of attention — are never small to the one who receives them.",
+    ],
+    ideas:[
+      {icon:"📞",place:"Your phone",how:"Call or message one person you haven't spoken to in a while — not to catch up, but simply to say you thought of them."},
+      {icon:"🍵",place:"Someone else's cup",how:"Make tea or coffee for someone without being asked. Caring begins with the small, physical, unremarkable acts."},
+      {icon:"👀",place:"A stranger",how:"Make eye contact and offer a genuine smile. Not a performance — a moment of real acknowledgement that another person exists."},
+      {icon:"🧹",place:"Shared space",how:"Tidy something in a shared space that isn't 'your' mess. Caring for the shared world is caring for others."},
+      {icon:"❓",place:"A check-in",how:"Ask someone 'how are you actually doing?' — and when they answer, listen fully. Don't offer a solution; just receive."},
+      {icon:"🌿",place:"Something living",how:"Water a plant, feed a bird, tend an animal. Caring for non-human life extends and softens the caring impulse."},
+      {icon:"📝",place:"A note",how:"Leave a handwritten note of appreciation for someone in your home or workplace. Unexpected, specific, and sincere."},
+    ],
+  },
+  {
+    key:"gentleness", name:"Gentleness", week:7,
+    skool:"https://www.skool.com/inner-journey-school/classroom/4a0770a8?md=075135c0fe0c40be88005b6e4cc665d5",
+    desc:"Gentleness is handling what is fragile — including people, including yourself — with care and without force.",
+    prayers:[
+      "May I speak today as if my words were hands, and use them gently.",
+      "Let me notice where I am harsh with myself, and soften there first.",
+      "May I move through today without hurrying, without forcing, without hardness.",
+      "Let gentleness be my response where impatience would be my habit.",
+      "May I handle this moment — and this person — as if they were precious. Because they are.",
+      "Let me practise the quiet strength that does not need to be forceful to be effective.",
+      "May I end this day having touched at least one thing — a word, a task, an interaction — more gently than I normally would.",
+    ],
+    ideas:[
+      {icon:"🤲",place:"Physical handling",how:"Pick things up gently today — your cup, your phone, a door handle. Gentleness in the body trains gentleness in the mind."},
+      {icon:"📢",place:"Your voice",how:"Speak five decibels softer than your usual volume in one conversation. Notice what happens to the exchange."},
+      {icon:"💭",place:"Your self-talk",how:"When you make a mistake today, say to yourself what you would say to a friend who made the same mistake. That is gentleness turned inward."},
+      {icon:"🧸",place:"With a child or animal",how:"Spend five minutes at their pace, in their world, without agenda. Gentleness is matching the pace of what is tender."},
+      {icon:"🖊️",place:"Your writing",how:"Write slowly today — a message, a note, even a shopping list. Hasty strokes are rarely gentle. Precision and care in small things."},
+      {icon:"🌙",place:"Your evening",how:"End the day without screens for 20 minutes. Let the transition to sleep be gentle — a practice in handling yourself with care."},
+      {icon:"🧘",place:"The breath",how:"In your sit, breathe so gently that a feather in front of your nose would barely stir. The subtlety trains the quality."},
+    ],
+  },
+  {
+    key:"graciousness", name:"Graciousness", week:8,
+    skool:"https://www.skool.com/inner-journey-school/classroom/4a0770a8?md=dab78d42fd7f4231ac5a87df894f3941",
+    desc:"Graciousness is receiving and giving with openness, warmth, and ease — without awkwardness, resentment, or keeping score.",
+    prayers:[
+      "May I receive a compliment today without deflecting it, and a difficulty without resenting it.",
+      "Let me give and receive today as if both are gifts.",
+      "May graciousness make me generous in spirit where smallness would be the easier default.",
+      "Let me remember: how I treat people when I gain nothing from it — that is the measure.",
+      "May I hold success and failure with the same open, unhurried grace.",
+      "Let me be the person in the room who makes others feel welcome, simply by how I am.",
+      "May I notice when I am ungracious — in thought, in word — and gently return to openness.",
+    ],
+    ideas:[
+      {icon:"🎁",place:"Receiving help",how:"Let someone help you today without minimising it: 'thank you' — full stop, no 'but you didn't have to'. Receive the gift graciously."},
+      {icon:"🏆",place:"Someone else's success",how:"Celebrate one person's achievement today with genuine warmth — not performatively, not with a 'but' — just joy for them."},
+      {icon:"🚪",place:"An entrance or exit",how:"Hold a door. Let someone go first. These small rituals of graciousness are the physical vocabulary of the quality."},
+      {icon:"🍴",place:"A shared meal",how:"Be the last to serve yourself. Attend to others first. Graciousness at the table is graciousness in miniature."},
+      {icon:"🤐",place:"When you disagree",how:"Disagree graciously: acknowledge what is right in the other view before offering yours. 'You're right that… and I also think…'"},
+      {icon:"📧",place:"A difficult email or message",how:"Reply to one challenging message more warmly than it deserves. Graciousness doesn't wait for the other person to go first."},
+      {icon:"🌟",place:"The close of the day",how:"Name three people who made your day easier — acknowledge them inwardly, or in writing. Graciousness is noticing what you receive."},
+    ],
+  },
+  {
+    key:"detachment", name:"Detachment", week:9,
+    skool:"https://www.skool.com/inner-journey-school/classroom/4a0770a8?md=ca75e5aaf55c42e58ffb268db730ad97",
+    desc:"Detachment is engaging fully with life while remaining free from the compulsion to control its outcome or possess its fruits.",
+    prayers:[
+      "May I act today with full effort and hold the result with open hands.",
+      "Let me love what I love without clinging to it — love freely given, freely held.",
+      "May I remember: I am the sky, not the weather passing through it.",
+      "Let me do my part completely, and release what is not mine to determine.",
+      "May detachment bring lightness today, not distance — freedom, not indifference.",
+      "Let me notice where I am grasping — at outcomes, at approval, at certainty — and gently open the hand.",
+      "May I end this day without checking the result of everything I gave today. Give, act, release.",
+    ],
+    ideas:[
+      {icon:"📤",place:"After sending important work",how:"Once sent, do not check for a response for one hour. Practice releasing the outcome the moment it leaves your hands."},
+      {icon:"🧹",place:"Clearing something out",how:"Give away one object you have been keeping 'just in case'. Detachment begins with things before it reaches thoughts."},
+      {icon:"🌊",place:"A result you care about",how:"Notice one area of life where you are outcome-obsessed. Write: 'I will do my part fully and release the rest.' Then do it."},
+      {icon:"👁️",place:"Your meditation",how:"Sit without wanting the meditation to be deep, clear, or peaceful. Let it be whatever it is. Detachment from the quality of the sit trains detachment from everything."},
+      {icon:"💬",place:"A conversation",how:"Say something true without needing the other person to agree with it. Let your words land without controlling how they are received."},
+      {icon:"📵",place:"Social media or messages",how:"Post or send something without checking back for reactions for three hours. Count the urge to check — that urge is what detachment dissolves."},
+      {icon:"🎭",place:"A role you play",how:"Notice one role — parent, professional, practitioner — that you are gripping tightly. For one hour, hold it more lightly. You are more than any role."},
+    ],
+  },
+];
+
+/* Which virtue is active this week? Cycles 1–9 by week number from start */
+function activeVirtueIndex(){
+  const d=daysSinceStart();
+  return Math.floor(d/7)%VIRTUES.length;
+}
+function activeVirtue(){ return VIRTUES[activeVirtueIndex()]; }
+function dayOfVirtueWeek(){ return daysSinceStart()%7; } // 0–6
+
+/* How many days has each virtue been logged by this person? */
+function virtueDays(vkey){
+  return state.entries.filter(e=>e.person===me&&e.kind==="virtue"&&e.virtueKey===vkey);
+}
+function virtueLoggedToday(vkey){
+  return state.entries.find(e=>e.person===me&&e.kind==="virtue"&&e.virtueKey===vkey&&e.date===today());
+}
+
+/* ---- Today virtue panel ---- */
+let vtShuffle=0;
+function renderVirtueToday(){
+  const v=activeVirtue();
+  const dayIdx=dayOfVirtueWeek();
+  const done=virtueDays(v.key);
+  const pct=Math.min(done.length/7,1);
+  const circumference=113;
+  const offset=circumference-(pct*circumference);
+
+  $("#vt-name").textContent=v.name;
+  $("#vt-ring-label").textContent=Math.min(done.length,7)+"/7";
+  const arc=$("#vt-ring-arc");
+  if(arc) arc.style.strokeDashoffset=offset;
+  // colour arc when embedded
+  if(done.length>=7 && arc) arc.style.stroke="var(--leaf)";
+
+  const prayerIdx=(dayIdx+vtShuffle)%v.prayers.length;
+  $("#vt-prayer").textContent=v.prayers[prayerIdx];
+
+  // pick 3 idea slots deterministically by date
+  const base=hashDate(today()+"V");
+  const ideas=v.ideas;
+  const idxs=[];
+  for(let i=0;i<3;i++) idxs.push((base+i)%ideas.length);
+  const unique=[...new Set(idxs)].slice(0,3);
+  // pad if needed
+  while(unique.length<3) unique.push((unique[unique.length-1]+1)%ideas.length);
+  $("#vt-ideas").innerHTML=unique.map(i=>`<div class="vt-idea"><span class="vi-icon">${ideas[i].icon}</span><div><strong>${esc(ideas[i].place)}</strong> — ${esc(ideas[i].how)}</div></div>`).join("");
+
+  const logged=!!virtueLoggedToday(v.key);
+  const cb=$("#vt-check"), wrap=$("#vt-check-wrap"), lbl=$("#vt-check-label");
+  if(cb){ cb.checked=logged; wrap.classList.toggle("done",logged); lbl.textContent=logged?"Practised ✓":"Practised today"; }
+
+  const tl=$("#vt-tab-link");
+  if(tl){ tl.textContent="See "+v.name+" in full →"; tl.onclick=()=>{ $$(".tab").forEach(x=>x.classList.remove("active")); $('[data-view="virtues"]').classList.add("active"); $$(".view").forEach(vv=>vv.classList.remove("active")); $("#view-virtues").classList.add("active"); renderVirtueGrid(); showVirtueDetail(v.key); }; }
+}
+
+/* ---- Virtue grid ---- */
+let openVirtue=null;
+function renderVirtueGrid(){
+  const av=activeVirtueIndex();
+  const html=VIRTUES.map((v,i)=>{
+    const days=virtueDays(v.key);
+    const n=Math.min(days.length,7);
+    const embedded=n>=7;
+    const active=i===av;
+    const pct=Math.round(n/7*100);
+    const circ=88; // 2π×14
+    const off=circ-(n/7*circ);
+    return `<div class="v-card${active?" active-week":""}${embedded?" embedded":""}" data-vkey="${v.key}">
+      <div class="vc-top">
+        <div><div class="vc-name">${esc(v.name)}</div><div class="vc-week">Week ${v.week}</div></div>
+        <div class="vc-ring-wrap">
+          <svg class="vc-ring" viewBox="0 0 44 44"><circle cx="22" cy="22" r="14" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="3"/><circle cx="22" cy="22" r="14" fill="none" stroke="${embedded?"var(--leaf)":"var(--dawn)"}" stroke-width="3" stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${off}" transform="rotate(-90 22 22)"/></svg>
+          <span class="vc-ring-label">${n}/7</span>
+        </div>
+      </div>
+      <div class="vc-bar"><span style="width:${pct}%"></span></div>
+      <div class="vc-status">${embedded?"✓ Embedded":""}${active&&!embedded?" ● This week":""} ${!embedded&&!active?n+" of 7 days":""}</div>
+    </div>`;
+  }).join("");
+  $("#virtue-grid").innerHTML=`<div class="virtue-grid">${html}</div>`;
+  $$(".v-card").forEach(c=>c.onclick=()=>showVirtueDetail(c.dataset.vkey));
+  if(openVirtue) showVirtueDetail(openVirtue);
+}
+function showVirtueDetail(vkey){
+  openVirtue=vkey;
+  const v=VIRTUES.find(x=>x.key===vkey);
+  if(!v) return;
+  const days=virtueDays(v.key);
+  const n=Math.min(days.length,7);
+  const embedded=n>=7;
+  const active=activeVirtue().key===vkey;
+  const loggedDates=new Set(days.map(e=>e.date));
+
+  // build 7-day log dots: use actual logged dates, or show future slots
+  const startD=new Date(getStartDate()+"T00:00:00");
+  const weekOffset=(v.week-1)*7;
+  const dots=Array.from({length:7},(_,i)=>{
+    const d=new Date(startD); d.setDate(d.getDate()+weekOffset+i);
+    const iso=d.toISOString().slice(0,10);
+    const done=loggedDates.has(iso);
+    return `<div class="vd-day${done?" done":""}"><div class="dd-dot"></div><span class="dd-date">${fmtDate(iso)}</span><span class="dd-note">${done?"practised":""}</span></div>`;
+  }).join("");
+
+  const prayerHTML=v.prayers.map((p,i)=>`<div class="vd-prayer${i===dayOfVirtueWeek()&&active?" today-prayer":""}">${esc(p)}</div>`).join("");
+  const ideasHTML=v.ideas.map(idea=>`<div class="vd-idea"><div class="di-icon">${idea.icon}</div><div class="di-body"><div class="di-title">${esc(idea.place)}</div><div class="di-text">${esc(idea.how)}</div></div></div>`).join("");
+
+  $("#virtue-detail").innerHTML=`
+    <div class="vd-head">
+      <div class="vd-name">${esc(v.name)}</div>
+      ${embedded?'<span class="pill answered">✓ Embedded</span>':active?'<span class="pill person">● Active this week</span>':'<span class="pill">Week '+v.week+'</span>'}
+    </div>
+    <div class="vd-desc">${esc(v.desc)}</div>
+    <a href="${v.skool}" target="_blank" rel="noopener" style="font-size:13px">↗ Open in classroom</a>
+    <div class="vd-section">Daily progress (${n}/7 days)</div>
+    <div class="vd-log">${dots}</div>
+    <div class="vd-section">The 7 daily prayers</div>
+    <div class="vd-prayers">${prayerHTML}</div>
+    <div class="vd-section">7 ways to practise ${esc(v.name)} today</div>
+    <div class="vd-ideas-list">${ideasHTML}</div>`;
+
+  $("#virtue-detail-card").style.display="block";
+  setTimeout(()=>$("#virtue-detail-card").scrollIntoView({behavior:"smooth",block:"nearest"}),50);
+}
 function initPresit(){
   ["breath","mudra"].forEach(k=>{
     const cb=$("#pi-"+k+"-cb"), item=$("#pi-"+k);
     if(cb && item) cb.onchange=()=>item.classList.toggle("checked",cb.checked);
   });
+
+  // divine form check — shown on 3 out of 7 days, stable by date hash
+  const divineItem=$("#pi-divineform"), divineCb=$("#pi-divineform-cb");
+  if(divineItem){
+    const daySlot=hashDate(today()+"DF")%7; // 0–6
+    const showToday=[0,2,4].includes(daySlot);
+    divineItem.style.display=showToday?"flex":"none";
+    if(divineCb) divineCb.onchange=()=>divineItem.classList.toggle("checked",divineCb.checked);
+  }
+
+  // virtue checkbox
+  const vtcb=$("#vt-check");
+  if(vtcb) vtcb.onchange=async()=>{
+    const v=activeVirtue();
+    const existing=virtueLoggedToday(v.key);
+    if(vtcb.checked && !existing){
+      await addEntry({kind:"virtue",date:today(),virtueKey:v.key,virtueName:v.name,text:"Practised "+v.name});
+    } else if(!vtcb.checked && existing){
+      await deleteEntry(existing.id);
+    } else { renderVirtueToday(); }
+  };
 }
 
 function renderAll(){
   renderStrip(); renderAvatar(); renderInvocation(); renderHighlight(); renderPracticeReminder();
+  renderVirtueToday();
   renderTodayList(); renderInsights(); renderQuestions();
-  renderProgress(); renderEveryone(); updateSyncStatus();
+  renderProgress(); renderVirtueGrid(); renderEveryone(); updateSyncStatus();
 }
 
 /* ==================== 7) EVENTS ==================== */
