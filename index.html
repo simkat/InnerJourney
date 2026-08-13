@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Inner Journey — Practice Log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   Set your deployed Apps Script URL + passphrase in the CONFIG
+   object inside the JavaScript near the bottom of this file.
+   Palette: pre-dawn indigo ground, single dawn-amber accent,
+   muted lotus-rose, restrained leaf-green for "done".
+   ============================================================ */
+:root{
+  --night:#11152a; --panel:#181d38; --raised:#212949;
+  --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.14);
+  --mist:#ecebf4; --dim:#9fa1bd; --faint:#6f7295;
+  --dawn:#e6b25a; --dawn-soft:rgba(230,178,90,.14); --dawn-line:rgba(230,178,90,.4);
+  --lotus:#d98aa6; --leaf:#83b8a0; --danger:#e0857f;
+  --r:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:
+    radial-gradient(1200px 600px at 50% -10%, #1a2247 0%, rgba(26,34,71,0) 60%),
+    var(--night);
+  color:var(--mist);
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  font-size:15px; line-height:1.5;
+  min-height:100vh; -webkit-font-smoothing:antialiased;
+}
+a{color:var(--dawn);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:860px;margin:0 auto;padding:22px 18px 90px}
+
+/* header */
+header.top{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;justify-content:space-between;margin-bottom:6px}
+.brand h1{font-family:'Spectral',serif;font-weight:500;font-size:26px;letter-spacing:.2px;margin:0;line-height:1.15}
+.brand p{margin:3px 0 0;color:var(--dim);font-size:13px}
+.who{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.who label{color:var(--faint);font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+select,input,textarea{
+  background:var(--panel);color:var(--mist);border:1px solid var(--line2);
+  border-radius:10px;padding:9px 11px;font:inherit;font-size:14px;outline:none;width:100%;
+}
+select:focus,input:focus,textarea:focus{border-color:var(--dawn-line);box-shadow:0 0 0 3px var(--dawn-soft)}
+.who select{width:auto;min-width:120px}
+textarea{resize:vertical;min-height:70px}
+
+.banner{margin:14px 0 0;padding:10px 13px;border-radius:10px;font-size:13px;display:none}
+.banner.warn{display:block;background:rgba(224,133,127,.12);border:1px solid rgba(224,133,127,.35);color:#f0b8b3}
+.banner.ok{display:block;background:rgba(131,184,160,.12);border:1px solid rgba(131,184,160,.35);color:#bfe3d4}
+
+/* streak strip */
+.strip{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 4px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:12px 15px;flex:1;min-width:120px}
+.stat .n{font-family:'Spectral',serif;font-size:26px;font-weight:600;color:var(--dawn);line-height:1}
+.stat .n.rose{color:var(--lotus)}
+.stat .n.leaf{color:var(--leaf)}
+.stat .l{color:var(--dim);font-size:12px;margin-top:5px}
+
+/* tabs */
+nav.tabs{display:flex;gap:4px;margin:20px 0 16px;border-bottom:1px solid var(--line);overflow-x:auto}
+.tab{background:none;border:none;color:var(--dim);font:inherit;font-size:14px;padding:10px 14px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+.tab:hover{color:var(--mist)}
+.tab.active{color:var(--mist);border-bottom-color:var(--dawn)}
+
+section.view{display:none}
+section.view.active{display:block}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.card + .card{margin-top:14px}
+.card h2{font-family:'Spectral',serif;font-weight:500;font-size:18px;margin:0 0 4px}
+.card .sub{color:var(--dim);font-size:13px;margin:0 0 16px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;color:var(--faint);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){.row2{grid-template-columns:1fr}}
+
+.check{display:flex;align-items:center;gap:10px;background:var(--night);border:1px solid var(--line2);border-radius:10px;padding:10px 12px;cursor:pointer}
+.check input{width:auto}
+.rating{display:flex;gap:6px}
+.dot{width:34px;height:34px;border-radius:50%;border:1px solid var(--line2);background:var(--night);color:var(--dim);cursor:pointer;font-size:13px}
+.dot.on{background:var(--dawn-soft);border-color:var(--dawn-line);color:var(--dawn)}
+
+.btn{background:var(--dawn);color:#2a1e05;border:none;border-radius:10px;padding:11px 18px;font:inherit;font-weight:600;font-size:14px;cursor:pointer}
+.btn:hover{filter:brightness(1.06)}
+.btn.ghost{background:transparent;color:var(--mist);border:1px solid var(--line2);font-weight:500}
+.btn.small{padding:7px 12px;font-size:13px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:4px}
+
+.lessonlink{font-size:12px;margin-top:6px;display:inline-block}
+
+/* entries list */
+.entry{border:1px solid var(--line);border-radius:12px;padding:13px 15px;margin-top:10px;background:var(--night)}
+.entry .meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--faint);margin-bottom:6px}
+.pill{font-size:11px;padding:2px 9px;border-radius:999px;border:1px solid var(--line2);color:var(--dim)}
+.pill.person{border-color:var(--dawn-line);color:var(--dawn);background:var(--dawn-soft)}
+.pill.rose{border-color:rgba(217,138,166,.4);color:var(--lotus);background:rgba(217,138,166,.1)}
+.pill.open{border-color:rgba(230,178,90,.4);color:var(--dawn)}
+.pill.answered{border-color:rgba(131,184,160,.4);color:var(--leaf);background:rgba(131,184,160,.1)}
+.entry .body{font-size:14.5px;white-space:pre-wrap;color:var(--mist)}
+.entry .refl{margin-top:8px;padding-top:8px;border-top:1px solid var(--line);color:var(--dim);font-size:13.5px;white-space:pre-wrap;font-style:italic}
+.entry .qactions{margin-top:9px;display:flex;gap:8px;flex-wrap:wrap}
+.mut{color:var(--faint);font-size:13px;text-align:center;padding:18px}
+
+/* progress lotus spine */
+.spine{display:flex;gap:18px}
+.stem{width:2px;background:linear-gradient(var(--dawn),var(--lotus));border-radius:2px;position:relative;flex:0 0 auto;margin-left:8px}
+.phases{flex:1;display:flex;flex-direction:column;gap:16px}
+.phase{position:relative}
+.phase .node{position:absolute;left:-27px;top:2px;width:16px;height:16px;border-radius:50%;background:var(--night);border:2px solid var(--line2)}
+.phase.done .node{background:var(--leaf);border-color:var(--leaf)}
+.phase.part .node{background:var(--dawn);border-color:var(--dawn)}
+.phase h3{font-family:'Spectral',serif;font-weight:500;font-size:16px;margin:0 0 3px}
+.phase .cnt{color:var(--dim);font-size:12.5px}
+.bar{height:6px;border-radius:6px;background:var(--night);border:1px solid var(--line);margin-top:7px;overflow:hidden}
+.bar span{display:block;height:100%;background:linear-gradient(90deg,var(--dawn),var(--lotus))}
+
+.legend{color:var(--faint);font-size:12px;margin-top:14px;line-height:1.7}
+footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="brand">
+      <h1>Inner Journey — Practice Log</h1>
+      <p>The lotus rises from the mud toward the light. One day at a time.</p>
+    </div>
+    <div class="who">
+      <label for="person">Practising as</label>
+      <select id="person" aria-label="Who is practising"></select>
+      <button class="btn ghost small" id="addPerson">+ add</button>
+    </div>
+  </header>
+
+  <div id="banner" class="banner"></div>
+
+  <div class="strip" id="strip"></div>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab active" data-view="today">Today</button>
+    <button class="tab" data-view="insights">Insights</button>
+    <button class="tab" data-view="questions">Questions</button>
+    <button class="tab" data-view="progress">Progress</button>
+    <button class="tab" data-view="everyone">Everyone</button>
+    <button class="tab" data-view="data">Backup</button>
+  </nav>
+
+  <!-- TODAY -->
+  <section class="view active" id="view-today">
+    <div class="card">
+      <h2>Log today's sit</h2>
+      <p class="sub">Morning practice, the daytime quality you're carrying, and an evening reflection.</p>
+      <div class="row2">
+        <div class="field">
+          <label for="d-date">Date</label>
+          <input type="date" id="d-date" />
+        </div>
+        <div class="field">
+          <label for="d-lesson">Formal practice / lesson</label>
+          <select id="d-lesson"></select>
+          <a class="lessonlink" id="d-lesson-link" target="_blank" rel="noopener"></a>
+        </div>
+      </div>
+      <div class="field">
+        <label>Did you complete the formal sit?</label>
+        <label class="check"><input type="checkbox" id="d-done" /> Yes — I sat today</label>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="d-min">Minutes</label>
+          <input type="number" id="d-min" min="0" step="5" placeholder="e.g. 20" />
+        </div>
+        <div class="field">
+          <label>How settled was the sit?</label>
+          <div class="rating" id="d-rating" role="group" aria-label="Settledness 1 to 5"></div>
+        </div>
+      </div>
+      <div class="field">
+        <label for="d-daytime">Daytime Divine Life practice</label>
+        <select id="d-daytime"></select>
+        <a class="lessonlink" id="d-daytime-link" target="_blank" rel="noopener"></a>
+      </div>
+      <div class="field">
+        <label for="d-refl">Evening reflection</label>
+        <textarea id="d-refl" placeholder="What did I notice today? Where did the quality show up — or not?"></textarea>
+      </div>
+      <div class="actions">
+        <button class="btn" id="d-save">Save entry</button>
+        <span id="d-msg" style="color:var(--leaf);font-size:13px"></span>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Your recent days</h2>
+      <div id="today-list"></div>
+    </div>
+  </section>
+
+  <!-- INSIGHTS -->
+  <section class="view" id="view-insights">
+    <div class="card">
+      <h2>Capture an insight</h2>
+      <p class="sub">A realisation, a shift, something that landed. Dated automatically.</p>
+      <div class="field">
+        <textarea id="i-text" placeholder="Today I saw that…"></textarea>
+      </div>
+      <div class="actions"><button class="btn" id="i-save">Save insight</button></div>
+    </div>
+    <div class="card">
+      <h2>Your insights</h2>
+      <div id="insights-list"></div>
+    </div>
+  </section>
+
+  <!-- QUESTIONS -->
+  <section class="view" id="view-questions">
+    <div class="card">
+      <h2>Ask a question</h2>
+      <p class="sub">Something to bring to Ben, the community, or to sit with. Mark answered when it resolves.</p>
+      <div class="field">
+        <textarea id="q-text" placeholder="What happens when…?"></textarea>
+      </div>
+      <div class="actions"><button class="btn" id="q-save">Save question</button></div>
+    </div>
+    <div class="card">
+      <h2>Open questions</h2>
+      <div id="questions-open"></div>
+    </div>
+    <div class="card">
+      <h2>Answered</h2>
+      <div id="questions-done"></div>
+    </div>
+  </section>
+
+  <!-- PROGRESS -->
+  <section class="view" id="view-progress">
+    <div class="card">
+      <h2>The path so far</h2>
+      <p class="sub" id="prog-sub"></p>
+      <div class="spine">
+        <div class="stem"></div>
+        <div class="phases" id="phases"></div>
+      </div>
+      <p class="legend">
+        A phase turns <span style="color:var(--dawn)">amber</span> once you've logged any of its lessons, and
+        <span style="color:var(--leaf)">green</span> when all are logged. Level 2 is designed to begin only after
+        all three Level 1 stages are complete.
+      </p>
+    </div>
+  </section>
+
+  <!-- EVERYONE -->
+  <section class="view" id="view-everyone">
+    <div class="card">
+      <h2>Everyone's practice</h2>
+      <p class="sub">A shared view across all practitioners. Insights and questions from the whole circle.</p>
+      <div id="everyone-list"></div>
+    </div>
+  </section>
+
+  <!-- DATA / BACKUP -->
+  <section class="view" id="view-data">
+    <div class="card">
+      <h2>Backup &amp; restore</h2>
+      <p class="sub">The Google Sheet is your live store. These are extra safety copies you own.</p>
+      <div class="actions">
+        <button class="btn ghost" id="exp-json">Download full backup (.json)</button>
+        <button class="btn ghost" id="exp-csv">Download log (.csv)</button>
+        <button class="btn ghost" id="imp-btn">Restore from .json</button>
+        <input type="file" id="imp-file" accept="application/json" style="display:none" />
+      </div>
+      <p class="legend" id="data-note"></p>
+    </div>
+    <div class="card">
+      <h2>Sync status</h2>
+      <div id="sync-status" class="mut"></div>
+      <div class="actions"><button class="btn ghost small" id="refresh">Refresh from Sheet</button></div>
+    </div>
+  </section>
+
+  <footer>
+    Inner Journey School practice log · data lives in your shared Google Sheet ·
+    lesson links open the live classroom.
+  </footer>
+</div>
+
+<script>
+/* ====================================================================
+   1) CONFIG  — paste your deployed Apps Script Web App URL here.
+      Leave ENDPOINT empty to run locally (this device only).
+      SECRET is an optional passphrase; must match the one in Code.gs.
+   ==================================================================== */
+const CONFIG = {
+  ENDPOINT: "https://script.google.com/macros/s/AKfycbwa1BdQ0L9wKmSZTyX6g1tCOz-ljCm1CkhQTZSk1eBcB6exgi1JJIT_iKpVnmn-N-eKmQ/exec",            // e.g. "https://script.google.com/macros/s/AKfy.../exec"
+  SECRET:   "pray"             // e.g. "lotus-2026"  (optional; match Code.gs)
+};
+
+/* ==================== 2) CURRICULUM (verified links) ==================== */
+const L1="https://www.skool.com/inner-journey-school/classroom/7dc1b586?md=";
+const L2="https://www.skool.com/inner-journey-school/classroom/b8642523?md=";
+const WD="https://www.skool.com/inner-journey-school/classroom/4a0770a8?md=";
+
+const PHASES = [
+  { key:"s1", label:"Level 1 · Stage 1 — Grounding", lessons:[
+    ["Orientation: The Path Begins Here", L1+"4df161eb267d448291b5cc4b21688605"],
+    ["Your 30-Day Path: Please Watch", L1+"da2b4074ea664a45ad15728ed3fa7aed"],
+    ["How to use the Course Features", L1+"3d98d61243664b04a7a82f8b205168f2"],
+    ["L1: What actually is Meditation?", L1+"39929f55dd63427b99799e6ebb78cc64"],
+    ["L2: Why a Formal Position Matters", L1+"fba3031121874ee381d91bd351ee1f05"],
+    ["L3: The 6 Meditation Asanas", L1+"b7baa9a287f641b19a297c60014c21e7"],
+    ["L4: How To Choose Your Position", L1+"031601fbd304492db545e698dbe559f3"],
+    ["L5: Kneeling stool & zafu", L1+"4dbdd311d2a348e595d34a74270300d4"],
+    ["L6: 3 Hand Positions (Mudras)", L1+"8bbf2fcfa9eb475998bb46237dac0288"],
+    ["L7: Setting up Your Sacred Space", L1+"e7955f1c59064dfea03a5cb77bfcbe29"],
+    ["L8: Correct Breathing", L1+"36e83dbb5ba74645b34ac2df4f30e883"],
+    ["L9: \"So-Hum\" Meditation Explained", L1+"93099ccd2e6d4613901fa677575f6b12"],
+    ["L10: 21 repetitions of \"OM\"", L1+"5a6849b92ee248b6814109966c8f6e2c"],
+    ["L11: Guided So-Hum Meditation", L1+"fe2e84903e3042bfad9df4798d1f298c"],
+  ]},
+  { key:"s2", label:"Level 1 · Stage 2 — Connecting", lessons:[
+    ["L12: Gather - Flow - Merge", L1+"fd162deb0a9a4ce6993bccbc8391ec0b"],
+    ["L13: Mastering Distractions", L1+"e074ee75646a4c1faf9e364b3e897069"],
+    ["L14: Connecting With the Divine", L1+"8651e7920644418da948e7101ed57be1"],
+    ["L15: Nature and the Higher Self", L1+"ae70f8e08d1c428093c65215a2d3e088"],
+    ["L16: Meditation on a Divine Form", L1+"a145669c7db44a819d4d7b8c3d202879"],
+    ["L17: Connecting with Gurus & Spirit Guides", L1+"331538e1137d4728ad36f1ac6e018e48"],
+    ["L18: Pranayama (Nadi Shodhana)", L1+"82951119f0c74ce087f53b55e89c88d5"],
+    ["L19: Guided Divine Meditation", L1+"a9b98c596a574ddc95809c70f8c66740"],
+  ]},
+  { key:"s3", label:"Level 1 · Stage 3 — Continuing", lessons:[
+    ["L20: Inner Communion Through Prayer", L1+"9710d0dc7bf34f5f89fcf5bb61a7c0ca"],
+    ["L21: How To Advance in Meditation", L1+"cc6d72eae88e4f1baa02a94bac8c2018"],
+    ["L22: What is \"Open Awareness\"?", L1+"346ead6bcbf14a88a52319df6d39c211"],
+    ["L23: Circle Method (Guided)", L1+"f9ac4d50096e4c4bb3a80adbb724cbbc"],
+    ["L24: Guided Open-Awareness Meditation", L1+"d8da091260644f32a75d8ee181e6394b"],
+  ]},
+  { key:"l2", label:"Level 2 · 12-Week Meditation Course", lessons:[
+    ["Start here: Course introduction", L2+"4af3393575474949a1b99639bea8e13a"],
+    ["Week 1 — Tibetan Colour", L2+"dd87f8acf1b6497ebf7153c983cd6721"],
+    ["Week 2 — Tibetan Colour", L2+"8e1dcfa592d84d149bddff4e1faa6175"],
+    ["Week 3 — Tibetan Colour", L2+"808dda3c2915447fbefd93acc9fc8491"],
+    ["Week 4 — Trataka", L2+"8336410252d14cad858a3133d35e2d53"],
+    ["Week 5 — Trataka", L2+"8660b34c290140a899a65270ea28b058"],
+    ["Week 6 — Trataka", L2+"ab9ae5a808914d678e761463c1ae3146"],
+    ["Week 7 — Anapana", L2+"b7583b8aaf8e499b89ffaa469c1ba1ab"],
+    ["Week 8 — Anapana", L2+"fb49938d4b2a445f8f92e8ca81080b25"],
+    ["Week 9 — Anapana", L2+"b808ca72478f47a18a88a8c45e237747"],
+    ["Week 10 — Self-Enquiry", L2+"4d76c5c858f64114befdc0b294674733"],
+    ["Week 11 — Self-Enquiry", L2+"479e336770a14bf28c5326d319beb303"],
+    ["Week 12 — Self-Enquiry", L2+"e9021fe63aa44c4bbafccbb41c19d2fa"],
+  ]},
+];
+
+/* Daytime "Way of a Divine Life" options */
+const DAYTIME = [
+  ["— none —",""],
+  ["What are you? — spiritual enquiry", WD+"3fed909f9f88401ab6233435da7922e6"],
+  ["The Inner Journey School Philosophy", WD+"42b9c2914f8845258f751368404b90ae"],
+  ["The Sixfold Path (Flowering Mind)", WD+"c217937286d14abf9d08b6b9dcb1b8ed"],
+  ["Virtue · Sincerity", WD+"c61ab49ea64f48dfab29a3470d7c125c"],
+  ["Virtue · Commitment", WD+"438fdf7a4acd4c70b8e2de786788ef74"],
+  ["Virtue · Patience", WD+"3361ace55ed54fc0b8ef05d7e2572b6e"],
+  ["Virtue · Acceptance", WD+"eb8eb08749b94061af19d92be85bf869"],
+  ["Virtue · Tolerance", WD+"ec24ab7aa4674424829ab288c198c851"],
+  ["Virtue · Caring", WD+"1aa5b05229654079a40b5715d4442a76"],
+  ["Virtue · Gentleness", WD+"075135c0fe0c40be88005b6e4cc665d5"],
+  ["Virtue · Graciousness", WD+"dab78d42fd7f4231ac5a87df894f3941"],
+  ["Virtue · Detachment", WD+"ca75e5aaf55c42e58ffb268db730ad97"],
+  ["Pillar · Aspiration", WD+"bc93cd01155a4d4db78c2b2d82066bd9"],
+  ["The Deus Mantra (in latin)", WD+"b4102a9b7a3148668c5f5ec551a09939"],
+  ["Mantra · Om Shanti Om", WD+"9194509b163447818425b8da680e5013"],
+];
+
+/* ==================== 3) STATE + STORAGE ==================== */
+const LS_KEY="ijs_log_v1";
+const LS_PEOPLE="ijs_people_v1";
+const LS_ME="ijs_me_v1";
+let state={ entries:[] };
+let me="";
+let people=[];
+let rating=0;
+let storageOK=true;
+
+function safeGet(k){ try{return localStorage.getItem(k)}catch(e){storageOK=false;return null} }
+function safeSet(k,v){ try{localStorage.setItem(k,v);return true}catch(e){storageOK=false;return false} }
+
+function loadLocal(){
+  try{ state.entries = JSON.parse(safeGet(LS_KEY)||"[]"); }catch(e){ state.entries=[]; }
+  try{ people = JSON.parse(safeGet(LS_PEOPLE)||"null") || ["Shruti","Smriti"]; }catch(e){ people=["Shruti","Smriti"]; }
+  me = safeGet(LS_ME) || people[0] || "Shruti";
+}
+function saveLocal(){ safeSet(LS_KEY, JSON.stringify(state.entries)); }
+function savePeople(){ safeSet(LS_PEOPLE, JSON.stringify(people)); }
+
+/* ==================== 4) SYNC (Apps Script) ==================== */
+const connected = !!CONFIG.ENDPOINT;
+let lastSync="never";
+
+async function pullRemote(){
+  if(!connected) return;
+  try{
+    const r = await fetch(CONFIG.ENDPOINT, {method:"GET"});
+    const j = await r.json();
+    if(j && j.ok && Array.isArray(j.rows)){
+      state.entries = j.rows.map(normalizeRow);
+      saveLocal();
+      lastSync = new Date().toLocaleString();
+      renderAll();
+      setBanner("ok","Synced with the shared Sheet · "+state.entries.length+" entries.");
+      setTimeout(()=>{ if(connected) document.getElementById("banner").className="banner"; },2500);
+    }
+  }catch(e){
+    setBanner("warn","Couldn't reach the Sheet just now — showing this device's copy. It'll retry on next save.");
+  }
+  updateSyncStatus();
+}
+async function pushRemote(action,payload){
+  if(!connected) return {ok:true,offline:true};
+  const body=Object.assign({action,secret:CONFIG.SECRET},payload);
+  try{
+    const r=await fetch(CONFIG.ENDPOINT,{
+      method:"POST",
+      headers:{"Content-Type":"text/plain;charset=utf-8"}, // avoids CORS preflight on Apps Script
+      body:JSON.stringify(body)
+    });
+    const j=await r.json();
+    lastSync=new Date().toLocaleString(); updateSyncStatus();
+    return j;
+  }catch(e){
+    setBanner("warn","Saved on this device but the Sheet didn't confirm — press Refresh later to reconcile.");
+    return {ok:false,error:String(e)};
+  }
+}
+function normalizeRow(row){
+  const o={};
+  ["id","createdAt","person","kind","date","phase","lessonTitle","lessonUrl","formalDone","minutes","rating","daytimeText","daytimeUrl","reflection","text","status"]
+    .forEach(k=>o[k]=row[k]!==undefined?row[k]:"");
+  return o;
+}
+
+/* ==================== 5) HELPERS ==================== */
+const $=(s,el=document)=>el.querySelector(s);
+const $$=(s,el=document)=>[...el.querySelectorAll(s)];
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const esc=s=>String(s==null?"":s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const today=()=>new Date().toISOString().slice(0,10);
+function fmtDate(d){ if(!d) return ""; const x=new Date(d); return isNaN(x)?d:x.toLocaleDateString(undefined,{weekday:"short",day:"numeric",month:"short"}); }
+
+function setBanner(type,msg){
+  const b=$("#banner"); b.className="banner "+type; b.textContent=msg;
+}
+
+async function addEntry(obj){
+  obj.id=uid(); obj.createdAt=new Date().toISOString(); obj.person=me;
+  state.entries.push(obj); saveLocal(); renderAll();
+  const r=await pushRemote("add",{row:obj});
+  return r;
+}
+async function updateEntry(id,fields){
+  const e=state.entries.find(x=>x.id===id); if(e) Object.assign(e,fields);
+  saveLocal(); renderAll();
+  await pushRemote("update",{id,fields});
+}
+async function deleteEntry(id){
+  state.entries=state.entries.filter(x=>x.id!==id); saveLocal(); renderAll();
+  await pushRemote("delete",{id});
+}
+
+/* ==================== 6) RENDER ==================== */
+function renderPeople(){
+  const sel=$("#person"); sel.innerHTML="";
+  people.forEach(p=>{ const o=document.createElement("option"); o.value=p; o.textContent=p; if(p===me)o.selected=true; sel.appendChild(o); });
+}
+function renderLessonSelect(){
+  const sel=$("#d-lesson"); sel.innerHTML="";
+  PHASES.forEach(ph=>{
+    const g=document.createElement("optgroup"); g.label=ph.label;
+    ph.lessons.forEach(([t,u])=>{ const o=document.createElement("option"); o.value=t; o.dataset.url=u; o.textContent=t; g.appendChild(o); });
+    sel.appendChild(g);
+  });
+  updateLessonLink();
+  const day=$("#d-daytime"); day.innerHTML="";
+  DAYTIME.forEach(([t,u])=>{ const o=document.createElement("option"); o.value=t; o.dataset.url=u; o.textContent=t; day.appendChild(o); });
+  updateDaytimeLink();
+}
+function updateLessonLink(){
+  const s=$("#d-lesson"); const o=s.options[s.selectedIndex]; const a=$("#d-lesson-link");
+  if(o&&o.dataset.url){ a.href=o.dataset.url; a.textContent="↗ open this lesson in the classroom"; } else a.textContent="";
+}
+function updateDaytimeLink(){
+  const s=$("#d-daytime"); const o=s.options[s.selectedIndex]; const a=$("#d-daytime-link");
+  if(o&&o.dataset.url){ a.href=o.dataset.url; a.textContent="↗ open this teaching"; } else a.textContent="";
+}
+function renderRating(){
+  const c=$("#d-rating"); c.innerHTML="";
+  for(let i=1;i<=5;i++){ const b=document.createElement("button"); b.type="button"; b.className="dot"+(i<=rating?" on":""); b.textContent=i;
+    b.onclick=()=>{ rating=(rating===i?0:i); renderRating(); }; c.appendChild(b); }
+}
+
+function mine(kind){ return state.entries.filter(e=>e.person===me && e.kind===kind).sort((a,b)=>(b.createdAt||"").localeCompare(a.createdAt||"")); }
+
+function entryCardDaily(e){
+  const link=e.lessonUrl?`<a href="${esc(e.lessonUrl)}" target="_blank" rel="noopener">${esc(e.lessonTitle)}</a>`:esc(e.lessonTitle||"");
+  const dt=e.daytimeText&&e.daytimeText!=="— none —"?`<div style="font-size:13px;color:var(--dim);margin-top:5px">Daytime: ${e.daytimeUrl?`<a href="${esc(e.daytimeUrl)}" target="_blank" rel="noopener">${esc(e.daytimeText)}</a>`:esc(e.daytimeText)}</div>`:"";
+  const r=e.rating?` · settled ${esc(e.rating)}/5`:"";
+  const m=e.minutes?` · ${esc(e.minutes)} min`:"";
+  const done=(e.formalDone===true||e.formalDone==="true")?`<span class="pill answered">sat</span>`:"";
+  return `<div class="entry">
+    <div class="meta"><span class="pill person">${esc(e.person)}</span> ${done}<span>${fmtDate(e.date)}${m}${r}</span></div>
+    <div class="body">${link}</div>${dt}
+    ${e.reflection?`<div class="refl">${esc(e.reflection)}</div>`:""}
+  </div>`;
+}
+function renderTodayList(){
+  const list=mine("daily").slice(0,12);
+  $("#today-list").innerHTML = list.length?list.map(entryCardDaily).join(""):`<div class="mut">No sits logged yet. Your first entry will appear here.</div>`;
+}
+function renderInsights(){
+  const list=mine("insight");
+  $("#insights-list").innerHTML=list.length?list.map(e=>`<div class="entry">
+    <div class="meta"><span class="pill person">${esc(e.person)}</span><span>${fmtDate(e.date||e.createdAt)}</span></div>
+    <div class="body">${esc(e.text)}</div></div>`).join(""):`<div class="mut">No insights yet.</div>`;
+}
+function renderQuestions(){
+  const q=mine("question");
+  const open=q.filter(e=>e.status!=="answered");
+  const done=q.filter(e=>e.status==="answered");
+  const row=e=>`<div class="entry">
+    <div class="meta"><span class="pill person">${esc(e.person)}</span><span class="pill ${e.status==="answered"?"answered":"open"}">${e.status==="answered"?"answered":"open"}</span><span>${fmtDate(e.date||e.createdAt)}</span></div>
+    <div class="body">${esc(e.text)}</div>
+    ${e.reflection?`<div class="refl">Answer: ${esc(e.reflection)}</div>`:""}
+    <div class="qactions">
+      ${e.status==="answered"
+        ? `<button class="btn ghost small" data-reopen="${e.id}">Reopen</button>`
+        : `<button class="btn ghost small" data-answer="${e.id}">Mark answered…</button>`}
+      <button class="btn ghost small" data-del="${e.id}">Delete</button>
+    </div></div>`;
+  $("#questions-open").innerHTML=open.length?open.map(row).join(""):`<div class="mut">No open questions.</div>`;
+  $("#questions-done").innerHTML=done.length?done.map(row).join(""):`<div class="mut">Nothing answered yet.</div>`;
+}
+function renderProgress(){
+  const doneTitles=new Set(state.entries.filter(e=>e.person===me&&e.kind==="daily").map(e=>e.lessonTitle));
+  let l1done=true;
+  const html=PHASES.map(ph=>{
+    const total=ph.lessons.length;
+    const got=ph.lessons.filter(([t])=>doneTitles.has(t)).length;
+    const pct=Math.round(got/total*100);
+    const cls=got===0?"":(got===total?"done":"part");
+    if(ph.key.startsWith("s")&&got<total) l1done=false;
+    return `<div class="phase ${cls}"><span class="node"></span>
+      <h3>${esc(ph.label)}</h3>
+      <div class="cnt">${got} of ${total} lessons logged</div>
+      <div class="bar"><span style="width:${pct}%"></span></div></div>`;
+  }).join("");
+  $("#phases").innerHTML=html;
+  const l1 = PHASES.filter(p=>p.key[0]==="s");
+  const l1got = l1.reduce((a,p)=>a+p.lessons.filter(([t])=>doneTitles.has(t)).length,0);
+  const l1tot = l1.reduce((a,p)=>a+p.lessons.length,0);
+  $("#prog-sub").textContent = l1done
+    ? "Level 1 complete — the 12-Week course can begin."
+    : `Level 1: ${l1got} of ${l1tot} lessons logged. Complete all three stages before Level 2.`;
+}
+function renderEveryone(){
+  const all=state.entries.slice().sort((a,b)=>(b.createdAt||"").localeCompare(a.createdAt||"")).slice(0,40);
+  $("#everyone-list").innerHTML=all.length?all.map(e=>{
+    if(e.kind==="daily") return entryCardDaily(e);
+    const kindPill=e.kind==="insight"?`<span class="pill rose">insight</span>`:`<span class="pill ${e.status==="answered"?"answered":"open"}">question</span>`;
+    return `<div class="entry"><div class="meta"><span class="pill person">${esc(e.person)}</span>${kindPill}<span>${fmtDate(e.date||e.createdAt)}</span></div><div class="body">${esc(e.text)}</div>${e.reflection?`<div class="refl">${esc(e.reflection)}</div>`:""}</div>`;
+  }).join(""):`<div class="mut">Nothing logged by anyone yet.</div>`;
+}
+function renderStrip(){
+  const dailies=state.entries.filter(e=>e.person===me&&e.kind==="daily");
+  const days=new Set(dailies.map(e=>e.date)).size;
+  const streak=calcStreak(dailies);
+  const ins=state.entries.filter(e=>e.person===me&&e.kind==="insight").length;
+  const openQ=state.entries.filter(e=>e.person===me&&e.kind==="question"&&e.status!=="answered").length;
+  $("#strip").innerHTML=`
+    <div class="stat"><div class="n">${streak}</div><div class="l">day streak</div></div>
+    <div class="stat"><div class="n leaf">${days}</div><div class="l">days practised</div></div>
+    <div class="stat"><div class="n rose">${ins}</div><div class="l">insights</div></div>
+    <div class="stat"><div class="n">${openQ}</div><div class="l">open questions</div></div>`;
+}
+function calcStreak(dailies){
+  const set=new Set(dailies.map(e=>e.date));
+  let s=0; let d=new Date();
+  // allow today or yesterday to start the streak
+  const iso=x=>x.toISOString().slice(0,10);
+  if(!set.has(iso(d))) d.setDate(d.getDate()-1);
+  while(set.has(iso(d))){ s++; d.setDate(d.getDate()-1); }
+  return s;
+}
+function updateSyncStatus(){
+  const el=$("#sync-status"); if(!el) return;
+  el.textContent = connected
+    ? `Connected to the shared Google Sheet. Last sync: ${lastSync}. Entries: ${state.entries.length}.`
+    : "Not connected — running locally on this device only. Add your Apps Script URL to CONFIG.ENDPOINT to sync with Shruti, Smriti and anyone you add.";
+}
+function renderAll(){
+  renderStrip(); renderTodayList(); renderInsights(); renderQuestions();
+  renderProgress(); renderEveryone(); updateSyncStatus();
+}
+
+/* ==================== 7) EVENTS ==================== */
+function initEvents(){
+  $$(".tab").forEach(t=>t.onclick=()=>{
+    $$(".tab").forEach(x=>x.classList.remove("active")); t.classList.add("active");
+    $$(".view").forEach(v=>v.classList.remove("active"));
+    $("#view-"+t.dataset.view).classList.add("active");
+  });
+  $("#person").onchange=e=>{ me=e.target.value; safeSet(LS_ME,me); renderAll(); };
+  $("#addPerson").onclick=()=>{
+    const name=prompt("Name of the person to add:"); if(!name) return;
+    const n=name.trim(); if(!n||people.includes(n)) return;
+    people.push(n); savePeople(); me=n; safeSet(LS_ME,me); renderPeople(); renderAll();
+  };
+  $("#d-lesson").onchange=updateLessonLink;
+  $("#d-daytime").onchange=updateDaytimeLink;
+
+  $("#d-save").onclick=async()=>{
+    const ls=$("#d-lesson"), lo=ls.options[ls.selectedIndex];
+    const ds=$("#d-daytime"), dop=ds.options[ds.selectedIndex];
+    await addEntry({
+      kind:"daily", date:$("#d-date").value||today(),
+      phase:lo?lo.parentNode.label:"", lessonTitle:$("#d-lesson").value, lessonUrl:lo?lo.dataset.url:"",
+      formalDone:$("#d-done").checked, minutes:$("#d-min").value||"", rating:rating||"",
+      daytimeText:$("#d-daytime").value, daytimeUrl:dop?dop.dataset.url:"",
+      reflection:$("#d-refl").value.trim()
+    });
+    $("#d-refl").value=""; $("#d-min").value=""; $("#d-done").checked=false; rating=0; renderRating();
+    $("#d-msg").textContent="Saved ✓"; setTimeout(()=>$("#d-msg").textContent="",1800);
+  };
+  $("#i-save").onclick=async()=>{
+    const t=$("#i-text").value.trim(); if(!t) return;
+    await addEntry({kind:"insight",date:today(),text:t}); $("#i-text").value="";
+  };
+  $("#q-save").onclick=async()=>{
+    const t=$("#q-text").value.trim(); if(!t) return;
+    await addEntry({kind:"question",date:today(),text:t,status:"open"}); $("#q-text").value="";
+  };
+  document.body.addEventListener("click",e=>{
+    const a=e.target.closest("[data-answer]"); const r=e.target.closest("[data-reopen]"); const d=e.target.closest("[data-del]");
+    if(a){ const ans=prompt("Add the answer / resolution (optional):")||""; updateEntry(a.dataset.answer,{status:"answered",reflection:ans}); }
+    if(r){ updateEntry(r.dataset.reopen,{status:"open"}); }
+    if(d){ if(confirm("Delete this entry?")) deleteEntry(d.dataset.del); }
+  });
+
+  // backup
+  $("#exp-json").onclick=()=>download("inner-journey-backup-"+today()+".json", JSON.stringify(state.entries,null,2), "application/json");
+  $("#exp-csv").onclick=()=>download("inner-journey-log-"+today()+".csv", toCSV(state.entries), "text/csv");
+  $("#imp-btn").onclick=()=>$("#imp-file").click();
+  $("#imp-file").onchange=ev=>{
+    const f=ev.target.files[0]; if(!f) return; const rd=new FileReader();
+    rd.onload=()=>{ try{ const arr=JSON.parse(rd.result); if(Array.isArray(arr)){ const ids=new Set(state.entries.map(x=>x.id)); arr.forEach(x=>{if(!ids.has(x.id))state.entries.push(x)}); saveLocal(); renderAll(); setBanner("ok","Restored "+arr.length+" entries into this device. Press Refresh to reconcile with the Sheet."); } }catch(e){ alert("That file couldn't be read as a backup."); } };
+    rd.readAsText(f);
+  };
+  $("#refresh").onclick=pullRemote;
+}
+function download(name,text,type){
+  const b=new Blob([text],{type}); const u=URL.createObjectURL(b);
+  const a=document.createElement("a"); a.href=u; a.download=name; a.click(); URL.revokeObjectURL(u);
+}
+function toCSV(rows){
+  const cols=["createdAt","person","kind","date","phase","lessonTitle","formalDone","minutes","rating","daytimeText","reflection","text","status"];
+  const q=v=>`"${String(v==null?"":v).replace(/"/g,'""')}"`;
+  return [cols.join(",")].concat(rows.map(r=>cols.map(c=>q(r[c])).join(","))).join("\n");
+}
+
+/* ==================== 8) BOOT ==================== */
+function boot(){
+  loadLocal();
+  $("#d-date").value=today();
+  renderPeople(); renderLessonSelect(); renderRating(); initEvents();
+  if(!storageOK) setBanner("warn","This browser is blocking local storage — use the Backup tab to export regularly, or enable storage for this site.");
+  else if(!connected) setBanner("warn","Running locally on this device only. Open index.html and paste your Apps Script URL into CONFIG.ENDPOINT to sync with the family.");
+  renderAll();
+  pullRemote();
+  $("#data-note").textContent = connected
+    ? "Live store: your shared Google Sheet. Backups here are extra copies of this device's cache."
+    : "No sync configured yet — everything is on this device only until you set CONFIG.ENDPOINT.";
+}
+boot();
+</script>
+</body>
+</html>
