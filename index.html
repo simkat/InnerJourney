@@ -82,68 +82,6 @@ section.view.active{display:block}
 @media(max-width:560px){.row2{grid-template-columns:1fr}}
 
 .check{display:flex;align-items:center;gap:10px;background:var(--night);border:1px solid var(--line2);border-radius:10px;padding:10px 12px;cursor:pointer}
-
-/* daily invocation — the opening moment */
-.invo{position:relative;overflow:hidden;border:1px solid var(--dawn-line);
-  background:linear-gradient(160deg, rgba(230,178,90,.10), rgba(217,138,166,.07) 60%, rgba(0,0,0,0));
-  border-radius:var(--r);padding:20px 20px 18px}
-.invo .eyebrow{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
-.invo .caption{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dawn)}
-.invo .att{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dawn);
-  border:1px solid var(--dawn-line);border-radius:999px;padding:3px 11px;background:rgba(230,178,90,.08)}
-.invo .att.f{color:var(--lotus);border-color:rgba(217,138,166,.45);background:rgba(217,138,166,.08)}
-.invo .att.s{color:var(--leaf);border-color:rgba(131,184,160,.45);background:rgba(131,184,160,.08)}
-.invo .prayer{font-family:'Spectral',serif;font-weight:400;font-style:italic;font-size:17px;
-  line-height:1.7;color:var(--mist);margin:2px 0 16px;max-width:60ch}
-.invo .prayer p{margin:0 0 12px}
-.invo .prayer .lead{display:inline;font-style:normal;font-weight:600;font-size:11px;
-  letter-spacing:.13em;text-transform:uppercase;margin-right:9px;vertical-align:1px}
-.invo .prayer .lead.l{color:var(--dawn)}
-.invo .prayer .lead.f{color:var(--lotus)}
-.invo .prayer .lead.s{color:var(--leaf)}
-.invo .prayer .close{margin-top:2px;padding-top:11px;border-top:1px solid var(--line);color:var(--mist)}
-.invo .invo-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.invo-check{display:inline-flex;align-items:center;gap:10px;cursor:pointer;user-select:none;
-  border:1px solid var(--line2);border-radius:999px;padding:8px 15px;background:var(--night);font-size:14px}
-.invo-check input{width:auto}
-.invo-check.done{border-color:rgba(131,184,160,.5);background:rgba(131,184,160,.12);color:var(--leaf)}
-.invo .again{background:none;border:none;color:var(--faint);cursor:pointer;font:inherit;font-size:12.5px}
-.invo .again:hover{color:var(--dawn)}
-.invo .invo-streak{color:var(--faint);font-size:12.5px}
-
-/* daily highlight */
-.highlight{border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;
-  background:linear-gradient(135deg,rgba(255,255,255,.025),rgba(255,255,255,0));
-  margin-bottom:4px;position:relative}
-.highlight .hl-eye{font-size:11px;letter-spacing:.13em;text-transform:uppercase;
-  color:var(--faint);margin-bottom:9px}
-.highlight .hl-text{font-family:'Spectral',serif;font-style:italic;font-size:16.5px;
-  line-height:1.75;color:var(--mist);max-width:60ch}
-.highlight .hl-foot{margin-top:10px;display:flex;justify-content:flex-end}
-.highlight .again{background:none;border:none;color:var(--faint);cursor:pointer;font:inherit;font-size:12px}
-.highlight .again:hover{color:var(--dawn)}
-
-/* pre-sit checklist */
-.presit{border:1px solid var(--line2);border-radius:var(--r);padding:16px 18px;background:var(--night)}
-.presit h3{margin:0 0 12px;font-size:14px;font-weight:600;color:var(--dim);
-  letter-spacing:.04em;display:flex;align-items:center;gap:8px}
-.presit-item{display:flex;align-items:flex-start;gap:11px;padding:9px 0;
-  border-bottom:1px solid var(--line);cursor:pointer}
-.presit-item:last-child{border-bottom:none;padding-bottom:0}
-.presit-item input{flex:0 0 auto;margin-top:2px;width:auto}
-.presit-item .pi-text{font-size:14px;line-height:1.5;color:var(--mist)}
-.presit-item .pi-sub{font-size:12px;color:var(--faint);margin-top:2px}
-.presit-item.checked .pi-text{color:var(--leaf)}
-
-/* practice reminder banner */
-.practice-reminder{border:1px solid var(--dawn-line);border-radius:var(--r);
-  padding:14px 16px;background:var(--dawn-soft);display:flex;align-items:flex-start;gap:12px}
-.practice-reminder .pr-icon{font-size:20px;flex:0 0 auto;margin-top:1px}
-.practice-reminder .pr-body{flex:1}
-.practice-reminder .pr-label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--dawn);margin-bottom:4px}
-.practice-reminder .pr-text{font-size:14.5px;color:var(--mist);line-height:1.5}
-.practice-reminder .pr-sub{font-size:12px;color:var(--dim);margin-top:4px}
 .check input{width:auto}
 .rating{display:flex;gap:6px}
 .dot{width:34px;height:34px;border-radius:50%;border:1px solid var(--line2);background:var(--night);color:var(--dim);cursor:pointer;font-size:13px}
@@ -172,38 +110,6 @@ section.view.active{display:block}
 
 /* progress lotus spine */
 .spine{display:flex;gap:18px}
-
-/* profile avatar + stage badge */
-.avatar-wrap{position:relative;flex:0 0 auto}
-.avatar{width:54px;height:54px;border-radius:50%;
-  background:linear-gradient(135deg,var(--dawn),var(--lotus));
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Spectral',serif;font-size:22px;font-weight:600;color:#1a1205;
-  border:2px solid rgba(255,255,255,.1);flex-shrink:0;user-select:none}
-.stage-badge{position:absolute;bottom:-4px;right:-6px;
-  background:var(--panel);border:1.5px solid var(--dawn-line);
-  border-radius:999px;padding:2px 7px;
-  font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--dawn);white-space:nowrap;line-height:1.6}
-.stage-badge.s2{color:var(--lotus);border-color:rgba(217,138,166,.6);
-  background:rgba(217,138,166,.12)}
-.stage-badge.s3{color:var(--leaf);border-color:rgba(131,184,160,.5);
-  background:rgba(131,184,160,.1)}
-.stage-badge.l2{color:#b8a0ff;border-color:rgba(184,160,255,.5);
-  background:rgba(184,160,255,.1)}
-.stage-badge.done{color:var(--leaf);border-color:rgba(131,184,160,.5);
-  background:rgba(131,184,160,.1)}
-
-/* Sat Sandesh reminder — Stage 2 only */
-.sandesh{border:1px solid rgba(217,138,166,.35);border-radius:var(--r);
-  padding:13px 16px;background:rgba(217,138,166,.07);
-  display:flex;align-items:flex-start;gap:12px}
-.sandesh .sd-icon{font-size:20px;flex:0 0 auto;margin-top:1px}
-.sandesh .sd-body{flex:1}
-.sandesh .sd-label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--lotus);margin-bottom:4px}
-.sandesh .sd-text{font-size:14.5px;color:var(--mist);line-height:1.5}
-.sandesh .sd-sub{font-size:12px;color:var(--dim);margin-top:3px}
 .stem{width:2px;background:linear-gradient(var(--dawn),var(--lotus));border-radius:2px;position:relative;flex:0 0 auto;margin-left:8px}
 .phases{flex:1;display:flex;flex-direction:column;gap:16px}
 .phase{position:relative}
@@ -228,10 +134,6 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
       <p>The lotus rises from the mud toward the light. One day at a time.</p>
     </div>
     <div class="who">
-      <div class="avatar-wrap">
-        <div class="avatar" id="avatar-circle">S</div>
-        <span class="stage-badge" id="stage-badge">Stage 1</span>
-      </div>
       <label for="person">Practising as</label>
       <select id="person" aria-label="Who is practising"></select>
       <button class="btn ghost small" id="addPerson">+ add</button>
@@ -253,68 +155,6 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
 
   <!-- TODAY -->
   <section class="view active" id="view-today">
-    <div class="invo" id="invo">
-      <div class="eyebrow">
-        <span class="caption">The Three Sacred Attitudes · spoken aloud</span>
-      </div>
-      <div class="prayer" id="invo-text"></div>
-      <div class="invo-foot">
-        <label class="invo-check" id="invo-check-wrap">
-          <input type="checkbox" id="invo-check" /> <span id="invo-check-label">Read aloud</span>
-        </label>
-        <div style="display:flex;gap:14px;align-items:center">
-          <span class="invo-streak" id="invo-streak"></span>
-          <button class="again" id="invo-again" title="Draw a different one for today">⟳ another</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- daily teaching highlight -->
-    <div class="highlight" id="hl-card">
-      <div class="hl-eye">✦ Today's teaching</div>
-      <div class="hl-text" id="hl-text"></div>
-      <div class="hl-foot"><button class="again" id="hl-again">⟳ another</button></div>
-    </div>
-
-    <!-- rotating practice reminder -->
-    <div class="practice-reminder" id="practice-reminder">
-      <div class="pr-icon">🔔</div>
-      <div class="pr-body">
-        <div class="pr-label">This week's practice</div>
-        <div class="pr-text" id="pr-text"></div>
-        <div class="pr-sub" id="pr-sub"></div>
-      </div>
-    </div>
-
-    <!-- Sat Sandesh reminder — shown only during Stage 2 -->
-    <div class="sandesh" id="sandesh-reminder" style="display:none">
-      <div class="sd-icon">📖</div>
-      <div class="sd-body">
-        <div class="sd-label">Stage 2 · Daily reading</div>
-        <div class="sd-text">Read one page of <em>Sat Sandesh</em> before you sit today.</div>
-        <div class="sd-sub">Sant Rajinder Singh Ji's teachings — one page, slowly, as a preparation for the inner journey.</div>
-      </div>
-    </div>
-
-    <!-- pre-sit checklist -->
-    <div class="presit" id="presit">
-      <h3>⚙ Before you sit — two checks</h3>
-      <label class="presit-item" id="pi-breath">
-        <input type="checkbox" id="pi-breath-cb" />
-        <div>
-          <div class="pi-text">Steady deep breathing for 2–5 minutes</div>
-          <div class="pi-sub">Before meditation, breathe slowly and deeply to quieten the nervous system and prepare the mind.</div>
-        </div>
-      </label>
-      <label class="presit-item" id="pi-mudra">
-        <input type="checkbox" id="pi-mudra-cb" />
-        <div>
-          <div class="pi-text">Hand mudra held slightly above the legs</div>
-          <div class="pi-sub">Keep the mudra raised a little, not resting heavily on the thighs — sustain this for at least 10 minutes to drop into a deeper state.</div>
-        </div>
-      </label>
-    </div>
-
     <div class="card">
       <h2>Log today's sit</h2>
       <p class="sub">Morning practice, the daytime quality you're carrying, and an evening reflection.</p>
@@ -459,7 +299,7 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
    ==================================================================== */
 const CONFIG = {
   ENDPOINT: "",            // e.g. "https://script.google.com/macros/s/AKfy.../exec"
-  SECRET:   ""             // e.g. "lotus-2026"  (optional; match Code.gs)
+  SECRET:   "pray"         // e.g. "lotus-2026"  (optional; match Code.gs)
 };
 
 /* ==================== 2) CURRICULUM (verified links) ==================== */
@@ -536,81 +376,6 @@ const DAYTIME = [
   ["Pillar · Aspiration", WD+"bc93cd01155a4d4db78c2b2d82066bd9"],
   ["The Deus Mantra (in latin)", WD+"b4102a9b7a3148668c5f5ec551a09939"],
   ["Mantra · Om Shanti Om", WD+"9194509b163447818425b8da680e5013"],
-];
-
-/* The Three Sacred Attitudes — a fuller daily opening prayer.
-   One is chosen per day (seeded from the date: varied and unpredictable,
-   but stable through the day), spoken aloud before the sit. */
-const INVOCATIONS = [
-  { love:"May I move through this day with an untethered heart. I choose to put my racing thoughts to sleep and drown them in the sea of love. Let compassion flow freely, without condition, toward myself and all living things.",
-    focus:"May my mind remain clear, anchored, and deeply present. When the noise of the world or the wandering of my own mind pulls at my attention, let me gently return my focus to the breath, resting in the pure, quiet awareness of this exact moment.",
-    surrender:"May I release my grip on how I think life should be, and yield completely to the flow of what is. I surrender the need for control, trusting the silence within and allowing life to unfold organically.",
-    close:"With a heart full of love, a mind perfectly focused, and a spirit entirely surrendered to the present, I step into my day." },
-
-  { love:"Let my heart soften before the day can harden it. I release yesterday's grievances and tomorrow's worries into the warmth of love, holding myself and every being I meet with the same unhurried tenderness.",
-    focus:"Let my attention be single and clear, like a candle flame in a still room. Each time the mind scatters, I bring it home to the breath — needing no perfect stillness, only the willingness to return.",
-    surrender:"Let me stop rehearsing how life must go. I open my hands and give the outcome to the Divine, trusting that what unfolds is already held by something far wiser than my worry.",
-    close:"Loved, focused, and surrendered, I meet this day exactly as it is — and that is enough." },
-
-  { love:"May love be the water I move through today, not the wall I build against the world. I let compassion run without condition — first toward my own tired heart, then outward to all that lives.",
-    focus:"May my awareness rest lightly and completely in this moment. When thought pulls me into past or future, I return, patient as a gardener, to the simple ground of the breath.",
-    surrender:"May I loosen my grip on control and let life carry me as a river carries a leaf. I trust the current, trust the silence beneath the noise, and stop fighting the shape of what is.",
-    close:"Heart open, mind clear, hands unclenched — I step forward and let the day arrive." },
-
-  { love:"Let me begin in love rather than in fear. I lay my anxious, racing thoughts down to sleep in a sea of kindness, wishing wellness to myself and to everyone whose path I cross.",
-    focus:"Let me be here, fully, for the small and ordinary things. When my mind wanders off, I lead it gently back to the breath, resting in the quiet awareness that asks nothing and lacks nothing.",
-    surrender:"Let me release the story of how it all should be. I yield to the flow of what is, trusting the stillness within me more than the striving, and letting life unfold in its own time.",
-    close:"With a heart full of love, a mind at rest in focus, and a spirit surrendered, I begin." },
-
-  { love:"May I carry an untethered heart today, bound to no resentment. I drown my restless thoughts in love and let compassion move through me freely, sparing no one — least of all myself.",
-    focus:"May my mind stay anchored and awake. Whenever the world's noise or my own wandering tugs at me, I return to the breath and to the pure awareness of this single moment.",
-    surrender:"May I release my need to arrange the future. I give myself to the flow of what is, trusting the silence within and letting life open like a flower that needs no instruction.",
-    close:"Loving, present, and surrendered, I walk gently into whatever comes." },
-
-  { love:"Let love be wider than my thoughts today. I set down the endless commentary of the mind and rest in warmth, holding every living thing — including this fragile self — with unconditional care.",
-    focus:"Let my focus be a still lamp the wind cannot trouble. Each distraction is only an invitation to begin again, so I return to the breath without judgement, again and again.",
-    surrender:"Let me unclench. I release the illusion that I must control the day, trusting the deeper order beneath appearances and allowing life to move as it will.",
-    close:"Softened, steadied, and surrendered, I offer this day to the Divine." },
-
-  { love:"May my heart be a sanctuary, not a courtroom. I forgive quickly, love freely, and let kindness pour out without waiting to be deserved — beginning with the one who most forgets to receive it: me.",
-    focus:"May I stay rooted in the now like a tree in the earth. When storms of thought pass through, I do not chase them; I return to the breath and let awareness hold the moment whole.",
-    surrender:"May I trust more than I grasp. I hand over my plans and my fears to the flow of what is, resting in the quiet certainty that I am carried.",
-    close:"Rooted in love, clear in focus, light in surrender — I begin the day." },
-
-  { love:"Let me meet this morning with a heart that asks for nothing and gives much. I quiet the racing mind and let it dissolve in love, wishing peace to myself and to all beings, near and far.",
-    focus:"Let my attention settle like sediment in still water, leaving the moment clear. Each time it clouds with thought, I wait, breathe, and return — patient, gentle, unhurried.",
-    surrender:"Let me release the reins I was never meant to hold. I yield to what is, trusting silence over strategy, and allow the day to unfold without my anxious editing.",
-    close:"Clear-hearted and open-handed, I step into the unknown with trust." },
-
-  { love:"May love be my first language today, spoken even in silence. I lay my restless thoughts to rest and let compassion flow — unconditional, unhurried — toward every living thing I touch.",
-    focus:"May I return, always, to the breath. When attention frays, I gather it without scolding, and rest in the plain, luminous awareness of exactly this.",
-    surrender:"May I stop insisting and start trusting. I release control into the flow of what is, letting the silence within guide me and life arrange itself as it knows how.",
-    close:"In love, in focus, in surrender — I say yes to this day." },
-
-  { love:"Let me hold today loosely and lovingly. I drown my anxious thoughts in a sea of tenderness and let compassion move outward, sparing no living thing and forgetting no forgotten corner of my own heart.",
-    focus:"Let my mind be a clear sky through which thoughts pass like weather. I need not stop them; I return to the breath and rest, present and awake, in this exact moment.",
-    surrender:"Let me give the day to the Divine before I try to run it. I release my grip on outcomes and trust the current, allowing what is to simply be what is.",
-    close:"Whole-hearted, clear-minded, and surrendered, I begin again." },
-
-  { love:"May I begin untethered from grievance, free to love. I put the racing mind to sleep in the sea of the heart and let compassion flow — first inward to soothe myself, then outward to all who suffer.",
-    focus:"May my focus rest where my feet are. When the mind runs ahead, I call it back to the breath, resting in awareness so simple it cannot be improved, only inhabited.",
-    surrender:"May I trust what I cannot see. I loosen my hold on how things should be and surrender to the flow, letting the silence within carry what my effort cannot.",
-    close:"Loved and loving, present and clear, surrendered and free — I step into the day." },
-
-  { love:"Let compassion be my default and not my afterthought. I quiet the noise of judgement and let love flow without condition, holding all beings — and my own weary heart — in kindness.",
-    focus:"Let me be here for this breath, and then the next. I release the grip of past and future and return to the still, waking awareness of now, needing nothing more.",
-    surrender:"Let me yield. I stop bracing against life and lean into its flow, trusting that what is unfolding is held by a wisdom larger than my fear.",
-    close:"Tender, attentive, and at ease, I give this day to what is." },
-
-  { love:"May my heart stay open even where the world is sharp. I lay my restless thoughts to sleep in love and let kindness pour freely toward every living thing — beginning with the person I am hardest on: myself.",
-    focus:"May I anchor in the breath as in a home I can always return to. Each wandering is forgiven the moment I notice it, and I rest again in the clear awareness of now.",
-    surrender:"May I release the exhausting work of control. I surrender to the flow of what is, trusting the quiet within and letting the day become itself without my interference.",
-    close:"Loving, focused, surrendered — I meet the day with open hands." },
-
-  { love:"Let me move through today with an untethered heart, owing nothing to old wounds. I dissolve my racing thoughts in a sea of love and let compassion flow, without condition, to all that breathes.",
-    focus:"Let my mind stay clear, anchored, and present. When noise or wandering pulls me away, I gently return to the breath, resting in the pure awareness of this exact moment.",
-    surrender:"Let me release my grip on how life should be and yield to the flow of what is. I surrender the need for control, trusting the silence within and letting life unfold organically.",
-    close:"Heart full of love, mind perfectly focused, spirit surrendered to the present — I step into my day." },
 ];
 
 /* ==================== 3) STATE + STORAGE ==================== */
@@ -783,27 +548,24 @@ function renderQuestions(){
 function renderProgress(){
   const doneTitles=new Set(state.entries.filter(e=>e.person===me&&e.kind==="daily").map(e=>e.lessonTitle));
   let l1done=true;
-  const stage=currentStage();
   const html=PHASES.map(ph=>{
     const total=ph.lessons.length;
     const got=ph.lessons.filter(([t])=>doneTitles.has(t)).length;
     const pct=Math.round(got/total*100);
-    const isActive=currentStage()===ph.key;
     const cls=got===0?"":(got===total?"done":"part");
     if(ph.key.startsWith("s")&&got<total) l1done=false;
-    const activePill=isActive?`<span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dawn);background:var(--dawn-soft);border:1px solid var(--dawn-line);border-radius:999px;padding:2px 9px;margin-left:8px;vertical-align:2px">● active</span>`:"";
     return `<div class="phase ${cls}"><span class="node"></span>
-      <h3>${esc(ph.label)}${activePill}</h3>
+      <h3>${esc(ph.label)}</h3>
       <div class="cnt">${got} of ${total} lessons logged</div>
       <div class="bar"><span style="width:${pct}%"></span></div></div>`;
   }).join("");
   $("#phases").innerHTML=html;
-  const l1=PHASES.filter(p=>p.key[0]==="s");
-  const l1got=l1.reduce((a,p)=>a+p.lessons.filter(([t])=>doneTitles.has(t)).length,0);
-  const l1tot=l1.reduce((a,p)=>a+p.lessons.length,0);
-  $("#prog-sub").textContent=l1done
-    ?"Level 1 complete — the 12-Week course can begin."
-    :`Level 1: ${l1got} of ${l1tot} lessons logged. Complete all three stages before Level 2.`;
+  const l1 = PHASES.filter(p=>p.key[0]==="s");
+  const l1got = l1.reduce((a,p)=>a+p.lessons.filter(([t])=>doneTitles.has(t)).length,0);
+  const l1tot = l1.reduce((a,p)=>a+p.lessons.length,0);
+  $("#prog-sub").textContent = l1done
+    ? "Level 1 complete — the 12-Week course can begin."
+    : `Level 1: ${l1got} of ${l1tot} lessons logged. Complete all three stages before Level 2.`;
 }
 function renderEveryone(){
   const all=state.entries.slice().sort((a,b)=>(b.createdAt||"").localeCompare(a.createdAt||"")).slice(0,40);
@@ -825,40 +587,6 @@ function renderStrip(){
     <div class="stat"><div class="n rose">${ins}</div><div class="l">insights</div></div>
     <div class="stat"><div class="n">${openQ}</div><div class="l">open questions</div></div>`;
 }
-
-/* ---- stage detection ---- */
-function currentStage(){
-  // returns 's1','s2','s3','l2','complete' based on which lessons have been logged
-  const done=new Set(state.entries.filter(e=>e.person===me&&e.kind==="daily").map(e=>e.lessonTitle));
-  const phaseComplete=k=>PHASES.find(p=>p.key===k).lessons.every(([t])=>done.has(t));
-  if(!phaseComplete("s1")) return "s1";
-  if(!phaseComplete("s2")) return "s2";
-  if(!phaseComplete("s3")) return "s3";
-  if(!phaseComplete("l2")) return "l2";
-  return "complete";
-}
-const STAGE_META={
-  s1:{ label:"Stage 1", cls:"",    title:"Grounding" },
-  s2:{ label:"Stage 2", cls:"s2",  title:"Connecting" },
-  s3:{ label:"Stage 3", cls:"s3",  title:"Continuing" },
-  l2:{ label:"Level 2", cls:"l2",  title:"12-Week Course" },
-  complete:{ label:"Complete", cls:"done", title:"All stages done" },
-};
-
-/* ---- avatar + badge ---- */
-function renderAvatar(){
-  const stage=currentStage();
-  const meta=STAGE_META[stage];
-  const av=$("#avatar-circle"), badge=$("#stage-badge");
-  // initials from current person name
-  const initials=me.split(" ").map(w=>w[0]||"").join("").slice(0,2).toUpperCase()||"?";
-  av.textContent=initials;
-  badge.textContent=meta.label+" · "+meta.title;
-  badge.className="stage-badge"+(meta.cls?" "+meta.cls:"");
-  // show/hide Sat Sandesh
-  const sd=$("#sandesh-reminder");
-  if(sd) sd.style.display=(stage==="s2")?"flex":"none";
-}
 function calcStreak(dailies){
   const set=new Set(dailies.map(e=>e.date));
   let s=0; let d=new Date();
@@ -874,114 +602,8 @@ function updateSyncStatus(){
     ? `Connected to the shared Google Sheet. Last sync: ${lastSync}. Entries: ${state.entries.length}.`
     : "Not connected — running locally on this device only. Add your Apps Script URL to CONFIG.ENDPOINT to sync with Shruti, Smriti and anyone you add.";
 }
-/* ---- daily invocation ---- */
-let invoShuffle=0;
-function hashDate(s){ let h=2166136261; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619);} return Math.abs(h); }
-function todaysInvocation(){
-  const base=hashDate(today());
-  const i=((base+invoShuffle)%INVOCATIONS.length);
-  return INVOCATIONS[i];
-}
-function prayerText(p){ return "Love — "+p.love+"\nFocus — "+p.focus+"\nSurrender — "+p.surrender+"\n"+p.close; }
-function prayerHTML(p){
-  return `<p><span class="lead l">Love</span>${esc(p.love)}</p>`
-       + `<p><span class="lead f">Focus</span>${esc(p.focus)}</p>`
-       + `<p><span class="lead s">Surrender</span>${esc(p.surrender)}</p>`
-       + `<p class="close">${esc(p.close)}</p>`;
-}
-function invoDoneEntry(){
-  return state.entries.find(e=>e.person===me&&e.kind==="invocation"&&e.date===today());
-}
-function renderInvocation(){
-  const p=todaysInvocation();
-  $("#invo-text").innerHTML=prayerHTML(p);
-  const done=invoDoneEntry();
-  const cb=$("#invo-check"), wrap=$("#invo-check-wrap"), lbl=$("#invo-check-label");
-  cb.checked=!!done;
-  wrap.classList.toggle("done",!!done);
-  lbl.textContent=done?"Read aloud ✓":"Read aloud";
-  const streak=calcStreak(state.entries.filter(e=>e.person===me&&e.kind==="invocation"));
-  $("#invo-streak").textContent=streak>1?("spoken "+streak+" days running"):(done?"spoken today":"");
-}
-/* ---- daily teaching highlight ---- */
-let hlShuffle=0;
-const HIGHLIGHTS = [
-  "Meditation is a tool to take us closer to truth primarily by purification of mind — to overcome ego and ignorance. With this journey we will overcome many challenges, and our consciousness will slowly and surely rise.",
-  "The mind is like a lake. When the surface is disturbed, we cannot see the bottom. Meditation stills the surface so that truth may be seen clearly beneath.",
-  "It is not the length of your sit that matters most, but the quality of your presence within it. Even ten minutes of genuine attention is worth more than an hour of restless wandering.",
-  "The ego is not the enemy — it is simply a case of mistaken identity. We have taken ourselves to be the wave, when all along we are the ocean.",
-  "Purification is not punishment. Every time we sit, we are gently washing away the residue of habit, reaction, and unconscious conditioning — layer by layer, day by day.",
-  "We do not meditate to become something we are not. We meditate to become what we already are — beneath the noise, beneath the thoughts, beneath the story of self.",
-  "Distractions are not failures. They are the very material of the practice. Each time you return your attention, you are building the muscle of awareness.",
-  "Consciousness rises the way the sun rises — gradually, inexorably, even on cloudy days. You cannot force the sunrise, but you can be awake when it comes.",
-  "The sacred space you create outwardly is a reflection of the sacred space you are cultivating inwardly. Treat both with the same care.",
-  "So-Hum — 'I am That.' With every breath, this truth is already being spoken inside you. Meditation is learning to hear it.",
-  "OM is not merely a sound. It is the vibration from which all form arises and into which all form returns. To chant it is to touch the beginning and end of everything.",
-  "Pranayama is the bridge between the body and the mind. When the breath is steady, the mind grows quiet. When the mind grows quiet, truth draws near.",
-  "The Higher Self does not need to be sought in extraordinary places. It is here — in this breath, in this moment, behind every thought that arises.",
-  "Surrender is not weakness. It is the most courageous act there is — to release the grip of the small self and trust the deeper current of what is.",
-  "The nature of open awareness is that it has no centre and no edge. It is not focused on anything, yet it misses nothing. This is your natural state.",
-  "Guru means 'that which removes darkness.' Every teacher, every teaching, every moment of genuine clarity is a guru — if you are willing to receive.",
-  "The Divine Form you choose for meditation is a door, not a destination. What matters is not the form itself, but the love and attention you bring to it.",
-  "A practitioner who is sincere but imperfect is further along the path than one who is perfect but insincere. Show up honestly, every day.",
-  "Inner communion through prayer is not a performance for the Divine. It is a conversation between your deepest self and the source from which it comes.",
-  "Open awareness is the sky. Thoughts, feelings, sensations are weather passing through. You are not the weather. You are the sky.",
-];
-function todaysHighlight(){
-  const base=hashDate(today()+"H");
-  return HIGHLIGHTS[((base+hlShuffle)%HIGHLIGHTS.length)];
-}
-function renderHighlight(){
-  $("#hl-text").textContent=todaysHighlight();
-}
-
-/* ---- rotating practice reminder ---- */
-// startDate: the date the practitioner first opened the tracker (stored in localStorage)
-const LS_START="ijs_start_v1";
-function getStartDate(){
-  let s=safeGet(LS_START);
-  if(!s){ s=today(); safeSet(LS_START,s); }
-  return s;
-}
-function daysSinceStart(){
-  const start=new Date(getStartDate()+"T00:00:00");
-  const now=new Date(today()+"T00:00:00");
-  return Math.max(0,Math.round((now-start)/86400000));
-}
-const PRACTICE_WEEKS = [
-  { days:[0,6],   icon:"🌊", label:"Week 1 — So-Hum",
-    text:"Do your So-Hum meditation today.",
-    sub:"Sit comfortably, close the eyes, and silently repeat 'So' on the in-breath and 'Hum' on the out-breath for 10–20 minutes." },
-  { days:[7,13],  icon:"🕉️", label:"Week 2 — 21 × OM",
-    text:"Do your 21 repetitions of OM today.",
-    sub:"Chant OM slowly and deliberately 21 times before your formal sit, feeling the vibration settle the mind." },
-  { days:[14,20], icon:"🌬️", label:"Week 3 — Nadi Shodhana",
-    text:"Practise Nadi Shodhana (alternate nostril breathing) today.",
-    sub:"5–10 minutes before meditation, alternating nostrils to balance the two hemispheres and deepen stillness." },
-  { days:[21,27], icon:"🔥", label:"Week 4 — Trataka (focus)",
-    text:"Practise steady single-point attention today.",
-    sub:"Spend 5 minutes before your sit gazing softly at a candle flame or fixed point, training the eye of the mind." },
-];
-function renderPracticeReminder(){
-  const d=daysSinceStart();
-  // cycle through the four weeks repeatedly
-  const week=PRACTICE_WEEKS[Math.floor(d/7)%PRACTICE_WEEKS.length];
-  const dayInWeek=(d%7)+1;
-  $("#pr-text").textContent=week.icon+" "+week.text;
-  $("#pr-sub").textContent=week.sub+" (Day "+dayInWeek+" of 7 for "+week.label+")";
-}
-
-/* ---- pre-sit checklist (session only — not stored, just a nudge) ---- */
-function initPresit(){
-  ["breath","mudra"].forEach(k=>{
-    const cb=$("#pi-"+k+"-cb"), item=$("#pi-"+k);
-    if(cb && item) cb.onchange=()=>item.classList.toggle("checked",cb.checked);
-  });
-}
-
 function renderAll(){
-  renderStrip(); renderAvatar(); renderInvocation(); renderHighlight(); renderPracticeReminder();
-  renderTodayList(); renderInsights(); renderQuestions();
+  renderStrip(); renderTodayList(); renderInsights(); renderQuestions();
   renderProgress(); renderEveryone(); updateSyncStatus();
 }
 
@@ -1000,17 +622,6 @@ function initEvents(){
   };
   $("#d-lesson").onchange=updateLessonLink;
   $("#d-daytime").onchange=updateDaytimeLink;
-
-  $("#invo-check").onchange=async()=>{
-    const existing=invoDoneEntry();
-    if($("#invo-check").checked && !existing){
-      await addEntry({kind:"invocation",date:today(),text:prayerText(todaysInvocation())});
-    } else if(!$("#invo-check").checked && existing){
-      await deleteEntry(existing.id);
-    } else { renderInvocation(); }
-  };
-  $("#invo-again").onclick=()=>{ invoShuffle++; renderInvocation(); };
-  $("#hl-again").onclick=()=>{ hlShuffle++; renderHighlight(); };
 
   $("#d-save").onclick=async()=>{
     const ls=$("#d-lesson"), lo=ls.options[ls.selectedIndex];
@@ -1065,7 +676,7 @@ function toCSV(rows){
 function boot(){
   loadLocal();
   $("#d-date").value=today();
-  renderPeople(); renderLessonSelect(); renderRating(); initEvents(); initPresit();
+  renderPeople(); renderLessonSelect(); renderRating(); initEvents();
   if(!storageOK) setBanner("warn","This browser is blocking local storage — use the Backup tab to export regularly, or enable storage for this site.");
   else if(!connected) setBanner("warn","Running locally on this device only. Open index.html and paste your Apps Script URL into CONFIG.ENDPOINT to sync with the family.");
   renderAll();
