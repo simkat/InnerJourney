@@ -536,7 +536,7 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
   <section class="view" id="view-data">
     <div class="card">
       <h2>Backup &amp; restore</h2>
-      <p class="sub">The Google Sheet is your live store. These are extra safety copies you own.</p>
+      <p class="sub">Data stays in this browser unless you configure optional Google Sheets sync. These backups are extra copies you own.</p>
       <div class="actions">
         <button class="btn ghost" id="exp-json">Download full backup (.json)</button>
         <button class="btn ghost" id="exp-csv">Download log (.csv)</button>
@@ -553,7 +553,7 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
   </section>
 
   <footer>
-    Inner Journey School practice log · data lives in your shared Google Sheet ·
+    Inner Journey School practice log · data stays on this device unless sync is configured ·
     lesson links open the live classroom.
   </footer>
 </div>
@@ -565,7 +565,7 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
       SECRET is an optional passphrase; must match the one in Code.gs.
    ==================================================================== */
 const CONFIG = {
-  ENDPOINT: "https://script.google.com/macros/s/AKfycbwa1BdQ0L9wKmSZTyX6g1tCOz-ljCm1CkhQTZSk1eBcB6exgi1JJIT_iKpVnmn-N-eKmQ/exec",
+  ENDPOINT: "",
   SECRET: "pray"
 };
 
