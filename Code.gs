@@ -1,118 +1,144 @@
-// Inner Journey Practice Log - Google Apps Script Backend
-// Deploy as a Web App (Execute as: your account, Who has access: Anyone)
+/**
+ * Inner Journey — Practice Log backend  (v2)
+ * Turns a Google Sheet into a tiny sync API for the tracker page.
+ *
+ * v2 CHANGES — you MUST redeploy after pasting this:
+ *   Deploy ▸ Manage deployments ▸ Edit (pencil) ▸ Version: New version ▸ Deploy
+ *   The /exec URL stays the same, so no change is needed in index.html.
+ *
+ * What's new: an optional "sheet" parameter on every action, so the Practice
+ * Library and weekly assignments get their own tabs. Requests that omit it
+ * default to "Log", so the previous version's calls keep working unchanged.
+ *
+ * SETUP (first time only):
+ *  1. Create a Google Sheet. Extensions ▸ Apps Script.
+ *  2. Delete any sample code, paste ALL of this file, Save.
+ *  3. (Optional) set SECRET below and put the SAME value in index.html CONFIG.SECRET.
+ *  4. Deploy ▸ New deployment ▸ Web app
+ *       - Execute as: Me
+ *       - Who has access: Anyone with the link
+ *     Copy the /exec URL into index.html CONFIG.ENDPOINT.
+ */
 
-const SECRET = "pray";  // MUST match CONFIG.SECRET in index.html
-const SHEET_NAME = "entries";  // Name of your sheet storing the data
+const SECRET = '';   // leave '' for no passphrase, or match CONFIG.SECRET
+
+const SHEETS = {
+  Log: ['id','createdAt','person','kind','date','phase',
+        'lessonTitle','lessonUrl','formalDone','minutes','rating',
+        'daytimeText','daytimeUrl','reflection','text','status',
+        'virtueKey','virtueName',
+        'practiceId','weekNumber','dayNumber','engaged','practised'],
+  Practices: ['practiceId','title','core','purpose','dateIntroduced','originalWeek',
+              'instructions','dailyLife'],
+  PracticeAssignments: ['weekNumber','weekStart','weekEnd','practiceId',
+                        'assignmentType','assignedAt']
+};
+
+/* The key column used to find an existing row, per sheet */
+const KEY_COL = { Log: 'id', Practices: 'practiceId', PracticeAssignments: 'weekNumber' };
 
 function doGet(e) {
-  try {
-    const sheet = SpreadsheetApp.getActiveSheet();
-    if (sheet.getName() !== SHEET_NAME) {
-      sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
-    }
-    
-    const data = sheet.getDataRange().getValues();
-    const headers = data[0];
-    const rows = data.slice(1).map(row => {
-      const obj = {};
-      headers.forEach((h, i) => obj[h] = row[i] !== undefined ? row[i] : "");
-      return obj;
-    });
-    
-    return ContentService.createTextOutput(JSON.stringify({ ok: true, rows: rows }))
-      .setMimeType(ContentService.MimeType.JSON);
-  } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({ ok: false, error: err.toString() }))
-      .setMimeType(ContentService.MimeType.JSON);
+  var which = (e && e.parameter && e.parameter.sheet) || null;
+  if (which && SHEETS[which]) {
+    return json_({ ok: true, rows: getRows_(which) });
   }
+  // default: return everything, with `rows` kept for backwards compatibility
+  return json_({
+    ok: true,
+    rows: getRows_('Log'),
+    practices: getRows_('Practices'),
+    practiceAssignments: getRows_('PracticeAssignments')
+  });
 }
 
 function doPost(e) {
-  try {
-    const data = JSON.parse(e.postData.contents);
-    
-    // Validate secret
-    if (data.secret !== SECRET) {
-      return ContentService.createTextOutput(JSON.stringify({ ok: false, error: "Invalid secret" }))
-        .setMimeType(ContentService.MimeType.JSON);
-    }
-    
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
-    const action = data.action;
-    
-    if (action === "add") {
-      return addRow(sheet, data.row);
-    } else if (action === "update") {
-      return updateRow(sheet, data.id, data.fields);
-    } else if (action === "delete") {
-      return deleteRow(sheet, data.id);
-    } else {
-      return ContentService.createTextOutput(JSON.stringify({ ok: false, error: "Unknown action" }))
-        .setMimeType(ContentService.MimeType.JSON);
-    }
-  } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({ ok: false, error: err.toString() }))
-      .setMimeType(ContentService.MimeType.JSON);
+  var body = {};
+  try { body = JSON.parse(e.postData.contents); } catch (err) {}
+  if (SECRET && body.secret !== SECRET) {
+    return json_({ ok: false, error: 'unauthorised' });
   }
+
+  var name = body.sheet && SHEETS[body.sheet] ? body.sheet : 'Log';
+  var headers = SHEETS[name];
+  var keyCol = KEY_COL[name];
+  var sh = sheet_(name, headers);
+  var action = body.action || 'add';
+
+  if (action === 'add') {
+    var row = body.row || {};
+    // upsert on the key column so re-syncing never duplicates
+    var existing = findRow_(sh, headers, keyCol, row[keyCol]);
+    if (existing > 0) {
+      headers.forEach(function (h, i) {
+        if (row[h] !== undefined) sh.getRange(existing, i + 1).setValue(serialise_(row[h]));
+      });
+      return json_({ ok: true, updated: true, key: row[keyCol] });
+    }
+    sh.appendRow(headers.map(function (h) {
+      return row[h] !== undefined && row[h] !== null ? serialise_(row[h]) : '';
+    }));
+    return json_({ ok: true, key: row[keyCol] });
+  }
+
+  if (action === 'update') {
+    var key = body.id !== undefined ? body.id : (body.key !== undefined ? body.key : null);
+    var r = findRow_(sh, headers, keyCol, key);
+    if (r > 0) {
+      var fields = body.fields || {};
+      headers.forEach(function (h, i) {
+        if (fields[h] !== undefined) sh.getRange(r, i + 1).setValue(serialise_(fields[h]));
+      });
+    }
+    return json_({ ok: true });
+  }
+
+  if (action === 'delete') {
+    var dkey = body.id !== undefined ? body.id : (body.key !== undefined ? body.key : null);
+    var d = findRow_(sh, headers, keyCol, dkey);
+    if (d > 0) sh.deleteRow(d);
+    return json_({ ok: true });
+  }
+
+  return json_({ ok: false, error: 'unknown action' });
 }
 
-function addRow(sheet, row) {
-  try {
-    const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-    const values = headers.map(h => row[h] !== undefined ? row[h] : "");
-    sheet.appendRow(values);
-    return ContentService.createTextOutput(JSON.stringify({ ok: true, message: "Row added" }))
-      .setMimeType(ContentService.MimeType.JSON);
-  } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({ ok: false, error: err.toString() }))
-      .setMimeType(ContentService.MimeType.JSON);
-  }
+/* ---------- helpers ---------- */
+function sheet_(name, headers) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(name) || ss.insertSheet(name);
+  if (sh.getLastRow() === 0) sh.appendRow(headers);
+  return sh;
 }
-
-function updateRow(sheet, id, fields) {
-  try {
-    const data = sheet.getDataRange().getValues();
-    const headers = data[0];
-    const idIndex = headers.indexOf("id");
-    
-    for (let i = 1; i < data.length; i++) {
-      if (data[i][idIndex] === id) {
-        // Update this row
-        Object.keys(fields).forEach(key => {
-          const colIndex = headers.indexOf(key);
-          if (colIndex !== -1) {
-            sheet.getRange(i + 1, colIndex + 1).setValue(fields[key]);
-          }
-        });
-        return ContentService.createTextOutput(JSON.stringify({ ok: true, message: "Row updated" }))
-          .setMimeType(ContentService.MimeType.JSON);
-      }
-    }
-    return ContentService.createTextOutput(JSON.stringify({ ok: false, error: "ID not found" }))
-      .setMimeType(ContentService.MimeType.JSON);
-  } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({ ok: false, error: err.toString() }))
-      .setMimeType(ContentService.MimeType.JSON);
-  }
+function getRows_(name) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(name);
+  if (!sh || sh.getLastRow() < 2) return [];
+  var values = sh.getDataRange().getValues();
+  var head = values[0];
+  return values.slice(1).map(function (r) {
+    var o = {};
+    head.forEach(function (h, i) { o[h] = r[i]; });
+    return o;
+  });
 }
-
-function deleteRow(sheet, id) {
-  try {
-    const data = sheet.getDataRange().getValues();
-    const headers = data[0];
-    const idIndex = headers.indexOf("id");
-    
-    for (let i = 1; i < data.length; i++) {
-      if (data[i][idIndex] === id) {
-        sheet.deleteRow(i + 1);
-        return ContentService.createTextOutput(JSON.stringify({ ok: true, message: "Row deleted" }))
-          .setMimeType(ContentService.MimeType.JSON);
-      }
-    }
-    return ContentService.createTextOutput(JSON.stringify({ ok: false, error: "ID not found" }))
-      .setMimeType(ContentService.MimeType.JSON);
-  } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({ ok: false, error: err.toString() }))
-      .setMimeType(ContentService.MimeType.JSON);
+function findRow_(sh, headers, keyCol, key) {
+  if (key === null || key === undefined || key === '') return -1;
+  if (sh.getLastRow() < 2) return -1;
+  var col = headers.indexOf(keyCol) + 1;
+  if (col < 1) return -1;
+  var vals = sh.getRange(2, col, sh.getLastRow() - 1, 1).getValues();
+  for (var i = 0; i < vals.length; i++) {
+    if (String(vals[i][0]) === String(key)) return i + 2;
   }
+  return -1;
+}
+/* arrays are stored as newline-joined text so the sheet stays readable */
+function serialise_(v) {
+  if (Object.prototype.toString.call(v) === '[object Array]') return v.join('\n');
+  return v;
+}
+function json_(obj) {
+  return ContentService
+    .createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
 }

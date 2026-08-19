@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="sky" cx="50%" cy="12%" r="92%">
+      <stop offset="0%" stop-color="#2a3358"/>
+      <stop offset="55%" stop-color="#1a2247"/>
+      <stop offset="100%" stop-color="#11152a"/>
+    </radialGradient>
+    <linearGradient id="petal" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#d98aa6"/>
+      <stop offset="100%" stop-color="#e6b25a"/>
+    </linearGradient>
+    <linearGradient id="petalSide" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#b8708c" stop-opacity=".85"/>
+      <stop offset="100%" stop-color="#e6b25a" stop-opacity=".6"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#sky)"/>
+  <!-- dawn horizon -->
+  <circle cx="256" cy="330" r="150" fill="#e6b25a" opacity=".07"/>
+  <!-- lotus: five petals rising -->
+  <g transform="translate(256,342)">
+    <path d="M0,0 C-96,-26 -128,-92 -120,-140 C-72,-134 -20,-84 0,0 Z" fill="url(#petalSide)"/>
+    <path d="M0,0 C96,-26 128,-92 120,-140 C72,-134 20,-84 0,0 Z" fill="url(#petalSide)"/>
+    <path d="M0,0 C-70,-58 -80,-134 -60,-176 C-20,-152 -8,-80 0,0 Z" fill="url(#petal)" opacity=".92"/>
+    <path d="M0,0 C70,-58 80,-134 60,-176 C20,-152 8,-80 0,0 Z" fill="url(#petal)" opacity=".92"/>
+    <path d="M0,0 C-34,-70 -34,-158 0,-206 C34,-158 34,-70 0,0 Z" fill="url(#petal)"/>
+  </g>
+  <!-- still water line -->
+  <rect x="118" y="346" width="276" height="3" rx="1.5" fill="#83b8a0" opacity=".5"/>
+  <rect x="156" y="360" width="200" height="2" rx="1" fill="#83b8a0" opacity=".28"/>
+</svg>

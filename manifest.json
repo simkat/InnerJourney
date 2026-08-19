@@ -1,0 +1,16 @@
+{
+  "name": "Inner Journey — Practice Log",
+  "short_name": "Inner Journey",
+  "description": "A daily companion for meditation and spiritual practice.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#11152a",
+  "theme_color": "#11152a",
+  "categories": ["lifestyle", "health"],
+  "icons": [
+    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}
