@@ -3,7 +3,15 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Inner Journey — Practice Log1</title>
+<title>Inner Journey — Practice Log</title>
+<meta name="theme-color" content="#11152a" />
+<meta name="description" content="A daily companion for meditation and spiritual practice." />
+<link rel="manifest" href="./manifest.json" />
+<link rel="icon" type="image/svg+xml" href="./icon.svg" />
+<link rel="apple-touch-icon" href="./icon.svg" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Inner Journey" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -144,6 +152,642 @@ section.view.active{display:block}
   color:var(--dawn);margin-bottom:4px}
 .practice-reminder .pr-text{font-size:14.5px;color:var(--mist);line-height:1.5}
 .practice-reminder .pr-sub{font-size:12px;color:var(--dim);margin-top:4px}
+
+/* ── Practice of the Week ── */
+.potw{border:1px solid var(--line2);border-radius:var(--r);
+  background:linear-gradient(160deg,rgba(230,178,90,.07),rgba(131,184,160,.04) 70%);
+  padding:20px 20px 18px}
+.potw-head{margin-bottom:12px}
+.potw-eye{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dawn);margin-bottom:6px}
+.potw-title{font-family:'Spectral',serif;font-weight:500;font-size:23px;color:var(--mist);line-height:1.2}
+.potw-meta{font-size:12.5px;color:var(--faint);margin-top:3px}
+
+
+/* ══════════ REDESIGN: zones, hero flip cards, meditation stages ══════════ */
+
+/* zone scaffolding */
+.zone{margin:34px 0 0}
+.zone-head{margin-bottom:14px}
+.zone-title{font-family:'Spectral',serif;font-size:19px;font-weight:500;color:var(--mist);
+  letter-spacing:.01em}
+.zone-sub{font-size:13px;color:var(--faint);margin-top:3px}
+.zone-eyebrow{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+
+/* ① orientation */
+.orient{padding:6px 2px 0}
+.greet{font-family:'Spectral',serif;font-weight:400;font-size:27px;color:var(--mist);
+  margin:0;line-height:1.25;letter-spacing:.01em}
+.greet-date{font-size:13px;color:var(--faint);margin-top:5px}
+.orient-thought{margin-top:18px;padding-left:13px;border-left:2px solid var(--dawn-line)}
+.thought-text{font-family:'Spectral',serif;font-style:italic;font-size:15.5px;
+  color:var(--dim);line-height:1.7;margin:5px 0 6px;max-width:62ch}
+
+/* collapsible folds */
+.invo-fold,.recent-fold{margin-top:16px;border:1px solid var(--line);border-radius:12px;
+  background:var(--panel);overflow:hidden}
+.recent-fold{margin-top:30px}
+.invo-fold>summary,.recent-fold>summary{list-style:none;cursor:pointer;padding:13px 16px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px}
+.invo-fold>summary::-webkit-details-marker,.recent-fold>summary::-webkit-details-marker{display:none}
+.invo-fold>summary::after,.recent-fold>summary::after{content:"⌄";color:var(--faint);
+  transition:transform .25s ease;font-size:15px}
+.invo-fold[open]>summary::after,.recent-fold[open]>summary::after{transform:rotate(180deg)}
+.if-title{font-size:14px;color:var(--mist)}
+.if-meta{font-size:12px;color:var(--faint)}
+.invo-fold .prayer{padding:0 16px;margin:0 0 12px}
+.invo-fold .invo-foot{padding:0 16px 14px;display:flex;align-items:center;
+  justify-content:space-between;gap:10px;flex-wrap:wrap}
+.recent-fold>div{padding:0 16px 14px}
+
+/* shared pill checkbox */
+.pill-check{display:inline-flex;align-items:center;gap:8px;cursor:pointer;user-select:none;
+  border:1px solid var(--line2);border-radius:999px;padding:8px 14px;background:var(--night);
+  font-size:13px;min-height:40px;transition:border-color .15s,background .15s}
+.pill-check input{width:auto;accent-color:var(--leaf)}
+.pill-check.done{border-color:rgba(131,184,160,.55);background:rgba(131,184,160,.13);color:var(--leaf)}
+.pill-check:focus-within{outline:2px solid var(--dawn-line);outline-offset:2px}
+.okmsg{color:var(--leaf);font-size:12.5px}
+
+/* ② hero flip cards */
+.hero-pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:stretch}
+@media(max-width:760px){.hero-pair{grid-template-columns:1fr}}
+.flipwrap{perspective:1600px}
+.flipper{position:relative;width:100%;height:100%;
+  transition:transform .42s cubic-bezier(.4,.16,.2,1);transform-style:preserve-3d}
+.flipper.flipped{transform:rotateY(180deg)}
+.face{backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  border-radius:16px;border:1px solid var(--line2);padding:18px;display:flex;flex-direction:column;
+  box-shadow:0 1px 2px rgba(0,0,0,.28);transition:box-shadow .25s,transform .25s,border-color .25s}
+/* the FRONT defines the card's height so nothing spills below it */
+.face.front{position:relative;height:100%;min-height:340px}
+.face.back{position:absolute;inset:0;transform:rotateY(180deg)}
+.v-face{background:linear-gradient(158deg,rgba(217,138,166,.13),rgba(217,138,166,.03) 62%,transparent)}
+.p-face{background:linear-gradient(158deg,rgba(230,178,90,.13),rgba(131,184,160,.04) 62%,transparent)}
+@media(hover:hover) and (pointer:fine){
+  .flipwrap:hover .face.front{box-shadow:0 10px 30px rgba(0,0,0,.38);
+    transform:translateY(-3px)}
+  .flipwrap:hover .v-face.front{border-color:rgba(217,138,166,.5)}
+  .flipwrap:hover .p-face.front{border-color:var(--dawn-line)}
+  .flipwrap:hover .hover-hint{opacity:1;max-height:60px;margin-top:9px}
+  .flipwrap:hover .flipbtn{text-decoration:underline}
+}
+.hover-hint{opacity:0;max-height:0;margin-top:0;overflow:hidden;
+  transition:opacity .28s ease,max-height .28s ease,margin-top .28s ease;
+  font-size:12.5px;color:var(--dim);line-height:1.5;border-top:1px dashed var(--line2);padding-top:0}
+.flipwrap:hover .hover-hint{padding-top:9px}
+@media(prefers-reduced-motion:reduce){.hover-hint{transition:none}}
+@media(hover:none){.hover-hint{opacity:1;max-height:none;margin-top:9px;padding-top:9px}}
+.face-cap{display:flex;align-items:center;gap:8px;font-size:10px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--faint);margin-bottom:11px}
+.cap-dot{width:6px;height:6px;border-radius:50%;flex:0 0 auto}
+.v-dot{background:var(--lotus)}
+.p-dot{background:var(--dawn)}
+.face-title{font-family:'Spectral',serif;font-size:25px;font-weight:500;color:var(--mist);line-height:1.15}
+.v-face .face-title{color:#f2d3de}
+.p-face .face-title{color:#f6dcae}
+.face-meta{font-size:12px;color:var(--faint);margin-top:4px}
+.face-lede{font-size:13.5px;color:var(--dim);line-height:1.55;margin-top:7px}
+.face-today{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);flex:1}
+.ft-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:5px}
+.ft-text{font-size:14.5px;color:var(--mist);line-height:1.6}
+.v-face .ft-text{font-family:'Spectral',serif;font-style:italic}
+.dotrow{display:flex;gap:6px;margin:13px 0 4px}
+.dotrow .d{flex:1;height:6px;border-radius:6px;background:rgba(255,255,255,.08);
+  position:relative;transition:background .2s}
+.dotrow .d.on{background:var(--leaf)}
+.dotrow .d.half{background:var(--dawn)}
+.dotrow .d.now{box-shadow:0 0 0 2px var(--dawn-soft)}
+.face-explored{font-size:11.5px;color:var(--faint)}
+.face-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin-top:12px;padding-top:12px;border-top:1px solid var(--line);flex-wrap:wrap}
+.flipbtn,.closebtn,.ghostlink{background:none;border:none;font:inherit;cursor:pointer;
+  color:var(--dawn);font-size:13px;padding:7px 2px;min-height:36px}
+.flipbtn:hover,.ghostlink:hover{text-decoration:underline}
+.flipbtn:focus-visible,.closebtn:focus-visible,.pill-check:focus-visible{outline:2px solid var(--dawn-line);outline-offset:3px}
+.closebtn{margin-left:auto;color:var(--faint);font-size:14px;padding:0 4px;min-height:auto}
+.closebtn:hover{color:var(--mist)}
+.back-scroll{flex:1;overflow-y:auto;margin:-2px -4px 0;padding:0 4px}
+.back-scroll::-webkit-scrollbar{width:4px}
+.back-scroll::-webkit-scrollbar-thumb{background:var(--line2);border-radius:4px}
+.b-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin:13px 0 4px}
+.b-label:first-child{margin-top:0}
+.b-text{font-size:13.5px;color:var(--mist);line-height:1.6}
+.b-quote{font-family:'Spectral',serif;font-style:italic;font-size:14.5px;color:var(--mist);line-height:1.6}
+.prayer-mini{margin-top:13px;padding:11px 13px;border-radius:11px;
+  background:rgba(230,178,90,.08);border:1px solid var(--dawn-line)}
+.prayer-mini .b-label{margin-top:0}
+
+/* sixfold strip */
+.six-strip-head{display:flex;align-items:baseline;justify-content:space-between;
+  gap:10px;margin:26px 0 9px;flex-wrap:wrap}
+.six-strip-now{font-size:12px;color:#b8a0ff}
+.six-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+@media(max-width:760px){.six-strip{grid-template-columns:repeat(3,1fr)}}
+.six-chip{background:var(--panel);border:1px solid var(--line);border-radius:11px;
+  padding:11px 9px;cursor:pointer;text-align:center;min-height:78px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  transition:border-color .15s,transform .15s}
+.six-chip:hover{border-color:rgba(184,160,255,.45);transform:translateY(-1px)}
+.six-chip:focus-visible{outline:2px solid rgba(184,160,255,.6);outline-offset:2px}
+.six-chip.now{border-color:rgba(184,160,255,.55);background:rgba(184,160,255,.1)}
+.six-chip .sx-n{font-size:9.5px;letter-spacing:.1em;color:var(--faint)}
+.six-chip .sx-g{font-size:16px;line-height:1}
+.six-chip .sx-name{font-size:11.5px;color:var(--dim);line-height:1.25}
+.six-chip.now .sx-name{color:#d6c9ff}
+
+/* ③ meditation stages */
+.stages{list-style:none;margin:0;padding:0;position:relative}
+.stage{display:flex;gap:14px;padding-bottom:20px;position:relative}
+.stage:not(:last-child)::before{content:"";position:absolute;left:13px;top:30px;bottom:2px;
+  width:1px;background:linear-gradient(var(--line2),transparent)}
+.stage-mark{width:27px;height:27px;border-radius:50%;flex:0 0 auto;
+  border:1px solid var(--line2);background:var(--night);color:var(--faint);
+  display:flex;align-items:center;justify-content:center;font-size:12px;z-index:1}
+.stage.done .stage-mark{border-color:rgba(131,184,160,.55);background:rgba(131,184,160,.14);color:var(--leaf)}
+.stage-body{flex:1;min-width:0}
+.stage-title{font-size:11px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--dim);margin:5px 0 10px}
+.sit-card{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:15px 16px}
+.prep-notes{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+.prep-notes .tech-line{padding:0}
+.prep-notes .sandesh{padding:10px 13px}
+
+
+/* ══════════ VISUAL POLISH ══════════ */
+
+/* ambient dawn glow — the sky behind the practice */
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(900px 420px at 18% -6%, rgba(230,178,90,.10), transparent 62%),
+    radial-gradient(760px 380px at 88% 4%, rgba(217,138,166,.08), transparent 60%),
+    radial-gradient(1000px 520px at 50% 104%, rgba(131,184,160,.055), transparent 62%);
+}
+.wrap{position:relative;z-index:1}
+
+/* grain — stops the flat-gradient look */
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.16;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E")}
+
+/* zone rhythm — a hairline that fades, rather than a hard rule */
+.zone{position:relative}
+.zone::before{content:"";position:absolute;top:-17px;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,var(--line2),transparent 62%)}
+
+/* the greeting gets an accent underline that reads as a horizon */
+.greet{position:relative;display:inline-block;padding-bottom:5px}
+.greet::after{content:"";position:absolute;left:0;bottom:0;width:46px;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,var(--dawn),transparent)}
+
+/* card inner light — a soft top edge, like dawn on a rim */
+.face::after{content:"";position:absolute;inset:0;border-radius:16px;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.055),transparent 34%)}
+.face>*{position:relative;z-index:1}
+
+/* progress segments: gentle stagger so the row feels alive on load */
+.dotrow .d{animation:seg .5s cubic-bezier(.3,.9,.3,1) both}
+.dotrow .d:nth-child(1){animation-delay:.02s} .dotrow .d:nth-child(2){animation-delay:.05s}
+.dotrow .d:nth-child(3){animation-delay:.08s} .dotrow .d:nth-child(4){animation-delay:.11s}
+.dotrow .d:nth-child(5){animation-delay:.14s} .dotrow .d:nth-child(6){animation-delay:.17s}
+.dotrow .d:nth-child(7){animation-delay:.20s}
+@keyframes seg{from{transform:scaleX(.35);opacity:0}to{transform:scaleX(1);opacity:1}}
+
+/* today's segment breathes, slowly — like the breath the app is about */
+.dotrow .d.now::after{content:"";position:absolute;inset:0;border-radius:6px;
+  background:var(--dawn);opacity:.32;animation:breathe 4.4s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:.14}50%{opacity:.42}}
+
+/* checked state: a soft settle rather than a pop */
+.pill-check.done{animation:settle .34s cubic-bezier(.3,1.1,.4,1)}
+@keyframes settle{0%{transform:scale(.97)}60%{transform:scale(1.015)}100%{transform:scale(1)}}
+
+/* sixfold chips: the active one glows faintly */
+.six-chip.now{box-shadow:0 0 0 1px rgba(184,160,255,.22), 0 4px 16px rgba(184,160,255,.10)}
+.six-chip .sx-g{transition:transform .2s}
+.six-chip:hover .sx-g{transform:scale(1.14)}
+
+/* stage rail: the connecting line fills green as stages complete */
+.stage.done:not(:last-child)::before{background:linear-gradient(rgba(131,184,160,.5),transparent)}
+.stage-mark{transition:background .3s,border-color .3s,color .3s}
+
+/* buttons: quiet lift */
+.btn{transition:filter .18s,transform .18s,box-shadow .18s}
+.btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(230,178,90,.22)}
+.btn:active{transform:translateY(0)}
+.btn.ghost:hover{box-shadow:none;border-color:var(--dawn-line)}
+
+/* inputs settle into focus */
+select,input,textarea{transition:border-color .18s,box-shadow .18s,background .18s}
+
+/* fold panels open smoothly */
+.invo-fold>summary:hover .if-title,.recent-fold>summary:hover .if-title{color:var(--dawn)}
+.invo-fold>summary,.recent-fold>summary{transition:background .18s}
+.invo-fold>summary:hover,.recent-fold>summary:hover{background:rgba(255,255,255,.025)}
+
+/* first-paint entrance for the two hero cards */
+.flipwrap{animation:rise .55s cubic-bezier(.22,.9,.3,1) both}
+.flipwrap:nth-child(2){animation-delay:.09s}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* scrollbar */
+*::-webkit-scrollbar{width:9px;height:9px}
+*::-webkit-scrollbar-track{background:transparent}
+*::-webkit-scrollbar-thumb{background:var(--line2);border-radius:9px;
+  border:2px solid var(--night)}
+*::-webkit-scrollbar-thumb:hover{background:var(--faint)}
+
+@media(prefers-reduced-motion:reduce){
+  .dotrow .d,.flipwrap,.pill-check.done{animation:none}
+  .dotrow .d.now::after{animation:none;opacity:.3}
+  .btn:hover{transform:none}
+  body::after{display:none}
+}
+
+
+/* ══════════ SIDE RAILS — the two pillars, as architecture ══════════ */
+.rail{position:fixed;top:0;bottom:0;width:74px;z-index:5;display:none;
+  flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  padding:26px 0;pointer-events:none}
+.rail-left{left:0}
+.rail-right{right:0}
+/* a hairline spine so the rail reads as structure, not floating dots */
+.rail::before{content:"";position:absolute;top:8%;bottom:8%;width:1px}
+.rail-left::before{right:20px;background:linear-gradient(transparent,rgba(217,138,166,.28) 14%,rgba(217,138,166,.28) 86%,transparent)}
+.rail-right::before{left:20px;background:linear-gradient(transparent,rgba(184,160,255,.28) 14%,rgba(184,160,255,.28) 86%,transparent)}
+.rail-cap{position:absolute;font-size:9px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--faint);white-space:nowrap;pointer-events:none}
+.rail-left .rail-cap{top:30px;left:50%;transform:translateX(-50%) rotate(180deg);writing-mode:vertical-rl}
+.rail-right .rail-cap{top:30px;left:50%;transform:translateX(-50%);writing-mode:vertical-rl}
+.rail-node{pointer-events:auto;position:relative;background:none;border:none;cursor:pointer;
+  padding:9px 0;width:100%;display:flex;align-items:center;justify-content:center;
+  font:inherit;color:inherit}
+.rail-node .rn-dot{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.13);
+  transition:transform .22s cubic-bezier(.3,1.2,.4,1),background .22s,box-shadow .22s}
+.rail-left .rail-node.done .rn-dot{background:rgba(217,138,166,.55)}
+.rail-right .rail-node.done .rn-dot{background:rgba(184,160,255,.5)}
+.rail-left .rail-node.now .rn-dot{background:var(--lotus);transform:scale(1.65);
+  box-shadow:0 0 0 5px rgba(217,138,166,.14),0 0 18px rgba(217,138,166,.5)}
+.rail-right .rail-node.now .rn-dot{background:#b8a0ff;transform:scale(1.65);
+  box-shadow:0 0 0 5px rgba(184,160,255,.14),0 0 18px rgba(184,160,255,.5)}
+.rail-node:hover .rn-dot{transform:scale(1.5)}
+.rail-node:focus-visible{outline:2px solid var(--dawn-line);outline-offset:-4px;border-radius:8px}
+/* label slides out on hover */
+.rail-node .rn-label{position:absolute;top:50%;transform:translateY(-50%);
+  white-space:nowrap;font-size:11.5px;color:var(--mist);background:var(--raised);
+  border:1px solid var(--line2);border-radius:999px;padding:5px 11px;
+  opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:2}
+.rail-left .rn-label{left:52px;transform:translateY(-50%) translateX(-6px)}
+.rail-right .rn-label{right:52px;transform:translateY(-50%) translateX(6px)}
+.rail-node:hover .rn-label,.rail-node:focus-visible .rn-label{opacity:1;transform:translateY(-50%) translateX(0)}
+.rail-node .rn-num{position:absolute;font-size:9px;color:var(--faint);opacity:0;transition:opacity .2s}
+.rail-left .rn-num{left:14px} .rail-right .rn-num{right:14px}
+.rail:hover .rn-num{opacity:1}
+
+/* rails only where there is room; below that the inline strip does the job */
+@media(min-width:1180px){
+  .rail{display:flex}
+  .six-strip-head,.six-strip{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .rail-node .rn-dot,.rail-node .rn-label{transition:none}
+}
+
+
+/* ── sit timer ── */
+.timer-panel{display:flex;gap:18px;align-items:center;margin-top:15px;padding-top:15px;
+  border-top:1px solid var(--line);flex-wrap:wrap}
+.tm-ring-wrap{position:relative;width:116px;height:116px;flex:0 0 auto}
+.tm-ring{width:116px;height:116px;transform:rotate(0deg)}
+#tm-ring-arc{transition:stroke-dashoffset .3s linear}
+.tm-display{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:'Spectral',serif;font-size:25px;color:var(--mist);letter-spacing:.02em;
+  font-variant-numeric:tabular-nums}
+.timer-panel.running .tm-display{color:var(--dawn)}
+.timer-panel.running .tm-ring-wrap::after{content:"";position:absolute;inset:-6px;border-radius:50%;
+  box-shadow:0 0 34px rgba(230,178,90,.28);animation:tmglow 4.4s ease-in-out infinite;pointer-events:none}
+@keyframes tmglow{0%,100%{opacity:.35}50%{opacity:.9}}
+.tm-controls{flex:1;min-width:190px}
+.tm-label{display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--faint);margin-bottom:5px}
+.tm-controls select{width:auto;min-width:88px}
+.tm-btns{display:flex;gap:8px;margin-top:10px;align-items:center}
+.tm-note{font-size:11.5px;color:var(--faint);margin-top:9px;line-height:1.5}
+@media(prefers-reduced-motion:reduce){.timer-panel.running .tm-ring-wrap::after{animation:none}}
+
+
+/* ══════════ QUIET MODE ══════════ */
+.quiet{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;
+  background:radial-gradient(900px 700px at 50% 44%,#1b2245,#0c0f20 72%);
+  opacity:0;transition:opacity .8s ease}
+.quiet.on{display:flex;opacity:1}
+.q-inner{text-align:center;padding:24px;max-width:440px}
+.q-practice{font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--faint);margin-bottom:34px}
+.q-ringwrap{position:relative;width:246px;height:246px;margin:0 auto}
+.q-ring{width:246px;height:246px}
+#q-arc{transition:stroke-dashoffset .4s linear}
+/* the breath: a slow expanding disc, 4s in / 6s out */
+.q-breath{position:absolute;left:50%;top:50%;width:132px;height:132px;margin:-66px 0 0 -66px;
+  border-radius:50%;background:radial-gradient(circle,rgba(230,178,90,.19),rgba(217,138,166,.05) 62%,transparent 72%);
+  animation:qbreath 10s cubic-bezier(.45,0,.55,1) infinite}
+@keyframes qbreath{
+  0%   {transform:scale(.7);  opacity:.34}
+  40%  {transform:scale(1.16);opacity:.72}
+  100% {transform:scale(.7);  opacity:.34}
+}
+.q-time{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:'Spectral',serif;font-size:40px;font-weight:300;color:var(--mist);
+  letter-spacing:.03em;font-variant-numeric:tabular-nums;opacity:.62}
+.q-word{margin-top:34px;font-family:'Spectral',serif;font-style:italic;font-size:16px;
+  color:var(--dim);line-height:1.7;min-height:52px;opacity:0;
+  transition:opacity 1.6s ease}
+.q-word.show{opacity:1}
+.q-exit{margin-top:26px;background:none;border:1px solid var(--line2);border-radius:999px;
+  color:var(--faint);font:inherit;font-size:12.5px;padding:9px 20px;cursor:pointer;
+  transition:color .25s,border-color .25s,opacity .5s;opacity:.4}
+.q-exit:hover{color:var(--mist);border-color:var(--line2);opacity:1}
+.quiet:hover .q-exit{opacity:.8}
+@media(prefers-reduced-motion:reduce){
+  .q-breath{animation:none;transform:scale(.95);opacity:.5}
+  .quiet{transition:none}
+}
+
+
+/* ── year view ── */
+.year-grid{display:grid;grid-template-columns:repeat(26,1fr);gap:4px;margin-top:4px}
+@media(max-width:620px){.year-grid{grid-template-columns:repeat(13,1fr)}}
+.yc{aspect-ratio:1;border-radius:3px;background:rgba(255,255,255,.05);
+  transition:transform .15s,box-shadow .15s;cursor:default}
+.yc:hover{transform:scale(1.35);box-shadow:0 2px 10px rgba(0,0,0,.5);z-index:2;position:relative}
+.yc.future{background:rgba(255,255,255,.022)}
+.yc.empty{background:rgba(255,255,255,.05)}
+.yc.now{box-shadow:0 0 0 2px var(--dawn-line)}
+.year-legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;font-size:12px;color:var(--dim)}
+.yl{display:inline-flex;align-items:center;gap:6px}
+.yl i{width:9px;height:9px;border-radius:2px;display:inline-block}
+
+/* ── reflection search ── */
+.refl-count{font-size:11.5px;color:var(--faint);margin-bottom:9px}
+.refl-hit{border:1px solid var(--line);border-radius:10px;padding:11px 13px;
+  margin-bottom:7px;background:var(--night)}
+.rh-meta{display:flex;justify-content:space-between;gap:10px;font-size:11.5px;
+  color:var(--faint);margin-bottom:5px}
+.rh-src{color:var(--dawn)}
+.rh-text{font-size:13.5px;color:var(--mist);line-height:1.6;white-space:pre-wrap}
+.rh-text mark{background:rgba(230,178,90,.28);color:var(--mist);border-radius:3px;padding:0 2px}
+.stat .n .of{font-size:15px;color:var(--faint);font-weight:400}
+
+
+/* ── quiet-mode rails: attitudes left · posture right ── */
+.q-rail{position:absolute;top:0;bottom:0;width:150px;display:flex;flex-direction:column;
+  align-items:flex-start;justify-content:center;gap:22px;padding:40px 0;pointer-events:none}
+.q-rail-left{left:34px;align-items:flex-start}
+.q-rail-right{right:34px;align-items:flex-end;text-align:right}
+.q-rail::before{content:"";position:absolute;top:16%;bottom:16%;width:1px}
+.q-rail-left::before{left:4px;background:linear-gradient(transparent,rgba(230,178,90,.3) 16%,rgba(230,178,90,.3) 84%,transparent)}
+.q-rail-right::before{right:4px;background:linear-gradient(transparent,rgba(131,184,160,.28) 16%,rgba(131,184,160,.28) 84%,transparent)}
+.qr-cap{position:absolute;top:8px;font-size:8.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--faint);opacity:.6}
+.q-rail-left .qr-cap{left:16px} .q-rail-right .qr-cap{right:16px}
+.qr-item{display:flex;align-items:center;gap:11px;opacity:.30;transition:opacity 1.2s ease}
+.q-rail-right .qr-item{flex-direction:row-reverse}
+.qr-dot{width:5px;height:5px;border-radius:50%;flex:0 0 auto;background:var(--faint);
+  transition:background .8s,box-shadow .8s,transform .8s}
+.qr-name{font-size:12px;color:var(--dim);line-height:1.35;letter-spacing:.02em}
+.q-rail-left .qr-item{padding-left:12px}
+.q-rail-right .qr-item{padding-right:12px}
+/* each attitude glows in turn, slowly cycling through the sit */
+.qr-item.lit{opacity:1}
+.qr-item.lit .qr-dot{transform:scale(1.9);background:var(--dawn);
+  box-shadow:0 0 14px rgba(230,178,90,.7),0 0 0 4px rgba(230,178,90,.1)}
+.qr-item.lit .qr-name{color:var(--mist)}
+.q-rail-right .qr-item.lit .qr-dot{background:var(--leaf);
+  box-shadow:0 0 14px rgba(131,184,160,.6),0 0 0 4px rgba(131,184,160,.1)}
+@media(max-width:900px){
+  .q-rail{position:static;flex-direction:row;flex-wrap:wrap;width:auto;justify-content:center;
+    gap:8px 16px;padding:0;margin:0 auto}
+  .q-rail::before{display:none}
+  .qr-cap{position:static;display:block;width:100%;text-align:center;margin-bottom:2px}
+  .q-rail-left{margin-bottom:20px} .q-rail-right{margin-top:22px}
+  .q-rail-right .qr-item{flex-direction:row}
+  .qr-name{font-size:11px}
+  .q-rail-left .qr-item,.q-rail-right .qr-item{padding:0}
+}
+@media(prefers-reduced-motion:reduce){.qr-item,.qr-dot{transition:none}}
+
+
+/* ── post-sit landing ── */
+.postsit{position:fixed;inset:0;z-index:85;display:none;align-items:center;justify-content:center;
+  background:radial-gradient(760px 600px at 50% 45%,#1b2245,#0c0f20 74%);opacity:0;
+  transition:opacity .7s ease}
+.postsit.on{display:flex;opacity:1}
+.ps-inner{text-align:center;padding:26px;max-width:430px;animation:rise .7s cubic-bezier(.22,.9,.3,1) both}
+.ps-mins{font-family:'Spectral',serif;font-size:32px;color:var(--dawn);margin-bottom:6px}
+.ps-q{font-family:'Spectral',serif;font-style:italic;font-size:19px;color:var(--mist);margin-bottom:26px}
+.ps-choices{display:flex;flex-direction:column;gap:9px}
+.ps-choice{display:flex;align-items:center;gap:13px;background:rgba(255,255,255,.035);
+  border:1px solid var(--line2);border-radius:14px;padding:15px 19px;cursor:pointer;
+  font:inherit;font-size:15px;color:var(--mist);text-align:left;min-height:56px;
+  transition:border-color .2s,background .2s,transform .2s}
+.ps-choice:hover{border-color:var(--dawn-line);background:rgba(230,178,90,.08);transform:translateY(-2px)}
+.ps-choice:focus-visible{outline:2px solid var(--dawn-line);outline-offset:3px}
+.pc-g{font-size:21px}
+.ps-skip{margin-top:20px;background:none;border:none;color:var(--faint);font:inherit;
+  font-size:12.5px;cursor:pointer;padding:8px}
+.ps-skip:hover{color:var(--mist)}
+
+/* ── morning glance ── */
+.glance{text-align:center;padding:48px 20px 40px}
+.glance .g-greet{font-family:'Spectral',serif;font-size:30px;color:var(--mist);margin-bottom:6px}
+.glance .g-date{font-size:13px;color:var(--faint);margin-bottom:30px}
+.glance .g-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:9px}
+.glance .g-invite{font-family:'Spectral',serif;font-style:italic;font-size:18px;color:var(--mist);
+  line-height:1.65;max-width:36ch;margin:0 auto 30px}
+.glance .g-btn{background:var(--dawn);color:#2a1e05;border:none;border-radius:999px;
+  padding:15px 34px;font:inherit;font-weight:600;font-size:15px;cursor:pointer;min-height:52px;
+  transition:transform .18s,box-shadow .18s}
+.glance .g-btn:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(230,178,90,.3)}
+.glance .g-actions{display:flex;flex-direction:column;align-items:center;gap:0}
+.glance .g-alts{display:flex;align-items:center;gap:6px;margin-top:4px}
+.glance .g-sep{color:var(--line2);font-size:13px}
+.glance .g-open{background:none;border:none;color:var(--faint);
+  font:inherit;font-size:13px;cursor:pointer;padding:10px 8px;min-height:44px}
+.glance .g-open:hover{color:var(--dawn);text-decoration:underline}
+.glance-hidden{display:none}
+
+/* ── weekly letter ── */
+.letter{border:1px solid var(--dawn-line);border-radius:var(--r);padding:20px;
+  background:linear-gradient(160deg,rgba(230,178,90,.08),transparent 65%);margin-bottom:14px}
+.letter .lt-cap{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dawn);margin-bottom:10px}
+.letter .lt-body{font-family:'Spectral',serif;font-size:15.5px;color:var(--mist);line-height:1.8}
+.letter .lt-body p{margin:0 0 12px}
+.letter .lt-body em{color:var(--dim)}
+.letter .lt-close{margin-top:4px;font-size:12.5px;color:var(--faint)}
+
+/* ── shared presence ── */
+.presence{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--dim);
+  padding:10px 14px;border:1px solid var(--line);border-radius:999px;
+  background:var(--panel);margin-top:14px;width:fit-content}
+.presence .pr-dots{display:flex;gap:-4px}
+.presence .pr-av{width:22px;height:22px;border-radius:50%;font-size:9.5px;
+  display:flex;align-items:center;justify-content:center;color:#2a1e05;font-weight:600;
+  background:linear-gradient(135deg,var(--dawn),var(--lotus));margin-right:-7px;
+  border:1.5px solid var(--panel)}
+
+/* toast */
+#toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);
+  background:var(--raised);border:1px solid var(--line2);color:var(--mist);
+  padding:11px 18px;border-radius:999px;font-size:13.5px;z-index:60;
+  opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;
+  box-shadow:0 6px 24px rgba(0,0,0,.4)}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* reduced motion */
+@media(prefers-reduced-motion:reduce){
+  .flipper{transition:none}
+  .six-chip{transition:none}
+  .invo-fold>summary::after,.recent-fold>summary::after{transition:none}
+  #toast{transition:none}
+}
+
+/* ── alignment tag on the practice ── */
+.align-tag{display:inline-flex;align-items:center;gap:7px;margin-top:10px;
+  padding:6px 12px;border-radius:999px;cursor:pointer;font-size:12.5px;
+  border:1px solid var(--line2);background:var(--night);transition:border-color .15s}
+.align-tag:hover{border-color:var(--dawn-line)}
+.align-tag .at-kind{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.align-tag.sixfold{border-color:rgba(184,160,255,.45);background:rgba(184,160,255,.09)}
+.align-tag.sixfold .at-name{color:#c3b0ff;font-weight:600}
+.align-tag.sixfold .at-kind{color:#a58fe8}
+.align-tag.virtue{border-color:rgba(217,138,166,.45);background:rgba(217,138,166,.09)}
+.align-tag.virtue .at-name{color:var(--lotus);font-weight:600}
+.align-tag.virtue .at-kind{color:var(--lotus);opacity:.75}
+.align-row{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ── TWO PILLARS ── */
+.pillars{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:4px}
+@media(max-width:600px){.pillars{grid-template-columns:1fr}}
+.pillar{position:relative;border-radius:var(--r);padding:16px 16px 14px;
+  border:1px solid var(--line2);overflow:hidden;cursor:pointer;transition:border-color .18s}
+.pillar:hover{border-color:var(--line2)}
+.pillar::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px}
+.pillar.virtue-pillar{background:linear-gradient(160deg,rgba(217,138,166,.11),rgba(217,138,166,.02))}
+.pillar.virtue-pillar::before{background:linear-gradient(var(--lotus),rgba(217,138,166,.2))}
+.pillar.virtue-pillar:hover{border-color:rgba(217,138,166,.5)}
+.pillar.six-pillar{background:linear-gradient(160deg,rgba(184,160,255,.11),rgba(184,160,255,.02))}
+.pillar.six-pillar::before{background:linear-gradient(#b8a0ff,rgba(184,160,255,.2))}
+.pillar.six-pillar:hover{border-color:rgba(184,160,255,.5)}
+.pillar .pl-cap{font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--faint);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:6px}
+.pillar .pl-glyph{font-size:15px}
+.pillar .pl-name{font-family:'Spectral',serif;font-size:19px;font-weight:500;color:var(--mist);line-height:1.2}
+.pillar.virtue-pillar .pl-name{color:#f0cdd9}
+.pillar.six-pillar .pl-name{color:#d6c9ff}
+.pillar .pl-essence{font-size:12.5px;color:var(--dim);line-height:1.5;margin-top:5px}
+.pillar .pl-sub{margin-top:11px;padding-top:9px;border-top:1px solid var(--line)}
+.pillar .pl-sub-label{font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--faint);margin-bottom:4px}
+.pillar .pl-sub-text{font-size:13px;color:var(--mist);line-height:1.5}
+.pillar .pl-dots{display:flex;gap:3px;margin-top:10px}
+.pillar .pl-dot{height:3px;flex:1;border-radius:3px;background:rgba(255,255,255,.09)}
+.pillar.virtue-pillar .pl-dot.on{background:var(--lotus)}
+.pillar.six-pillar .pl-dot.on{background:#b8a0ff}
+.pillars-cap{font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--faint);margin:2px 0 8px;text-align:center}
+
+/* ── sixfold grid & detail (Path tab) ── */
+.six-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:4px}
+.s-card{background:var(--night);border:1px solid var(--line);border-radius:12px;
+  padding:14px 15px;cursor:pointer;transition:border-color .15s}
+.s-card:hover{border-color:var(--line2)}
+.s-card.active-week{border-color:rgba(184,160,255,.5);background:rgba(184,160,255,.08)}
+.s-card .sc-num{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.s-card .sc-name{font-family:'Spectral',serif;font-size:17px;font-weight:500;color:#d6c9ff;margin:3px 0 5px}
+.s-card .sc-essence{font-size:12.5px;color:var(--dim);line-height:1.5}
+.s-card .sc-status{font-size:11.5px;color:#b8a0ff;margin-top:8px}
+.sd-insight{background:var(--night);border:1px solid var(--line);border-radius:9px;
+  padding:10px 13px;font-size:13.5px;color:var(--mist);line-height:1.6;margin-bottom:6px}
+.sd-insight.today-insight{border-color:rgba(184,160,255,.45);background:rgba(184,160,255,.08)}
+.sd-insight .si-day{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--faint);margin-bottom:3px}
+
+.potw-week{display:flex;gap:8px;margin:14px 0 6px;flex-wrap:wrap}
+.potw-daydot{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;min-width:28px}
+.potw-daydot .dd-mark{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:13px;border:1.5px solid var(--line2);color:var(--faint);background:var(--night)}
+.potw-daydot.today .dd-mark{border-color:var(--dawn-line);box-shadow:0 0 0 3px var(--dawn-soft)}
+.potw-daydot.practised .dd-mark{background:rgba(131,184,160,.18);border-color:rgba(131,184,160,.6);color:var(--leaf)}
+.potw-daydot.engaged .dd-mark{background:rgba(230,178,90,.14);border-color:var(--dawn-line);color:var(--dawn)}
+.potw-daydot .dd-num{font-size:10px;color:var(--faint)}
+.potw-explored{font-size:12.5px;color:var(--dim);margin-bottom:6px}
+
+/* carry-forward chain — the thread between weeks */
+.potw-carry{margin:10px 0;padding:12px 14px;border-radius:10px;
+  background:linear-gradient(135deg,rgba(131,184,160,.10),rgba(230,178,90,.05));
+  border:1px solid rgba(131,184,160,.32);position:relative}
+.potw-carry .cf-label{font-size:11px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--leaf);margin-bottom:5px}
+.potw-carry .cf-quote{font-family:'Spectral',serif;font-style:italic;font-size:15.5px;
+  color:var(--mist);line-height:1.6}
+.potw-carry .cf-from{font-size:12px;color:var(--faint);margin-top:6px}
+.potw-carry .cf-thread{font-size:12.5px;color:var(--dim);margin-top:8px;
+  padding-top:8px;border-top:1px solid var(--line)}
+
+/* thread view in practice detail */
+.thread-item{display:flex;gap:11px;padding:10px 0;border-bottom:1px solid var(--line)}
+.thread-item:last-child{border-bottom:none}
+.thread-item .ti-week{font-size:11.5px;color:var(--faint);width:74px;flex:0 0 auto;padding-top:2px}
+.thread-item .ti-body .ti-practice{font-size:12px;color:var(--dawn);margin-bottom:3px}
+.thread-item .ti-body .ti-text{font-family:'Spectral',serif;font-style:italic;
+  font-size:14px;color:var(--mist);line-height:1.55}
+
+.potw-resurface{margin:10px 0;padding:11px 13px;border-radius:10px;
+  background:rgba(217,138,166,.08);border:1px solid rgba(217,138,166,.3);
+  font-size:13px;color:var(--mist);line-height:1.6}
+.potw-resurface .rs-title{color:var(--lotus);font-weight:600;margin-bottom:3px}
+.potw-resurface .rs-quote{font-family:'Spectral',serif;font-style:italic;color:var(--dim);margin-top:5px}
+
+.potw-callback{margin:10px 0;padding:11px 13px;border-radius:10px;
+  background:rgba(255,255,255,.03);border:1px solid var(--line);
+  font-size:13px;color:var(--dim);line-height:1.6}
+.potw-callback .cb-quote{font-family:'Spectral',serif;font-style:italic;color:var(--mist);margin:4px 0}
+
+.potw-day{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.potw-day-label{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--dawn);margin-bottom:12px}
+.potw-block{margin-bottom:12px}
+.pb-label{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:4px}
+.pb-text{font-size:14px;color:var(--mist);line-height:1.55}
+.pb-inspiration{font-family:'Spectral',serif;font-style:italic;font-size:15.5px;color:var(--mist);line-height:1.6}
+
+.potw-ways{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 8px}.pw-way{flex:1;min-width:150px;background:var(--night);border:1px solid var(--line);
+  border-radius:10px;padding:10px 12px}
+.pw-way .pw-icon{font-size:15px;margin-right:5px}
+.pw-way .pw-label{font-size:11.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.pw-way .pw-text{font-size:13px;color:var(--mist);line-height:1.4}
+.potw-again{display:flex;justify-content:flex-end;margin-bottom:6px}
+
+.potw-prayer-wrap{margin:14px 0 6px;padding:13px 15px;border-radius:12px;
+  background:rgba(230,178,90,.07);border:1px solid var(--dawn-line)}
+.potw-prayer{font-family:'Spectral',serif;font-style:italic;font-size:16.5px;
+  color:var(--mist);line-height:1.65;margin-top:2px}
+.potw-prayer-wrap .potw-again{margin:8px 0 0}
+
+.potw-check-row{margin:10px 0}
+.potw-refl{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.potw-refl textarea{min-height:60px;margin-top:4px}
+.potw-refl-actions{display:flex;align-items:center;gap:10px;margin-top:8px}
+
+.potw-week-review{margin-top:16px;padding-top:16px;border-top:1px solid var(--line2)}
+.potw-week-review .wr-title{font-family:'Spectral',serif;font-size:17px;color:var(--mist);margin-bottom:10px}
+.potw-week-review .wr-q{font-size:12px;color:var(--faint);margin:10px 0 4px}
+.potw-week-review textarea{min-height:56px}
+.potw-week-review .wr-note{margin-top:14px;font-size:13px;color:var(--dim);font-style:italic;
+  border-left:2px solid var(--dawn-line);padding-left:11px}
+
+.potw-foot{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+
+/* demoted technique line */
+.tech-line{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--dim);
+  padding:2px 4px}
+.tech-line .tl-icon{font-size:14px}
+.tech-line b{color:var(--mist);font-weight:600}
 .check input{width:auto}
 .rating{display:flex;gap:6px}
 .dot{width:34px;height:34px;border-radius:50%;border:1px solid var(--line2);background:var(--night);color:var(--dim);cursor:pointer;font-size:13px}
@@ -205,7 +849,46 @@ section.view.active{display:block}
 .sandesh .sd-text{font-size:14.5px;color:var(--mist);line-height:1.5}
 .sandesh .sd-sub{font-size:12px;color:var(--dim);margin-top:3px}
 
-/* ── virtue today panel ── */
+/* ── persistent curriculum progress track ── */
+.curr-track{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
+  padding:14px 16px;margin-bottom:4px}
+.curr-phases{display:flex;align-items:stretch;gap:0}
+.curr-seg{flex:1;position:relative;cursor:pointer}
+.curr-seg + .curr-seg::before{
+  content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);
+  width:1px;height:28px;background:var(--line2)}
+.curr-seg-inner{padding:8px 10px;border-radius:10px;transition:background .15s}
+.curr-seg:hover .curr-seg-inner{background:rgba(255,255,255,.04)}
+.curr-seg.active-seg .curr-seg-inner{background:var(--dawn-soft)}
+.curr-seg.done-seg .curr-seg-inner{background:rgba(131,184,160,.07)}
+.curr-seg .cs-label{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--faint);margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.curr-seg.active-seg .cs-label{color:var(--dawn)}
+.curr-seg.done-seg .cs-label{color:var(--leaf)}
+.curr-seg .cs-bar{height:5px;border-radius:5px;background:var(--line2);overflow:hidden;margin-bottom:4px}
+.curr-seg .cs-bar span{display:block;height:100%;border-radius:5px;
+  background:linear-gradient(90deg,var(--dawn),var(--lotus));transition:width .4s}
+.curr-seg.done-seg .cs-bar span{background:linear-gradient(90deg,var(--leaf),#b8e8d4)}
+.curr-seg .cs-count{font-size:11px;color:var(--faint);display:flex;align-items:center;gap:5px}
+.curr-seg.active-seg .cs-count{color:var(--dawn)}
+.curr-seg.done-seg .cs-count{color:var(--leaf)}
+.cs-tick{font-size:10px}
+
+/* lesson checklist drawer */
+.curr-lessons{margin-top:12px;border-top:1px solid var(--line);padding-top:12px}
+.cl-phase-head{font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--faint);margin:10px 0 6px}
+.cl-phase-head:first-child{margin-top:0}
+.cl-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:5px}
+.cl-item{display:flex;align-items:flex-start;gap:8px;padding:7px 9px;
+  border-radius:9px;background:var(--night);border:1px solid var(--line);
+  font-size:12.5px;color:var(--dim);line-height:1.4;cursor:pointer;transition:border-color .12s}
+.cl-item:hover{border-color:var(--line2)}
+.cl-item.done{color:var(--mist);border-color:rgba(131,184,160,.3);background:rgba(131,184,160,.05)}
+.cl-item input[type=checkbox]{flex:0 0 auto;margin-top:1px;width:auto;accent-color:var(--leaf)}
+.cl-close{margin-top:12px;font-size:12px;color:var(--faint);cursor:pointer;
+  background:none;border:none;font:inherit;padding:0}
+.cl-close:hover{color:var(--dawn)}
 .virtue-today{border:1px solid var(--line2);border-radius:var(--r);
   padding:18px;background:linear-gradient(145deg,rgba(217,138,166,.09),rgba(131,184,160,.06))}
 .vt-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
@@ -270,6 +953,34 @@ section.view.active{display:block}
 .vd-day.done .dd-dot{background:var(--leaf)}
 .vd-day .dd-date{color:var(--faint);width:80px}
 .vd-day .dd-note{color:var(--dim)}
+
+/* ── Practices tab ── */
+.plib-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:4px}
+.p-card{background:var(--night);border:1px solid var(--line);border-radius:12px;
+  padding:14px 15px;cursor:pointer;transition:border-color .15s}
+.p-card:hover{border-color:var(--line2)}
+.p-card.active-practice{border-color:var(--dawn-line);background:var(--dawn-soft)}
+.p-card .pc-badge{display:inline-block;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  padding:2px 8px;border-radius:999px;margin-bottom:8px}
+.p-card .pc-badge.new{color:var(--dawn);border:1px solid var(--dawn-line);background:rgba(230,178,90,.1)}
+.p-card .pc-badge.returning{color:var(--lotus);border:1px solid rgba(217,138,166,.4);background:rgba(217,138,166,.1)}
+.p-card .pc-title{font-family:'Spectral',serif;font-size:16.5px;font-weight:500;color:var(--mist);margin-bottom:6px}
+.p-card .pc-meta{font-size:12px;color:var(--faint);line-height:1.6}
+.pdet-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
+.pdet-title{font-family:'Spectral',serif;font-size:23px;font-weight:500}
+.pdet-core{font-family:'Spectral',serif;font-style:italic;font-size:16px;color:var(--mist);
+  line-height:1.7;border-left:2px solid var(--dawn-line);padding-left:13px;margin:10px 0 16px}
+.pdet-section{font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:var(--faint);margin:16px 0 8px}
+.pdet-list{display:flex;flex-direction:column;gap:6px}
+.pdet-list-item{background:var(--night);border:1px solid var(--line);border-radius:9px;
+  padding:9px 12px;font-size:13.5px;color:var(--mist);line-height:1.5}
+.pdet-history{display:flex;flex-direction:column;gap:5px}
+.pdet-hist-row{display:flex;gap:10px;font-size:12.5px;color:var(--dim)}
+.pdet-hist-row .hr-week{color:var(--faint);width:130px;flex:0 0 auto}
+.pdet-hist-row .hr-type{font-size:11px;padding:1px 7px;border-radius:999px;border:1px solid var(--line2)}
+.pdet-refl{background:var(--night);border:1px solid var(--line);border-radius:9px;padding:9px 12px;margin-bottom:6px}
+.pdet-refl .pr-date{font-size:11px;color:var(--faint);margin-bottom:3px}
+.pdet-refl .pr-text{font-size:13.5px;color:var(--mist);font-style:italic}
 .stem{width:2px;background:linear-gradient(var(--dawn),var(--lotus));border-radius:2px;position:relative;flex:0 0 auto;margin-left:8px}
 .phases{flex:1;display:flex;flex-direction:column;gap:16px}
 .phase{position:relative}
@@ -286,11 +997,64 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
 </style>
 </head>
 <body>
+<!-- decorative + navigable rails (desktop only) -->
+<aside class="rail rail-left" id="rail-virtues" aria-label="The nine virtues"></aside>
+<aside class="rail rail-right" id="rail-sixfold" aria-label="The Sixfold Path"></aside>
+
+<!-- quiet mode: everything falls away but the sit -->
+<div class="quiet" id="quiet" aria-hidden="true">
+  <aside class="q-rail q-rail-left" aria-label="The three sacred attitudes">
+    <span class="qr-cap">Hold these</span>
+    <div class="qr-item" data-att="love"><span class="qr-dot"></span><span class="qr-name">Love</span></div>
+    <div class="qr-item" data-att="focus"><span class="qr-dot"></span><span class="qr-name">Focus</span></div>
+    <div class="qr-item" data-att="surrender"><span class="qr-dot"></span><span class="qr-name">Surrender</span></div>
+  </aside>
+  <aside class="q-rail q-rail-right" aria-label="Posture reminders">
+    <span class="qr-cap">Posture</span>
+    <div class="qr-item"><span class="qr-dot"></span><span class="qr-name">Asana chosen</span></div>
+    <div class="qr-item"><span class="qr-dot"></span><span class="qr-name">Spine straight</span></div>
+    <div class="qr-item"><span class="qr-dot"></span><span class="qr-name">Tongue to roof of mouth</span></div>
+    <div class="qr-item"><span class="qr-dot"></span><span class="qr-name">Mudra clasped, above the navel</span></div>
+  </aside>
+  <div class="q-inner">
+    <div class="q-practice" id="q-practice"></div>
+    <div class="q-ringwrap">
+      <svg class="q-ring" viewBox="0 0 200 200" aria-hidden="true">
+        <circle cx="100" cy="100" r="92" fill="none" stroke="rgba(255,255,255,.055)" stroke-width="1.5"/>
+        <circle id="q-arc" cx="100" cy="100" r="92" fill="none" stroke="url(#qgrad)"
+          stroke-width="1.5" stroke-linecap="round" stroke-dasharray="578"
+          stroke-dashoffset="578" transform="rotate(-90 100 100)"/>
+        <defs><linearGradient id="qgrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#e6b25a"/><stop offset="100%" stop-color="#d98aa6"/>
+        </linearGradient></defs>
+      </svg>
+      <div class="q-breath" id="q-breath"></div>
+      <div class="q-time" id="q-time">20:00</div>
+    </div>
+    <div class="q-word" id="q-word"></div>
+    <button class="q-exit" id="q-exit">End sit</button>
+  </div>
+</div>
+
+<!-- after the bell: a moment before the form -->
+<div class="postsit" id="postsit" aria-hidden="true">
+  <div class="ps-inner">
+    <div class="ps-mins" id="ps-mins"></div>
+    <div class="ps-q">How was that?</div>
+    <div class="ps-choices">
+      <button class="ps-choice" data-settle="5"><span class="pc-g">🕊</span><span>Settled</span></button>
+      <button class="ps-choice" data-settle="3"><span class="pc-g">🌊</span><span>Somewhere between</span></button>
+      <button class="ps-choice" data-settle="1"><span class="pc-g">🌬</span><span>Restless</span></button>
+    </div>
+    <button class="ps-skip" id="ps-skip">Skip</button>
+  </div>
+</div>
+
 <div class="wrap">
 
   <header class="top">
     <div class="brand">
-      <h1>Inner Journey — Practice Log1</h1>
+      <h1>Inner Journey — Practice Log</h1>
       <p>The lotus rises from the mud toward the light. One day at a time.</p>
     </div>
     <div class="who">
@@ -308,11 +1072,18 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
 
   <div class="strip" id="strip"></div>
 
+  <!-- persistent curriculum progress track -->
+  <div class="curr-track" id="curr-track">
+    <div class="curr-phases" id="curr-phases"></div>
+    <div class="curr-lessons" id="curr-lessons" style="display:none"></div>
+  </div>
+
   <nav class="tabs" role="tablist">
     <button class="tab active" data-view="today">Today</button>
     <button class="tab" data-view="insights">Insights</button>
     <button class="tab" data-view="questions">Questions</button>
-    <button class="tab" data-view="virtues">Virtues</button>
+    <button class="tab" data-view="practices">Practices</button>
+    <button class="tab" data-view="virtues">Path</button>
     <button class="tab" data-view="progress">Progress</button>
     <button class="tab" data-view="everyone">Everyone</button>
     <button class="tab" data-view="data">Backup</button>
@@ -320,143 +1091,307 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
 
   <!-- TODAY -->
   <section class="view active" id="view-today">
-    <div class="invo" id="invo">
-      <div class="eyebrow">
-        <span class="caption">The Three Sacred Attitudes · spoken aloud</span>
-      </div>
-      <div class="prayer" id="invo-text"></div>
-      <div class="invo-foot">
-        <label class="invo-check" id="invo-check-wrap">
-          <input type="checkbox" id="invo-check" /> <span id="invo-check-label">Read aloud</span>
-        </label>
-        <div style="display:flex;gap:14px;align-items:center">
-          <span class="invo-streak" id="invo-streak"></span>
-          <button class="again" id="invo-again" title="Draw a different one for today">⟳ another</button>
+
+    <!-- ⓪ MORNING GLANCE — the whole app, before you've begun -->
+    <div class="glance" id="glance">
+      <div class="g-greet" id="gl-greet"></div>
+      <div class="g-date" id="gl-date"></div>
+      <div class="g-label">Today's invitation</div>
+      <div class="g-invite" id="gl-invite"></div>
+      <div class="g-actions">
+        <button class="g-btn" id="gl-begin">Begin meditation</button>
+        <div class="g-alts">
+          <button class="g-open" id="gl-open">Not meditating now</button>
+          <span class="g-sep">·</span>
+          <button class="g-open" id="gl-browse">Just browsing</button>
         </div>
       </div>
     </div>
 
-    <!-- daily teaching highlight -->
-    <div class="highlight" id="hl-card">
-      <div class="hl-eye">✦ Today's teaching</div>
-      <div class="hl-text" id="hl-text"></div>
-      <div class="hl-foot"><button class="again" id="hl-again">⟳ another</button></div>
+    <!-- ① ORIENTATION -->
+    <div class="orient" id="orient-zone">
+      <div class="orient-main">
+        <h1 class="greet" id="greet-line"></h1>
+        <div class="greet-date" id="greet-date"></div>
+      </div>
+      <div class="letter" id="weekly-letter" style="display:none">
+        <div class="lt-cap">Your week</div>
+        <div class="lt-body" id="lt-body"></div>
+      </div>
+      <div class="presence" id="presence" style="display:none"></div>
+      <div class="orient-thought">
+        <div class="zone-eyebrow">A thought for today</div>
+        <div class="thought-text" id="hl-text"></div>
+        <button class="again" id="hl-again">↻ another</button>
+      </div>
+      <details class="invo-fold" id="invo">
+        <summary>
+          <span class="if-title">The Three Sacred Attitudes</span>
+          <span class="if-meta" id="invo-streak"></span>
+        </summary>
+        <div class="prayer" id="invo-text"></div>
+        <div class="invo-foot">
+          <label class="pill-check" id="invo-check-wrap">
+            <input type="checkbox" id="invo-check" /> <span id="invo-check-label">Read aloud</span>
+          </label>
+          <button class="again" id="invo-again" title="Draw a different one for today">↻ another</button>
+        </div>
+      </details>
     </div>
 
-    <!-- rotating practice reminder -->
-    <div class="practice-reminder" id="practice-reminder">
-      <div class="pr-icon">🔔</div>
-      <div class="pr-body">
-        <div class="pr-label">This week's practice</div>
-        <div class="pr-text" id="pr-text"></div>
-        <div class="pr-sub" id="pr-sub"></div>
+    <!-- ② THIS WEEK'S INNER PRACTICE -->
+    <div class="zone">
+      <div class="zone-head">
+        <div class="zone-title">This week's inner practice</div>
+        <div class="zone-sub">Two things to live with this week, held within the wider path.</div>
       </div>
+
+      <div class="hero-pair">
+        <!-- VIRTUE CARD -->
+        <div class="flipwrap" id="virtue-today-card">
+          <div class="flipper" id="virtue-flipper">
+            <!-- front -->
+            <div class="face front v-face">
+              <div class="face-cap"><span class="cap-dot v-dot"></span>Virtue of the week</div>
+              <div class="face-title" id="vt-name"></div>
+              <div class="face-lede" id="vt-essence"></div>
+              <div class="face-today">
+                <div class="ft-label">Today</div>
+                <div class="ft-text" id="vt-prayer"></div>
+              </div>
+              <div class="dotrow" id="vt-dotrow"></div>
+              <div class="hover-hint" id="vt-hint"></div>
+              <div class="face-actions">
+                <label class="pill-check" id="vt-check-wrap">
+                  <input type="checkbox" id="vt-check" /> <span id="vt-check-label">Practised today</span>
+                </label>
+                <button class="flipbtn" data-flip="virtue-flipper" aria-label="More about this virtue">Explore →</button>
+              </div>
+            </div>
+            <!-- back -->
+            <div class="face back v-face">
+              <div class="face-cap"><span class="cap-dot v-dot"></span><span id="vt-back-name"></span>
+                <button class="closebtn" data-flip="virtue-flipper" aria-label="Back to summary">✕</button></div>
+              <div class="back-scroll">
+                <div class="b-label">What this cultivates</div>
+                <div class="b-text" id="vt-desc"></div>
+                <div class="b-label">Ways into it today</div>
+                <div class="vt-ideas" id="vt-ideas"></div>
+                <div class="b-label">This week</div>
+                <div class="b-text" id="vt-ring-label"></div>
+              </div>
+              <div class="face-actions">
+                <a class="ghostlink" id="vt-tab-link">See full virtue →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRACTICE CARD -->
+        <div class="flipwrap" id="potw-card">
+          <div class="flipper" id="potw-flipper">
+            <!-- front -->
+            <div class="face front p-face">
+              <div class="face-cap"><span class="cap-dot p-dot"></span>Practice of the week</div>
+              <div class="face-title" id="potw-title"></div>
+              <div class="face-meta" id="potw-meta"></div>
+              <div class="align-row" id="potw-align"></div>
+              <div class="face-today">
+                <div class="ft-label" id="potw-day-label"></div>
+                <div class="ft-text" id="pb-invitation"></div>
+              </div>
+              <div class="dotrow" id="potw-week"></div>
+              <div class="face-explored" id="potw-explored"></div>
+              <div class="hover-hint" id="potw-hint"></div>
+              <div class="face-actions">
+                <label class="pill-check" id="potw-check-wrap">
+                  <input type="checkbox" id="potw-check" /> <span id="potw-check-label">Practised today</span>
+                </label>
+                <button class="flipbtn" data-flip="potw-flipper" aria-label="More about this practice">Practise →</button>
+              </div>
+            </div>
+            <!-- back -->
+            <div class="face back p-face">
+              <div class="face-cap"><span class="cap-dot p-dot"></span>Right now
+                <button class="closebtn" data-flip="potw-flipper" aria-label="Back to summary">✕</button></div>
+              <div class="back-scroll">
+                <div class="potw-carry" id="potw-carry" style="display:none"></div>
+                <div class="potw-resurface" id="potw-resurface" style="display:none"></div>
+                <div class="potw-callback" id="potw-callback" style="display:none"></div>
+                <div class="b-label">Today's focus</div>
+                <div class="b-text" id="pb-focus"></div>
+                <div class="b-label">A way to explore</div>
+                <div class="b-text" id="pb-explore"></div>
+                <div class="b-label">Inspiration</div>
+                <div class="b-quote" id="pb-inspiration"></div>
+                <div class="prayer-mini">
+                  <div class="b-label">A prayer for today</div>
+                  <div class="potw-prayer" id="potw-prayer"></div>
+                  <button class="again" id="potw-prayer-again">↻ another prayer</button>
+                </div>
+                <div class="b-label">Ways to practise</div>
+                <div class="potw-ways" id="potw-ways"></div>
+                <button class="again" id="potw-another">↻ another way</button>
+                <div class="b-label">What did I notice?</div>
+                <textarea id="potw-refl-text" placeholder="A word, a moment, an observation…"></textarea>
+                <div class="face-actions" style="margin-top:8px">
+                  <button class="btn ghost small" id="potw-refl-save">Save reflection</button>
+                  <span id="potw-refl-msg" class="okmsg"></span>
+                </div>
+                <div class="potw-week-review" id="potw-week-review" style="display:none"></div>
+              </div>
+              <div class="face-actions">
+                <a class="ghostlink" id="potw-tab-link">See full practice →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIXFOLD STRIP -->
+      <div class="six-strip-head">
+        <span class="zone-eyebrow">The Sixfold Path — the wider framework</span>
+        <span class="six-strip-now" id="six-strip-now"></span>
+      </div>
+      <div class="six-strip" id="six-strip"></div>
     </div>
 
-    <!-- Sat Sandesh reminder — shown only during Stage 2 -->
-    <div class="sandesh" id="sandesh-reminder" style="display:none">
-      <div class="sd-icon">📖</div>
-      <div class="sd-body">
-        <div class="sd-label">Stage 2 · Daily reading</div>
-        <div class="sd-text">Read one page of <em>Sat Sandesh</em> before you sit today.</div>
-        <div class="sd-sub">Sant Rajinder Singh Ji's teachings — one page, slowly, as a preparation for the inner journey.</div>
+    <!-- ③ MEDITATION -->
+    <div class="zone">
+      <div class="zone-head">
+        <div class="zone-title">Meditation</div>
+        <div class="zone-sub">Prepare, sit, then record how it went.</div>
       </div>
+
+      <ol class="stages">
+        <!-- PREPARE -->
+        <li class="stage">
+          <div class="stage-mark">1</div>
+          <div class="stage-body">
+            <div class="stage-title">Prepare</div>
+            <div class="presit" id="presit">
+              <label class="presit-item" id="pi-breath">
+                <input type="checkbox" id="pi-breath-cb" />
+                <div>
+                  <div class="pi-text">Settle your breathing</div>
+                  <div class="pi-sub">Two to five minutes of slow, deep breaths to quieten the nervous system.</div>
+                </div>
+              </label>
+              <label class="presit-item" id="pi-mudra">
+                <input type="checkbox" id="pi-mudra-cb" />
+                <div>
+                  <div class="pi-text">Find your mudra</div>
+                  <div class="pi-sub">Held slightly above the legs, not resting on the thighs — sustain for at least 10 minutes to go deeper.</div>
+                </div>
+              </label>
+              <label class="presit-item" id="pi-divineform" style="display:none">
+                <input type="checkbox" id="pi-divineform-cb" />
+                <div>
+                  <div class="pi-text">Connect with your Divine Form</div>
+                  <div class="pi-sub">Gaze softly at your picture first — let the form enter the heart, then carry it into the sit.</div>
+                </div>
+              </label>
+            </div>
+            <div class="prep-notes">
+              <div class="tech-line" id="tech-line"></div>
+              <div class="sandesh" id="sandesh-reminder" style="display:none">
+                <div class="sd-icon">📖</div>
+                <div class="sd-body">
+                  <div class="sd-text">Read one page of <em>Sat Sandesh</em> before you sit.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- SIT -->
+        <li class="stage">
+          <div class="stage-mark">2</div>
+          <div class="stage-body">
+            <div class="stage-title">Sit</div>
+            <div class="sit-card">
+              <div class="row2">
+                <div class="field">
+                  <label for="d-date">Date</label>
+                  <input type="date" id="d-date" />
+                </div>
+                <div class="field">
+                  <label for="d-lesson">Today's lesson</label>
+                  <select id="d-lesson"></select>
+                  <a class="lessonlink" id="d-lesson-link" target="_blank" rel="noopener"></a>
+                </div>
+              </div>
+              <label class="check" id="d-done-wrap"><input type="checkbox" id="d-done" /> I sat today</label>
+
+              <div class="timer-panel" id="timer-panel">
+                <div class="tm-ring-wrap">
+                  <svg class="tm-ring" viewBox="0 0 100 100" aria-hidden="true">
+                    <circle cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="3"/>
+                    <circle id="tm-ring-arc" cx="50" cy="50" r="46" fill="none" stroke="var(--dawn)"
+                      stroke-width="3" stroke-linecap="round" stroke-dasharray="289"
+                      stroke-dashoffset="289" transform="rotate(-90 50 50)"/>
+                  </svg>
+                  <div class="tm-display" id="tm-display">20:00</div>
+                </div>
+                <div class="tm-controls">
+                  <label class="tm-label" for="tm-mins">Length</label>
+                  <select id="tm-mins">
+                    <option>5</option><option>10</option><option>15</option>
+                    <option selected>20</option><option>25</option><option>30</option>
+                    <option>40</option><option>45</option><option>60</option>
+                  </select>
+                  <div class="tm-btns">
+                    <button class="btn" id="tm-start">Begin</button>
+                    <button class="btn ghost small" id="tm-bell" title="Hear the bell">🔔</button>
+                  </div>
+                  <div class="tm-note">A bell sounds at the start and the end. Minutes fill in automatically.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- REFLECT & LOG -->
+        <li class="stage">
+          <div class="stage-mark">3</div>
+          <div class="stage-body">
+            <div class="stage-title">Reflect &amp; log</div>
+            <div class="sit-card">
+              <div class="row2">
+                <div class="field">
+                  <label for="d-min">Minutes</label>
+                  <input type="number" id="d-min" min="0" step="5" placeholder="e.g. 20" />
+                </div>
+                <div class="field">
+                  <label>How settled was the sit?</label>
+                  <div class="rating" id="d-rating" role="group" aria-label="Settledness 1 to 5"></div>
+                </div>
+              </div>
+              <div class="field">
+                <label for="d-daytime">Daytime Divine Life practice</label>
+                <select id="d-daytime"></select>
+                <a class="lessonlink" id="d-daytime-link" target="_blank" rel="noopener"></a>
+              </div>
+              <div class="field">
+                <label for="d-refl">Evening reflection</label>
+                <textarea id="d-refl" placeholder="What did I notice today? Where did the quality show up — or not?"></textarea>
+              </div>
+              <div class="actions">
+                <button class="btn" id="d-save">Save today's sit</button>
+                <span id="d-msg" class="okmsg"></span>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ol>
     </div>
 
-    <!-- this week's virtue -->
-    <div class="virtue-today" id="virtue-today-card">
-      <div class="vt-head">
-        <div>
-          <div class="vt-eye">This week's virtue</div>
-          <div class="vt-name" id="vt-name"></div>
-        </div>
-        <div class="vt-ring-wrap"><svg class="vt-ring" viewBox="0 0 44 44"><circle cx="22" cy="22" r="18" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="4"/><circle id="vt-ring-arc" cx="22" cy="22" r="18" fill="none" stroke="var(--dawn)" stroke-width="4" stroke-linecap="round" stroke-dasharray="113" stroke-dashoffset="113" transform="rotate(-90 22 22)"/></svg><span class="vt-ring-label" id="vt-ring-label">0/7</span></div>
-      </div>
-      <div class="vt-prayer-label">Today's prayer</div>
-      <div class="vt-prayer" id="vt-prayer"></div>
-      <div class="vt-ideas-label">Where to practise today</div>
-      <div class="vt-ideas" id="vt-ideas"></div>
-      <div class="vt-foot">
-        <label class="invo-check" id="vt-check-wrap">
-          <input type="checkbox" id="vt-check" /> <span id="vt-check-label">Practised today</span>
-        </label>
-        <a class="vt-tab-link" id="vt-tab-link">See full virtue →</a>
-      </div>
-    </div>
-
-    <!-- pre-sit checklist -->
-    <div class="presit" id="presit">
-      <h3>⚙ Before you sit — checks</h3>
-      <label class="presit-item" id="pi-breath">
-        <input type="checkbox" id="pi-breath-cb" />
-        <div>
-          <div class="pi-text">Steady deep breathing for 2–5 minutes</div>
-          <div class="pi-sub">Before meditation, breathe slowly and deeply to quieten the nervous system and prepare the mind.</div>
-        </div>
-      </label>
-      <label class="presit-item" id="pi-mudra">
-        <input type="checkbox" id="pi-mudra-cb" />
-        <div>
-          <div class="pi-text">Hand mudra held slightly above the legs</div>
-          <div class="pi-sub">Keep the mudra raised a little, not resting heavily on the thighs — sustain this for at least 10 minutes to drop into a deeper state.</div>
-        </div>
-      </label>
-      <label class="presit-item" id="pi-divineform" style="display:none">
-        <input type="checkbox" id="pi-divineform-cb" />
-        <div>
-          <div class="pi-text">🌸 Did you connect to your Divine Form using the picture?</div>
-          <div class="pi-sub">Before closing the eyes, gaze softly at your chosen picture — let the form enter the heart, not just the eyes. Then carry that living presence into the sit.</div>
-        </div>
-      </label>
-    </div>
-
-    <div class="card">
-      <h2>Log today's sit</h2>
-      <p class="sub">Morning practice, the daytime quality you're carrying, and an evening reflection.</p>
-      <div class="row2">
-        <div class="field">
-          <label for="d-date">Date</label>
-          <input type="date" id="d-date" />
-        </div>
-        <div class="field">
-          <label for="d-lesson">Formal practice / lesson</label>
-          <select id="d-lesson"></select>
-          <a class="lessonlink" id="d-lesson-link" target="_blank" rel="noopener"></a>
-        </div>
-      </div>
-      <div class="field">
-        <label>Did you complete the formal sit?</label>
-        <label class="check"><input type="checkbox" id="d-done" /> Yes — I sat today</label>
-      </div>
-      <div class="row2">
-        <div class="field">
-          <label for="d-min">Minutes</label>
-          <input type="number" id="d-min" min="0" step="5" placeholder="e.g. 20" />
-        </div>
-        <div class="field">
-          <label>How settled was the sit?</label>
-          <div class="rating" id="d-rating" role="group" aria-label="Settledness 1 to 5"></div>
-        </div>
-      </div>
-      <div class="field">
-        <label for="d-daytime">Daytime Divine Life practice</label>
-        <select id="d-daytime"></select>
-        <a class="lessonlink" id="d-daytime-link" target="_blank" rel="noopener"></a>
-      </div>
-      <div class="field">
-        <label for="d-refl">Evening reflection</label>
-        <textarea id="d-refl" placeholder="What did I notice today? Where did the quality show up — or not?"></textarea>
-      </div>
-      <div class="actions">
-        <button class="btn" id="d-save">Save entry</button>
-        <span id="d-msg" style="color:var(--leaf);font-size:13px"></span>
-      </div>
-    </div>
-    <div class="card">
-      <h2>Your recent days</h2>
+    <details class="recent-fold">
+      <summary><span class="if-title">Your recent days</span></summary>
       <div id="today-list"></div>
-    </div>
+    </details>
   </section>
+
 
   <!-- INSIGHTS -->
   <section class="view" id="view-insights">
@@ -467,6 +1402,14 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
         <textarea id="i-text" placeholder="Today I saw that…"></textarea>
       </div>
       <div class="actions"><button class="btn" id="i-save">Save insight</button></div>
+    </div>
+    <div class="card">
+      <h2>Search everything you've noticed</h2>
+      <p class="sub">Every reflection, insight and evening note you've written — searchable.</p>
+      <div class="field" style="margin-bottom:10px">
+        <input type="text" id="refl-q" placeholder="Try: intention, patience, speech…" />
+      </div>
+      <div id="refl-results"></div>
     </div>
     <div class="card">
       <h2>Your insights</h2>
@@ -495,8 +1438,95 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
   </section>
 
   <!-- PROGRESS -->
+  <!-- PRACTICES VIEW -->
+  <section class="view" id="view-practices">
+    <div class="card">
+      <h2>Add this week's practice</h2>
+      <p class="sub">Paste what your teacher gave you. It's stored permanently, word for word, and becomes this week's practice straight away.</p>
+      <div class="field">
+        <label for="np-title">Practice name</label>
+        <input type="text" id="np-title" placeholder="e.g. Right Speech" />
+      </div>
+      <div class="field">
+        <label for="np-core">Core instruction</label>
+        <textarea id="np-core" placeholder="The single line to carry — in the teacher's own words."></textarea>
+      </div>
+      <div class="field">
+        <label for="np-purpose">Purpose <span style="text-transform:none;color:var(--faint)">(optional)</span></label>
+        <textarea id="np-purpose" placeholder="What this practice is for."></textarea>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="np-inst">The practice includes <span style="text-transform:none;color:var(--faint)">— one per line</span></label>
+          <textarea id="np-inst" placeholder="Feeling the meaning&#10;Noticing without judgment&#10;Gently realigning"></textarea>
+        </div>
+        <div class="field">
+          <label for="np-daily">Daily-life practice <span style="text-transform:none;color:var(--faint)">— one per line</span></label>
+          <textarea id="np-daily" placeholder="Pause before speaking&#10;Check the motive&#10;Review the day"></textarea>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="np-six">Aligned Sixfold flow <span style="text-transform:none;color:var(--faint)">(optional)</span></label>
+          <select id="np-six"></select>
+        </div>
+        <div class="field">
+          <label for="np-virtue">Aligned virtue <span style="text-transform:none;color:var(--faint)">(optional)</span></label>
+          <select id="np-virtue"></select>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="np-source">Where it came from <span style="text-transform:none;color:var(--faint)">(optional)</span></label>
+          <input type="text" id="np-source" placeholder="Live class, 18 Aug · Skool post · satsang" />
+        </div>
+        <div class="field">
+          <label for="np-tags">Tags <span style="text-transform:none;color:var(--faint)">(comma separated)</span></label>
+          <input type="text" id="np-tags" placeholder="speech, attention, ego" />
+        </div>
+      </div>
+      <div class="field">
+        <label for="np-own">In my own words <span style="text-transform:none;color:var(--faint)">(optional — restating it is half the practice)</span></label>
+        <textarea id="np-own" placeholder="What this means to me…"></textarea>
+      </div>
+      <div class="actions">
+        <button class="btn" id="np-save">Add practice &amp; start this week</button>
+        <span id="np-msg" style="color:var(--leaf);font-size:13px"></span>
+      </div>
+      <p class="legend">The seven-day journey is built automatically from what you enter — each day reframes your teacher's own words from a different angle. Nothing is invented.</p>
+    </div>
+
+    <div class="card">
+      <h2>Current Practice</h2>
+      <p class="sub">The active Practice of the Week — see the Today tab to engage with it day by day.</p>
+      <div id="practice-current-summary"></div>
+    </div>
+    <div class="card">
+      <h2>Practice Library</h2>
+      <p class="sub">Every practice you've worked with, kept permanently. Click any card for its full history.</p>
+      <div id="practice-library-grid"></div>
+    </div>
+    <div class="card" id="thread-card" style="display:none">
+      <h2>The thread</h2>
+      <p class="sub">Everything you've chosen to carry forward, week after week — one continuous line of practice.</p>
+      <div id="thread-list"></div>
+    </div>
+
+    <div class="card" id="practice-detail-card" style="display:none">
+      <div id="practice-detail"></div>
+    </div>
+  </section>
+
   <!-- VIRTUES VIEW -->
   <section class="view" id="view-virtues">
+    <div class="card">
+      <h2>The Sixfold Path</h2>
+      <p class="sub">The Path of The Flowering Mind — six flows, one each week. <a href="https://www.skool.com/inner-journey-school/classroom/4a0770a8?md=c217937286d14abf9d08b6b9dcb1b8ed" target="_blank" rel="noopener">↗ Open in classroom</a></p>
+      <div id="six-grid"></div>
+    </div>
+    <div class="card" id="six-detail-card" style="display:none">
+      <div id="six-detail"></div>
+    </div>
     <div class="card">
       <h2>The Nine Virtues</h2>
       <p class="sub">One virtue per week. Track your daily practice, accumulate insights, and embed each quality before moving to the next.</p>
@@ -508,6 +1538,12 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
   </section>
 
   <section class="view" id="view-progress">
+    <div class="card">
+      <h2>The year</h2>
+      <p class="sub">Fifty-two weeks of inner work. Each square is a week, coloured by its practice — deeper colour where you practised more.</p>
+      <div class="year-grid" id="year-grid"></div>
+      <div class="year-legend" id="year-legend"></div>
+    </div>
     <div class="card">
       <h2>The path so far</h2>
       <p class="sub" id="prog-sub"></p>
@@ -565,8 +1601,8 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
       SECRET is an optional passphrase; must match the one in Code.gs.
    ==================================================================== */
 const CONFIG = {
-  ENDPOINT: "https://script.google.com/macros/s/AKfycbwa1BdQ0L9wKmSZTyX6g1tCOz-ljCm1CkhQTZSk1eBcB6exgi1JJIT_iKpVnmn-N-eKmQ/exec",
-  SECRET: "pray"
+  ENDPOINT: "",            // e.g. "https://script.google.com/macros/s/AKfy.../exec"
+  SECRET:   ""             // e.g. "lotus-2026"  (optional; match Code.gs)
 };
 
 /* ==================== 2) CURRICULUM (verified links) ==================== */
@@ -724,6 +1760,8 @@ const INVOCATIONS = [
 const LS_KEY="ijs_log_v1";
 const LS_PEOPLE="ijs_people_v1";
 const LS_ME="ijs_me_v1";
+const LS_ASSIGN="ijs_practice_assignments_v1";
+const LS_PRACTICES="ijs_practices_v1";
 let state={ entries:[] };
 let me="";
 let people=[];
@@ -765,7 +1803,7 @@ async function pullRemote(){
 }
 async function pushRemote(action,payload){
   if(!connected) return {ok:true,offline:true};
-  const body=Object.assign({action,secret:CONFIG.SECRET},payload);
+  const body=Object.assign({action,secret:CONFIG.SECRET,sheet:"Log"},payload);
   try{
     const r=await fetch(CONFIG.ENDPOINT,{
       method:"POST",
@@ -782,8 +1820,11 @@ async function pushRemote(action,payload){
 }
 function normalizeRow(row){
   const o={};
-  ["id","createdAt","person","kind","date","phase","lessonTitle","lessonUrl","formalDone","minutes","rating","daytimeText","daytimeUrl","reflection","text","status"]
+  ["id","createdAt","person","kind","date","phase","lessonTitle","lessonUrl","formalDone","minutes","rating","daytimeText","daytimeUrl","reflection","text","status","virtueKey","virtueName","practiceId","weekNumber","dayNumber","engaged","practised"]
     .forEach(k=>o[k]=row[k]!==undefined?row[k]:"");
+  // booleans arrive from Sheets as strings
+  o.engaged=(o.engaged===true||o.engaged==="true"||o.engaged==="TRUE");
+  o.practised=(o.practised===true||o.practised==="true"||o.practised==="TRUE");
   return o;
 }
 
@@ -923,12 +1964,15 @@ function renderEveryone(){
 function renderStrip(){
   const dailies=state.entries.filter(e=>e.person===me&&e.kind==="daily");
   const days=new Set(dailies.map(e=>e.date)).size;
-  const streak=calcStreak(dailies);
   const ins=state.entries.filter(e=>e.person===me&&e.kind==="insight").length;
   const openQ=state.entries.filter(e=>e.person===me&&e.kind==="question"&&e.status!=="answered").length;
+  // consistency over 30 days — kinder and more truthful than a breakable streak
+  const cut=new Date(); cut.setDate(cut.getDate()-29);
+  const cutIso=cut.toISOString().slice(0,10);
+  const recent=new Set(dailies.filter(e=>e.date>=cutIso).map(e=>e.date)).size;
   $("#strip").innerHTML=`
-    <div class="stat"><div class="n">${streak}</div><div class="l">day streak</div></div>
-    <div class="stat"><div class="n leaf">${days}</div><div class="l">days practised</div></div>
+    <div class="stat"><div class="n">${recent}<span class="of">/30</span></div><div class="l">days in the last month</div></div>
+    <div class="stat"><div class="n leaf">${days}</div><div class="l">days practised in all</div></div>
     <div class="stat"><div class="n rose">${ins}</div><div class="l">insights</div></div>
     <div class="stat"><div class="n">${openQ}</div><div class="l">open questions</div></div>`;
 }
@@ -1055,27 +2099,500 @@ function daysSinceStart(){
   const now=new Date(today()+"T00:00:00");
   return Math.max(0,Math.round((now-start)/86400000));
 }
+/* ==================== PRACTICE OF THE WEEK ==================== */
+/* Fixed anchor — never use the app's first-open date for practice weeks. */
+const PRACTICE_ANCHOR = "2026-08-18";
+
+const DAY_ANGLES = [
+  {n:1, key:"ARRIVE",    label:"Day 1 — Arrive"},
+  {n:2, key:"NOTICE",    label:"Day 2 — Notice"},
+  {n:3, key:"APPLY",     label:"Day 3 — Apply"},
+  {n:4, key:"GO DEEPER", label:"Day 4 — Go Deeper"},
+  {n:5, key:"EMBODY",    label:"Day 5 — Embody"},
+  {n:6, key:"RETURN",    label:"Day 6 — Return"},
+  {n:7, key:"REFLECT",   label:"Day 7 — Reflect"},
+];
+
+/* Practice Library — permanent. Never delete or replace items.
+   Each item carries its own authored 7-day journey derived from its own material. */
+/* ================================================================
+   THE SIXFOLD PATH — The Path of The Flowering Mind
+   The second pillar of daily practice, alongside the 9 Virtues.
+   Verified lesson in Way of a Divine Life.
+   Each flow carries 7 daily insights so something new appears each day.
+   ================================================================ */
+const SIXFOLD_LINK="https://www.skool.com/inner-journey-school/classroom/4a0770a8?md=c217937286d14abf9d08b6b9dcb1b8ed";
+const SIXFOLD = [
+  { key:"vision", name:"Right Vision", num:1, glyph:"👁",
+    essence:"Looking beneath external appearances to what is truly happening.",
+    daily:[
+      "Right Vision begins with admitting how much you assume. Most of what you 'see' today will be memory, not perception.",
+      "The surface of an event and its meaning are rarely the same. Ask of one situation: what is actually happening beneath this?",
+      "People rarely act from the motive we assign them. Today, consider that the person who irritated you may be afraid rather than hostile.",
+      "Right Vision is not optimism. It does not paint things better than they are — it simply refuses to paint them at all.",
+      "What you look for, you will find. Notice how your expectation shapes what appears in front of you today.",
+      "Clear seeing includes seeing yourself. The hardest thing to look at without distortion is your own behaviour.",
+      "By the end of the week: has anything you were certain about turned out to be a story you were telling?",
+    ],
+    invite:"Look beneath one appearance today and ask what is truly happening." },
+  { key:"intention", name:"Right Intention", num:2, glyph:"🧭",
+    essence:"Aligning thoughts, words and actions with clarity and kindness.",
+    daily:[
+      "Right Intention is a direction, not a destination. You will face away from it many times today; each turning back is the practice.",
+      "Before the action comes the motive. Catch one motive today before it becomes a word.",
+      "Notice the difference between wanting to be good and wanting to be seen as good. They produce very different actions.",
+      "Intention without action is only preference. What would today look like if your intention were visible to others?",
+      "Resentment is an intention too. Notice it without judgment — you cannot realign with what you refuse to see.",
+      "The vow: may my thoughts, words and actions serve clarity and kindness to all others today. Say it as if you meant it.",
+      "Review: where did intention hold today, and where did it quietly slip?",
+    ],
+    invite:"Open the day with the vow, and check your motive once before acting." },
+  { key:"speech", name:"Right Speech", num:3, glyph:"💬",
+    essence:"Asking before speaking: is it true, is it kind, is it necessary?",
+    daily:[
+      "Three gates before speaking: is it true, is it kind, is it necessary? Most speech fails at least one.",
+      "Silence is also speech. Notice what your not-saying communicates today.",
+      "The tone carries more than the words. You can say something true in a way that makes it unhearable.",
+      "Notice the urge to interrupt — that urge is almost always about you, not about what is being said.",
+      "Honesty without kindness is cruelty; kindness without honesty is cowardice. Right Speech needs both.",
+      "What you say about someone absent tells more about you than about them.",
+      "Review the week's speech: which single sentence would you take back?",
+    ],
+    invite:"Pass one sentence today through all three gates before you say it." },
+  { key:"action", name:"Right Action", num:4, glyph:"🤲",
+    essence:"Choosing what creates harmony rather than division.",
+    daily:[
+      "Every choice either gathers or divides. Ask of one decision today: which is this doing?",
+      "Right Action is usually unremarkable. It looks like the small thing done properly when nobody checks.",
+      "Inaction is a choice too. What are you not doing that harmony would require?",
+      "The right action is often the inconvenient one. Notice where convenience is making your decisions.",
+      "Doing good loudly and doing good quietly are different practices. Try the quiet one today.",
+      "Harmony is not agreement. You can act rightly in a disagreement.",
+      "Review: which action this week created harmony you can actually point to?",
+    ],
+    invite:"Ask of one choice today: does this create harmony or division?" },
+  { key:"presence", name:"Right Presence", num:5, glyph:"🪷",
+    essence:"Letting an ordinary task become the meditation.",
+    daily:[
+      "The meditation does not end when you stand up. Let one ordinary task today be done with full attention.",
+      "Presence is not intensity. It is simply not being somewhere else.",
+      "Washing up, walking, waiting — these are not interruptions to practice. They are where practice lives.",
+      "Notice how often you rush through the present to reach a future that arrives as another present you also rush through.",
+      "You cannot be present and be performing at the same time. Notice which one you are doing.",
+      "Presence includes the body. Where are your shoulders right now?",
+      "Review: which ordinary moment this week became unexpectedly whole?",
+    ],
+    invite:"Let one ordinary task today become the meditation." },
+  { key:"devotion", name:"Right Devotion", num:6, glyph:"🙏",
+    essence:"A moment of gratitude; bowing inwardly.",
+    daily:[
+      "Devotion begins with one honest moment of gratitude. Not a list — one thing, actually felt.",
+      "Bowing inwardly costs nothing and changes the posture of the whole day.",
+      "Devotion is not belief. It is the willingness to be small before something larger.",
+      "Offer one ordinary action to the Divine today — an email, a meal, a chore. Nothing needs to change but the dedication.",
+      "Gratitude for what is difficult is the advanced practice. Try it once, gently.",
+      "Devotion completes the other five. Vision, intention, speech, action and presence all soften when offered rather than achieved.",
+      "Review: where did the week feel like an offering rather than a task?",
+    ],
+    invite:"Offer one ordinary action today to the Divine." },
+];
+function getSixfold(k){ return SIXFOLD.find(s=>s.key===k); }
+/* The Sixfold cycles on its own 6-week rhythm, alongside the 9-week virtue cycle. */
+function activeSixfoldIndex(){ return Math.floor(daysSinceStart()/7)%SIXFOLD.length; }
+function activeSixfold(){ return SIXFOLD[activeSixfoldIndex()]; }
+function sixfoldDailyIndex(){ return daysSinceStart()%7; }
+
+/* ---- Prayers for the Practice of the Week ----
+   Drawn fresh on every open (genuinely random), but always matched to the
+   day's angle, so the prayer deepens the day rather than shuffling against it.
+   {P} is replaced with the practice title, {C} with its core instruction. */
+const ANGLE_PRAYERS = {
+  ARRIVE:[
+    "May I arrive at {P} today with an open, unhurried heart.",
+    "Let me begin — not perfectly, only sincerely.",
+    "May {P} become a direction I face, not a rule I obey.",
+    "Let this week's practice find its way into my ordinary hours.",
+    "May I hold {P} lightly enough to carry it all week.",
+  ],
+  NOTICE:[
+    "May I see clearly where {P} lives in me — and where it does not.",
+    "Let me notice without judging what I notice.",
+    "May I catch the moment before the habit, just once today.",
+    "Let my seeing be gentle, even when what I see is uncomfortable.",
+    "May I notice the absence of {P} as kindly as its presence.",
+  ],
+  APPLY:[
+    "May I bring {P} into one real moment today, however small.",
+    "Let me act from the practice, not merely think about it.",
+    "May the pause come before the word today.",
+    "Let one ordinary situation become the ground of {P}.",
+    "May I choose the practice once today, deliberately.",
+  ],
+  "GO DEEPER":[
+    "May I look beneath the surface of {P} without flinching.",
+    "Let me meet the part of me that resists this practice.",
+    "May I find what is really moving underneath my motives.",
+    "Let honesty go deeper than comfort today.",
+    "May the difficulty in {P} become my teacher.",
+  ],
+  EMBODY:[
+    "May {P} become something another person can actually feel.",
+    "Let the practice live in my hands and my voice, not only my mind.",
+    "May I do the thing, quietly, without needing it seen.",
+    "Let one action today carry the whole week's teaching.",
+    "May {P} take a form in the world today.",
+  ],
+  RETURN:[
+    "May I return to {P} as many times as I forget it.",
+    "Let beginning again be the practice, not the failure.",
+    "May I meet my forgetting without self-reproach.",
+    "Let me come back gently, as often as needed.",
+    "May I remember: returning is arriving.",
+  ],
+  REFLECT:[
+    "May I look back on this week with honesty and without harshness.",
+    "Let me carry forward what was real, and release the rest.",
+    "May I see how {P} has quietly changed me.",
+    "Let this week close gently, and remain in me.",
+    "May what I learned outlast the week that taught it.",
+  ],
+};
+function practicePrayer(angleKey, practice){
+  const pool=ANGLE_PRAYERS[angleKey]||ANGLE_PRAYERS.ARRIVE;
+  // genuinely random on each open, per the user's request
+  const raw=pool[Math.floor(Math.random()*pool.length)];
+  return raw.replace(/\{P\}/g, practice.title).replace(/\{C\}/g, practice.core||"");
+}
+
+/* ---- Generic seven-angle engine ----
+   Lets a practice work immediately from just its core instruction, its
+   "the practice includes" list and its daily-life list. Hand-authored
+   `days` content always takes priority when present. Nothing is invented:
+   every generated line reframes the teacher's own material. */
+const ANGLE_FRAMES = {
+  ARRIVE:{
+    focus:p=>`Today you simply arrive at ${p.title}. Let the core instruction settle before anything else: “${p.core}”`,
+    invitation:p=>`Say the core instruction once, slowly, feeling its meaning rather than reciting it. Then choose one simple way to hold it today.`,
+    explore:p=>p.dailyLife[0]?`Begin here: ${lower(p.dailyLife[0])}.`:`Carry the instruction into your first ordinary task today.`,
+  },
+  NOTICE:{
+    focus:p=>`Today you notice. ${p.title} usually becomes visible by its absence — the moment it slips. Watch without judgment.`,
+    invitation:p=>`Notice one moment today where ${p.title} was present, and one where it was not. Meet both with equal kindness.`,
+    explore:p=>p.dailyLife[1]?`Try noticing as you ${lower(p.dailyLife[1])}.`:`Watch for the gap between what you intend and what you actually do.`,
+  },
+  APPLY:{
+    focus:p=>`Today you apply. ${p.title} moves from observation into deliberate use — one real situation, consciously chosen.`,
+    invitation:p=>`Pick one interaction or decision today and bring ${p.title} to it on purpose.`,
+    explore:p=>p.dailyLife[2]?`A concrete way in: ${lower(p.dailyLife[2])}.`:`Choose one situation today and apply the practice deliberately.`,
+  },
+  "GO DEEPER":{
+    focus:p=>`Today you go deeper. Why is ${p.title} difficult to hold? Usually something quieter is running underneath, unexamined.`,
+    invitation:p=>`Look beneath the surface today and ask what is really driving you.`,
+    explore:p=>p.instructions[2]?`Sit with this: ${lower(p.instructions[2])}.`:`Ask honestly what resists this practice in you.`,
+  },
+  EMBODY:{
+    focus:p=>`Today you embody. ${p.title} that stays in the mind is only half the practice — let it become something someone else can feel.`,
+    invitation:p=>`Take one concrete action today that expresses ${p.title}.`,
+    explore:p=>p.dailyLife[3]?`For example: ${lower(p.dailyLife[3])}.`:`Do one thing that makes the practice visible in the world.`,
+  },
+  RETURN:{
+    focus:p=>`Today you return. By now you will have forgotten ${p.title} at some point. That forgetting is not the problem — returning is the practice.`,
+    invitation:p=>`Find where you lost alignment this week and begin again, without self-criticism.`,
+    explore:p=>p.dailyLife[4]?`Practise this: ${lower(p.dailyLife[4])}.`:`Notice where you drifted, and simply come back.`,
+  },
+  REFLECT:{
+    focus:p=>`Today you reflect. The week closes. Look honestly at where ${p.title} became real, and what you want to keep.`,
+    invitation:p=>`Review the week as a whole and name one thing you want to carry forward.`,
+    explore:p=>p.dailyLife[5]?`Close with this: ${lower(p.dailyLife[5])}.`:`Read back what you noticed this week and see what changed.`,
+  },
+};
+function lower(s){ return s?s.charAt(0).toLowerCase()+s.slice(1):s; }
+
+/* Build a day's content: hand-authored if available, else generated. */
+function dayContentFor(practice, dayNumber){
+  if(practice.days && practice.days[dayNumber-1]) return practice.days[dayNumber-1];
+  const angle=DAY_ANGLES[dayNumber-1];
+  const f=ANGLE_FRAMES[angle.key];
+  const inst=practice.instructions||[], dl=practice.dailyLife||[];
+  const safe={...practice, instructions:inst.length?inst:[practice.core||""], dailyLife:dl.length?dl:[practice.core||""]};
+  // three entry points drawn from the practice's own daily-life lines
+  const pick=(arr,i)=>arr.length?arr[i%arr.length]:"";
+  return {
+    focus:f.focus(safe),
+    invitation:f.invitation(safe),
+    explore:f.explore(safe),
+    inspiration:practice.core||"",
+    generated:true,
+    ways:{
+      morning:[ `Set your intention around ${practice.title} before the day begins.`,
+                pick(safe.instructions,0), pick(safe.instructions,1) ].filter(Boolean),
+      day:    [ pick(safe.dailyLife, dayNumber-1), pick(safe.dailyLife, dayNumber),
+                `Bring ${practice.title} to one ordinary moment today.` ].filter(Boolean),
+      evening:[ `Review where ${practice.title} was present today.`,
+                pick(safe.dailyLife, safe.dailyLife.length-1),
+                `Ask: what did ${practice.title} show me today?` ].filter(Boolean),
+    },
+  };
+}
+
+const PRACTICE_LIBRARY = [
+  {
+    practiceId:"p1",
+    title:"Right Intention",
+    alignType:"sixfold",
+    alignKey:"intention",
+    alignVirtue:"sincerity",
+    dateIntroduced:"2026-08-18",
+    originalWeek:1,
+    core:"May my thoughts, words and actions serve clarity and kindness today.",
+    purpose:"To align the inner motive behind everything you think, say and do with what is good, loving and true — and to return gently whenever that alignment is lost.",
+    instructions:[
+      "Feel the meaning rather than merely reciting it",
+      "Bring to mind the kind of person you intend to be",
+      "Notice resentment, selfishness or harmful intention without judgment",
+      "Gently realign with what is good, loving and true",
+      "Choose one simple intention for the day",
+    ],
+    dailyLife:[
+      "Pause before speaking or acting",
+      "Check the motive behind important choices",
+      "Choose honesty without unnecessary harshness",
+      "Look for an opportunity to help someone",
+      "Notice when alignment is lost and begin again",
+      "Review the day",
+    ],
+    days:[
+      { focus:"Today you simply arrive at the practice. Right Intention is not a rule to obey but a direction to face. Before anything else, let the core instruction settle: 'May my thoughts, words and actions serve clarity and kindness today.'",
+        invitation:"Say the core instruction once, slowly, and feel its meaning rather than reciting it. Then choose one simple intention for today.",
+        explore:"Before you leave the house or open your laptop, name your intention in a single sentence: 'Today I intend to be patient with interruptions.' Keep it small enough to actually hold.",
+        inspiration:"An intention is not a promise about outcomes. It is a direction you keep facing, however many times you turn away.",
+        ways:{
+          morning:["Choose one quality to carry into the day and name it aloud.","Sit for one minute and ask: what kind of person do I intend to be today?","Write your intention on a scrap of paper and keep it in your pocket."],
+          day:["When you notice you've forgotten your intention, simply recall it. No correction needed.","Say the core instruction silently once before a task you're dreading.","Notice the first moment today when your intention becomes relevant."],
+          evening:["Ask: did I remember my intention at all today?","Recall the one moment where the intention was present.","Re-read your intention and let it stand for tomorrow too."],
+        }},
+      { focus:"Today you notice. Right Intention becomes visible mainly by its absence — the moment you speak before checking, or act from a motive you wouldn't want examined. Notice without judgment.",
+        invitation:"Watch for one moment today where your intention was clear, and one where it was not. Notice both with equal kindness.",
+        explore:"In your next conversation, notice the gap between what you intend to convey and what you actually say. That gap is the practice's territory.",
+        inspiration:"Noticing resentment or selfishness is not failure. It is the practice working — you cannot realign with what you haven't seen.",
+        ways:{
+          morning:["Set an intention, then predict where it will be hardest to keep today.","Notice your motive for the first thing you do this morning.","Ask: what is my intention behind this ordinary task?"],
+          day:["Notice one moment where your motive was not what you'd have wanted it to be.","Catch yourself mid-sentence and ask: what am I actually trying to achieve here?","Observe an irritation and trace it back to its intention."],
+          evening:["Name one moment where intention was present, and one where it was absent.","Ask: where did I not want to look today?","Notice, without judgment, what you learned about your own motives."],
+        }},
+      { focus:"Today you apply. The practice moves from observation into deliberate use — one real situation where you consciously check your intention before acting.",
+        invitation:"Choose one real interaction or decision today and deliberately pause before it to check your motive.",
+        explore:"Before a difficult message, meeting, or conversation, take one breath and ask: 'What do I actually intend here?' Then act from that answer.",
+        inspiration:"The pause before speaking is where Right Intention lives. Everything after it is just consequence.",
+        ways:{
+          morning:["Identify the one situation today where you most want to bring conscious intention.","Rehearse the pause: breath, question, then act.","Set the intention for one specific upcoming interaction."],
+          day:["Pause before speaking in one conversation. Check the motive. Then speak.","Before an important choice, ask what is driving it.","Choose honesty in one moment — without unnecessary harshness."],
+          evening:["Ask: did the pause change what I did?","Recall the moment you applied the practice deliberately.","Note what was difficult about pausing."],
+        }},
+      { focus:"Today you go deeper. Why is intention so hard to hold? Usually because a competing intention — to be right, to be safe, to be seen — is running underneath, unexamined.",
+        invitation:"Look beneath one surface intention today and ask what quieter motive is running beneath it.",
+        explore:"Think of something you did this week that you justified easily. Ask honestly: what was the real intention? Sit with the answer without defending yourself.",
+        inspiration:"We rarely act without intention. We simply act without knowing which intention we are serving.",
+        ways:{
+          morning:["Ask: what intention do I habitually serve that I'd rather not admit?","Contemplate the phrase 'good, loving and true' — which is hardest for you?","Notice the intention behind wanting to do this practice well."],
+          day:["When you feel defensive, ask what intention is being protected.","Notice a moment where two intentions compete. Which wins?","Trace one reaction back to the fear underneath it."],
+          evening:["Ask: what did I discover about my own motives today?","Sit with one uncomfortable insight without fixing it.","Notice where self-honesty was difficult."],
+        }},
+      { focus:"Today you embody. Intention that stays in the mind is only half the practice. Let it become an action, a conversation, a decision that someone else can actually feel.",
+        invitation:"Look for one opportunity to help someone today — and take it, quietly, without needing it acknowledged.",
+        explore:"Do one concrete thing that expresses your intention: send the kind message, make the honest correction, offer the help nobody asked for.",
+        inspiration:"An intention that never becomes an action was never quite an intention. It was a preference.",
+        ways:{
+          morning:["Decide one concrete action that would express your intention today.","Ask: who could I help today, and how?","Plan one honest thing you've been avoiding saying."],
+          day:["Do the helpful thing without mentioning it.","Say the honest thing — clearly, without harshness.","Let one decision today be made from intention rather than habit."],
+          evening:["Ask: where did my intention become visible to someone else?","Recall the action you took and what it cost.","Notice whether you needed it to be noticed."],
+        }},
+      { focus:"Today you return. By now you have almost certainly forgotten the practice at some point — perhaps for a whole day. That forgetting is not a problem to solve. Returning is the practice.",
+        invitation:"Find the place where you lost alignment this week, and begin again — without any self-criticism.",
+        explore:"Recall the moment this week you most fell short of your intention. Say quietly: 'I lost it there. I begin again now.' Then genuinely let it go.",
+        inspiration:"Beginning again is not starting over. It is the practice itself, arriving on time.",
+        ways:{
+          morning:["Begin the day by explicitly beginning again.","Recall where you lost alignment and gently re-set.","Set the same intention you set on Day 1 — with more knowledge now."],
+          day:["Each time you notice you've forgotten, simply return. Count nothing.","Notice self-criticism arising and let it pass.","Return to the intention three times today without comment."],
+          evening:["Ask: how quickly did I return when I noticed?","Notice whether returning is getting easier.","Forgive one lapse completely."],
+        }},
+      { focus:"Today you reflect. The week closes. Look back honestly at where Right Intention became real, where it stayed theoretical, and what you want to carry forward.",
+        invitation:"Review the week as a whole, and name one thing about intention you want to keep.",
+        explore:"Read back any reflections you wrote this week. Notice what changed between Day 1 and today — and what didn't.",
+        inspiration:"The week ends. The practice does not. It simply returns to the library, waiting for the day you need it again.",
+        ways:{
+          morning:["Re-read your Day 1 intention. Does it still fit?","Ask: what does Right Intention mean to me now that it didn't on Monday?","Set the intention one final time for this week."],
+          day:["Notice one moment today where the week's practice showed up automatically.","Observe whether the pause before speaking has become easier.","Practise the whole week's learning in one interaction."],
+          evening:["Complete the week's review below.","Name what you want to carry forward.","Thank yourself for the week, however it went."],
+        }},
+    ],
+  },
+];
+
+/* ---- week / day maths from the fixed anchor ---- */
+function isoOf(d){ return d.toISOString().slice(0,10); }
+function daysBetween(a,b){
+  return Math.floor((new Date(b+"T00:00:00") - new Date(a+"T00:00:00"))/86400000);
+}
+function practiceWeekNumber(dateStr){
+  const d=daysBetween(PRACTICE_ANCHOR, dateStr||today());
+  return d<0 ? 0 : Math.floor(d/7)+1;
+}
+function practiceDayNumber(dateStr){
+  const d=daysBetween(PRACTICE_ANCHOR, dateStr||today());
+  return d<0 ? 0 : (d%7)+1;
+}
+function weekBounds(weekNumber){
+  const start=new Date(PRACTICE_ANCHOR+"T00:00:00");
+  start.setDate(start.getDate()+(weekNumber-1)*7);
+  const end=new Date(start); end.setDate(end.getDate()+6);
+  return {start:isoOf(start), end:isoOf(end)};
+}
+function fmtRange(a,b){
+  const A=new Date(a+"T00:00:00"), B=new Date(b+"T00:00:00");
+  const m=x=>x.toLocaleDateString(undefined,{month:"short"});
+  return A.getDate()+(m(A)===m(B)?"":" "+m(A))+"–"+B.getDate()+" "+m(B);
+}
+/* ---- user-added practices (from the teacher, week by week) ----
+   Stored separately from the built-in library so nothing is ever overwritten. */
+function loadCustomPractices(){
+  try{ return JSON.parse(safeGet(LS_PRACTICES)||"[]"); }catch(e){ return []; }
+}
+function saveCustomPractices(a){ safeSet(LS_PRACTICES, JSON.stringify(a)); }
+function allPractices(){ return PRACTICE_LIBRARY.concat(loadCustomPractices()); }
+function getPractice(pid){ return allPractices().find(p=>p.practiceId===pid); }
+
+async function addPractice(fields){
+  const list=loadCustomPractices();
+  const wk=practiceWeekNumber(today());
+  const p={
+    practiceId:"u"+uid(),
+    title:fields.title.trim(),
+    core:(fields.core||"").trim(),
+    purpose:(fields.purpose||"").trim(),
+    instructions:(fields.instructions||"").split("\n").map(s=>s.replace(/^[-•*]\s*/,"").trim()).filter(Boolean),
+    dailyLife:(fields.dailyLife||"").split("\n").map(s=>s.replace(/^[-•*]\s*/,"").trim()).filter(Boolean),
+    source:(fields.source||"").trim(),
+    alignType:fields.alignSix?"sixfold":(fields.alignVirtue?"virtue":""),
+    alignKey:fields.alignSix||fields.alignVirtue||"",
+    alignVirtue:fields.alignVirtue||"",
+    ownWords:(fields.ownWords||"").trim(),
+    tags:(fields.tags||"").split(",").map(s=>s.trim()).filter(Boolean),
+    dateIntroduced:today(),
+    originalWeek:wk,
+  };
+  list.push(p); saveCustomPractices(list);
+  await pushRemote("add",{sheet:"Practices", row:Object.assign({},p,{
+    instructions:p.instructions.join("\n"), dailyLife:p.dailyLife.join("\n"), tags:p.tags.join(", ")
+  })});
+  // assign it to this week immediately (a new practice always wins)
+  let asg=loadAssignments().filter(a=>a.weekNumber!==wk);
+  const b=weekBounds(wk);
+  const rec={weekNumber:wk, weekStart:b.start, weekEnd:b.end, practiceId:p.practiceId,
+             assignmentType:"new", assignedAt:new Date().toISOString()};
+  asg.push(rec); saveAssignments(asg);
+  await pushRemote("add",{sheet:"PracticeAssignments", row:rec});
+  renderAll();
+  return p;
+}
+
+/* ---- weekly assignment: persisted, deterministic, never random ---- */
+function loadAssignments(){
+  try{ return JSON.parse(safeGet(LS_ASSIGN)||"[]"); }catch(e){ return []; }
+}
+function saveAssignments(a){ safeSet(LS_ASSIGN, JSON.stringify(a)); }
+
+function assignmentFor(weekNumber){
+  let list=loadAssignments();
+  let found=list.find(a=>a.weekNumber===weekNumber);
+  if(found) return found;
+
+  const b=weekBounds(weekNumber);
+  let practiceId=null, type="resurfaced";
+
+  // 1) a practice introduced for exactly this week → always use it
+  const introduced=allPractices().find(p=>p.originalWeek===weekNumber);
+  if(introduced){ practiceId=introduced.practiceId; type="new"; }
+
+  // 2) otherwise resurface deterministically
+  if(!practiceId){
+    const prev=list.filter(a=>a.weekNumber<weekNumber).sort((x,y)=>y.weekNumber-x.weekNumber);
+    const lastId=prev.length?prev[0].practiceId:null;
+    const candidates=allPractices().filter(p=>p.practiceId!==lastId);
+    const pool=candidates.length?candidates:allPractices().slice();
+    let best=null, bestScore=-1;
+    pool.forEach(p=>{
+      const featured=list.filter(a=>a.practiceId===p.practiceId);
+      const lastWeek=featured.length?Math.max(...featured.map(a=>a.weekNumber)):p.originalWeek;
+      const weeksSince=weekNumber-lastWeek;                 // longer gap → higher
+      const timesFeatured=featured.length;                  // fewer → higher
+      const ageWeeks=weekNumber-(p.originalWeek||1);        // older → slightly higher
+      const logs=state.entries.filter(e=>e.kind==="practice"&&e.practiceId===p.practiceId&&e.practised);
+      const timesPractised=logs.length;                     // less practised → higher
+      const jitter=(hashDate(b.start+p.practiceId)%100)/1000; // deterministic tiebreak
+      const score=(weeksSince*3)+(ageWeeks*0.5)-(timesFeatured*2)-(timesPractised*0.4)+jitter;
+      if(score>bestScore){ bestScore=score; best=p; }
+    });
+    practiceId=best?best.practiceId:allPractices()[0].practiceId;
+    type="resurfaced";
+  }
+
+  found={weekNumber, weekStart:b.start, weekEnd:b.end, practiceId,
+         assignmentType:type, assignedAt:new Date().toISOString()};
+  list.push(found); saveAssignments(list);
+  pushRemote("add",{sheet:"PracticeAssignments", row:found});
+  return found;
+}
+function manuallyAssign(practiceId){
+  const wk=practiceWeekNumber(today());
+  let list=loadAssignments().filter(a=>a.weekNumber!==wk);
+  const b=weekBounds(wk);
+  const rec={weekNumber:wk, weekStart:b.start, weekEnd:b.end, practiceId,
+             assignmentType:"manual", assignedAt:new Date().toISOString()};
+  list.push(rec); saveAssignments(list);
+  pushRemote("add",{sheet:"PracticeAssignments", row:rec});
+  renderAll();
+}
+
+/* ---- practice log helpers ---- */
+function practiceLogFor(pid, dateStr){
+  return state.entries.find(e=>e.person===me&&e.kind==="practice"&&
+    e.practiceId===pid&&e.date===(dateStr||today()));
+}
+function practiceLogsThisWeek(pid, weekNumber){
+  return state.entries.filter(e=>e.person===me&&e.kind==="practice"&&
+    e.practiceId===pid&&Number(e.weekNumber)===weekNumber);
+}
+async function markEngaged(pid, weekNumber, dayNumber){
+  const existing=practiceLogFor(pid);
+  if(existing){
+    if(!existing.engaged){ await updateEntry(existing.id,{engaged:true}); }
+    return;
+  }
+  await addEntry({kind:"practice", practiceId:pid, date:today(),
+    weekNumber, dayNumber, engaged:true, practised:false, reflection:""});
+}
+/* ---- meditation technique rotation (retained, demoted to a compact line) ---- */
 const PRACTICE_WEEKS = [
-  { days:[0,6],   icon:"🌊", label:"Week 1 — So-Hum",
+  { days:[0,6],   icon:"🌊", label:"So-Hum",
     text:"Do your So-Hum meditation today.",
     sub:"Sit comfortably, close the eyes, and silently repeat 'So' on the in-breath and 'Hum' on the out-breath for 10–20 minutes." },
-  { days:[7,13],  icon:"🕉️", label:"Week 2 — 21 × OM",
+  { days:[7,13],  icon:"🕉️", label:"21 × OM",
     text:"Do your 21 repetitions of OM today.",
     sub:"Chant OM slowly and deliberately 21 times before your formal sit, feeling the vibration settle the mind." },
-  { days:[14,20], icon:"🌬️", label:"Week 3 — Nadi Shodhana",
+  { days:[14,20], icon:"🌬️", label:"Nadi Shodhana",
     text:"Practise Nadi Shodhana (alternate nostril breathing) today.",
     sub:"5–10 minutes before meditation, alternating nostrils to balance the two hemispheres and deepen stillness." },
-  { days:[21,27], icon:"🔥", label:"Week 4 — Trataka (focus)",
+  { days:[21,27], icon:"🔥", label:"Trataka (focus)",
     text:"Practise steady single-point attention today.",
     sub:"Spend 5 minutes before your sit gazing softly at a candle flame or fixed point, training the eye of the mind." },
 ];
 function renderPracticeReminder(){
   const d=daysSinceStart();
-  // cycle through the four weeks repeatedly
   const week=PRACTICE_WEEKS[Math.floor(d/7)%PRACTICE_WEEKS.length];
   const dayInWeek=(d%7)+1;
-  $("#pr-text").textContent=week.icon+" "+week.text;
-  $("#pr-sub").textContent=week.sub+" (Day "+dayInWeek+" of 7 for "+week.label+")";
+  const el=$("#tech-line");
+  if(el) el.innerHTML=`<span class="tl-icon">${week.icon}</span><span>This week's technique: <b>${esc(week.label)}</b> · day ${dayInWeek} of 7</span>`;
 }
 
 /* ================================================================
@@ -1317,36 +2834,44 @@ function renderVirtueToday(){
   const v=activeVirtue();
   const dayIdx=dayOfVirtueWeek();
   const done=virtueDays(v.key);
-  const pct=Math.min(done.length/7,1);
-  const circumference=113;
-  const offset=circumference-(pct*circumference);
+  const n=Math.min(done.length,7);
 
-  $("#vt-name").textContent=v.name;
-  $("#vt-ring-label").textContent=Math.min(done.length,7)+"/7";
-  const arc=$("#vt-ring-arc");
-  if(arc) arc.style.strokeDashoffset=offset;
-  // colour arc when embedded
-  if(done.length>=7 && arc) arc.style.stroke="var(--leaf)";
+  const nameEl=$("#vt-name"); if(!nameEl) return;
+  nameEl.textContent=v.name;
+  const bn=$("#vt-back-name"); if(bn) bn.textContent=v.name;
+  const ess=$("#vt-essence"); if(ess) ess.textContent=v.desc.split(".")[0]+".";
+  const desc=$("#vt-desc"); if(desc) desc.textContent=v.desc;
 
   const prayerIdx=(dayIdx+vtShuffle)%v.prayers.length;
   $("#vt-prayer").textContent=v.prayers[prayerIdx];
 
-  // pick 3 idea slots deterministically by date
+  // 7-day dotrow
+  const dr=$("#vt-dotrow");
+  if(dr) dr.innerHTML=Array.from({length:7},(_,i)=>
+    `<span class="d${i<n?" on":""}${i===dayIdx?" now":""}"></span>`).join("");
+  const rl=$("#vt-ring-label");
+  if(rl) rl.textContent=n+" of 7 days practised"+(n>=7?" · embedded":"");
+
+  // three ideas, rotating by date
   const base=hashDate(today()+"V");
-  const ideas=v.ideas;
-  const idxs=[];
+  const ideas=v.ideas, idxs=[];
   for(let i=0;i<3;i++) idxs.push((base+i)%ideas.length);
-  const unique=[...new Set(idxs)].slice(0,3);
-  // pad if needed
-  while(unique.length<3) unique.push((unique[unique.length-1]+1)%ideas.length);
-  $("#vt-ideas").innerHTML=unique.map(i=>`<div class="vt-idea"><span class="vi-icon">${ideas[i].icon}</span><div><strong>${esc(ideas[i].place)}</strong> — ${esc(ideas[i].how)}</div></div>`).join("");
+  const uniq=[...new Set(idxs)].slice(0,3);
+  while(uniq.length<3) uniq.push((uniq[uniq.length-1]+1)%ideas.length);
+  const ideaBox=$("#vt-ideas");
+  if(ideaBox) ideaBox.innerHTML=uniq.map(i=>
+    `<div class="vt-idea"><span class="vi-icon">${ideas[i].icon}</span><div><strong>${esc(ideas[i].place)}</strong> — ${esc(ideas[i].how)}</div></div>`).join("");
 
   const logged=!!virtueLoggedToday(v.key);
   const cb=$("#vt-check"), wrap=$("#vt-check-wrap"), lbl=$("#vt-check-label");
-  if(cb){ cb.checked=logged; wrap.classList.toggle("done",logged); lbl.textContent=logged?"Practised ✓":"Practised today"; }
+  if(cb){ cb.checked=logged; wrap.classList.toggle("done",logged);
+    lbl.textContent=logged?"Practised ✓":"Practised today"; }
+
+  const hint=$("#vt-hint");
+  if(hint) hint.textContent="Inside: what this cultivates, three ways into it today, and your week so far.";
 
   const tl=$("#vt-tab-link");
-  if(tl){ tl.textContent="See "+v.name+" in full →"; tl.onclick=()=>{ $$(".tab").forEach(x=>x.classList.remove("active")); $('[data-view="virtues"]').classList.add("active"); $$(".view").forEach(vv=>vv.classList.remove("active")); $("#view-virtues").classList.add("active"); renderVirtueGrid(); showVirtueDetail(v.key); }; }
+  if(tl){ tl.onclick=()=>{ gotoTab("virtues"); renderVirtueGrid(); showVirtueDetail(v.key); }; }
 }
 
 /* ---- Virtue grid ---- */
@@ -1420,7 +2945,7 @@ function showVirtueDetail(vkey){
 function initPresit(){
   ["breath","mudra"].forEach(k=>{
     const cb=$("#pi-"+k+"-cb"), item=$("#pi-"+k);
-    if(cb && item) cb.onchange=()=>item.classList.toggle("checked",cb.checked);
+    if(cb && item) cb.onchange=()=>{ item.classList.toggle("checked",cb.checked); renderStageState(); };
   });
 
   // divine form check — shown on 3 out of 7 days, stable by date hash
@@ -1431,6 +2956,79 @@ function initPresit(){
     divineItem.style.display=showToday?"flex":"none";
     if(divineCb) divineCb.onchange=()=>divineItem.classList.toggle("checked",divineCb.checked);
   }
+
+  // ---- Practice of the Week ----
+  const potwCb=$("#potw-check");
+  if(potwCb) potwCb.onchange=async()=>{
+    const wk=practiceWeekNumber(today()); if(wk<1) return;
+    const asg=assignmentFor(wk), dayN=practiceDayNumber(today());
+    const log=practiceLogFor(asg.practiceId);
+    if(log) await updateEntry(log.id,{practised:potwCb.checked, engaged:true});
+    else await addEntry({kind:"practice",practiceId:asg.practiceId,date:today(),
+      weekNumber:wk,dayNumber:dayN,engaged:true,practised:potwCb.checked,reflection:""});
+  };
+
+  const another=$("#potw-another");
+  if(another) another.onclick=()=>{ wayShuffle++; renderPracticeOfWeek(); };
+
+  const prayerAgain=$("#potw-prayer-again");
+  if(prayerAgain) prayerAgain.onclick=()=>{
+    const wk=practiceWeekNumber(today()); if(wk<1) return;
+    const p=getPractice(assignmentFor(wk).practiceId); if(!p) return;
+    const angle=DAY_ANGLES[practiceDayNumber(today())-1];
+    $("#potw-prayer").textContent=practicePrayer(angle.key, p);
+  };
+
+  const npSave=$("#np-save");
+  // populate alignment dropdowns
+  const nsx=$("#np-six"), nvt=$("#np-virtue");
+  if(nsx&&!nsx.options.length){
+    nsx.innerHTML=`<option value="">— none —</option>`+
+      SIXFOLD.map(s=>`<option value="${s.key}">${s.glyph} ${s.name}</option>`).join("");
+  }
+  if(nvt&&!nvt.options.length){
+    nvt.innerHTML=`<option value="">— none —</option>`+
+      VIRTUES.map(v=>`<option value="${v.key}">${v.name}</option>`).join("");
+  }
+  if(npSave) npSave.onclick=async()=>{
+    const title=$("#np-title").value.trim();
+    if(!title){ alert("Give the practice a name."); return; }
+    await addPractice({
+      title, core:$("#np-core").value, purpose:$("#np-purpose").value,
+      instructions:$("#np-inst").value, dailyLife:$("#np-daily").value,
+      source:$("#np-source").value, tags:$("#np-tags").value, ownWords:$("#np-own").value,
+      alignSix:$("#np-six").value, alignVirtue:$("#np-virtue").value,
+    });
+    ["np-title","np-core","np-purpose","np-inst","np-daily","np-source","np-tags","np-own"]
+      .forEach(id=>{ const el=$("#"+id); if(el) el.value=""; });
+    if(nsx) nsx.value=""; if(nvt) nvt.value="";
+    $("#np-msg").textContent="Added — it's this week's practice ✓";
+    setTimeout(()=>{const m=$("#np-msg"); if(m)m.textContent="";},2600);
+  };
+
+  const reflSave=$("#potw-refl-save");
+  if(reflSave) reflSave.onclick=async()=>{
+    const wk=practiceWeekNumber(today()); if(wk<1) return;
+    const asg=assignmentFor(wk), dayN=practiceDayNumber(today());
+    const txt=$("#potw-refl-text").value.trim();
+    const log=practiceLogFor(asg.practiceId);
+    if(log) await updateEntry(log.id,{reflection:txt, engaged:true});
+    else await addEntry({kind:"practice",practiceId:asg.practiceId,date:today(),
+      weekNumber:wk,dayNumber:dayN,engaged:true,practised:false,reflection:txt});
+    toast("Reflection saved");
+    $("#potw-refl-msg").textContent="Saved ✓";
+    setTimeout(()=>{const m=$("#potw-refl-msg"); if(m)m.textContent="";},1800);
+  };
+
+  const potwLink=$("#potw-tab-link");
+  if(potwLink) potwLink.onclick=()=>{
+    $$(".tab").forEach(x=>x.classList.remove("active"));
+    $('[data-view="practices"]').classList.add("active");
+    $$(".view").forEach(v=>v.classList.remove("active"));
+    $("#view-practices").classList.add("active");
+    const wk=practiceWeekNumber(today());
+    if(wk>=1) showPracticeDetail(assignmentFor(wk).practiceId);
+  };
 
   // virtue checkbox
   const vtcb=$("#vt-check");
@@ -1445,8 +3043,882 @@ function initPresit(){
   };
 }
 
+/* ---- persistent curriculum progress track ---- */
+let currOpen=null; // key of expanded phase, or null
+function renderCurriculumTrack(){
+  const done=new Set(state.entries.filter(e=>e.person===me&&e.kind==="daily").map(e=>e.lessonTitle));
+  const stage=currentStage();
+
+  // phase segments
+  const segsHTML=PHASES.map(ph=>{
+    const total=ph.lessons.length;
+    const got=ph.lessons.filter(([t])=>done.has(t)).length;
+    const pct=Math.round(got/total*100);
+    const isDone=got===total;
+    const isActive=stage===ph.key;
+    const cls=(isDone?"done-seg":"")+(isActive?" active-seg":"");
+    const tick=isDone?"✓ ":"";
+    return `<div class="curr-seg ${cls}" data-phkey="${ph.key}">
+      <div class="curr-seg-inner">
+        <div class="cs-label">${tick}${esc(ph.label.split("·")[1]||ph.label)}</div>
+        <div class="cs-bar"><span style="width:${pct}%"></span></div>
+        <div class="cs-count">${got}/${total}</div>
+      </div>
+    </div>`;
+  }).join("");
+  $("#curr-phases").innerHTML=segsHTML;
+
+  // lesson drawer
+  const cl=$("#curr-lessons");
+  if(currOpen){
+    const ph=PHASES.find(p=>p.key===currOpen);
+    if(ph){
+      const sections=ph.lessons.map(([title,url])=>{
+        const isDoneL=done.has(title);
+        return `<label class="cl-item${isDoneL?" done":""}" data-lesson="${esc(title)}">
+          <input type="checkbox" ${isDoneL?"checked":""} data-lesson="${esc(title)}" data-url="${esc(url)}" data-phase="${esc(ph.label)}" />
+          <span>${esc(title)}</span>
+        </label>`;
+      }).join("");
+      cl.innerHTML=`<div class="cl-phase-head">${esc(ph.label)}</div>
+        <div class="cl-items">${sections}</div>
+        <button class="cl-close">▲ close</button>`;
+      cl.style.display="block";
+      // wire checkboxes
+      cl.querySelectorAll("input[type=checkbox]").forEach(cb=>{
+        cb.onchange=async()=>{
+          const title=cb.dataset.lesson, url=cb.dataset.url, phase=cb.dataset.phase;
+          if(cb.checked){
+            // log as a daily entry if not already there
+            const already=state.entries.find(e=>e.person===me&&e.kind==="daily"&&e.lessonTitle===title);
+            if(!already){
+              await addEntry({kind:"daily",date:today(),phase,lessonTitle:title,lessonUrl:url,
+                formalDone:true,minutes:"",rating:"",daytimeText:"",daytimeUrl:"",reflection:""});
+            }
+          } else {
+            // remove the entry for this lesson
+            const entry=state.entries.find(e=>e.person===me&&e.kind==="daily"&&e.lessonTitle===title);
+            if(entry) await deleteEntry(entry.id);
+          }
+        };
+      });
+      cl.querySelector(".cl-close").onclick=()=>{ currOpen=null; renderCurriculumTrack(); };
+    }
+  } else {
+    cl.style.display="none";
+  }
+
+  // segment click — toggle drawer
+  $$(".curr-seg").forEach(seg=>{
+    seg.onclick=()=>{
+      currOpen=(currOpen===seg.dataset.phkey)?null:seg.dataset.phkey;
+      renderCurriculumTrack();
+      if(currOpen) setTimeout(()=>$("#curr-lessons").scrollIntoView({behavior:"smooth",block:"nearest"}),60);
+    };
+  });
+}
+
+/* ================= PRACTICE OF THE WEEK — RENDER ================= */
+let wayShuffle=0;
+
+/* ---- carry-forward chain: the thread that links each week to the next ---- */
+function weekReviewFor(weekNumber){
+  // the Day-7 review is stored as JSON in the entry's `text` field
+  const rows=state.entries.filter(e=>e.person===me&&e.kind==="practice"&&
+    Number(e.weekNumber)===weekNumber&&e.text);
+  for(const r of rows){
+    try{
+      const o=JSON.parse(r.text);
+      if(o&&(o.carry||o.real||o.hard||o.surprise)) return {data:o, row:r};
+    }catch(e){}
+  }
+  return null;
+}
+function lastCarryForward(beforeWeek){
+  for(let w=beforeWeek-1; w>=1; w--){
+    const rev=weekReviewFor(w);
+    if(rev&&rev.data.carry&&rev.data.carry.trim()){
+      const asg=loadAssignments().find(a=>a.weekNumber===w);
+      const p=asg?getPractice(asg.practiceId):null;
+      return {week:w, text:rev.data.carry.trim(), practice:p?p.title:"", gap:beforeWeek-w};
+    }
+  }
+  return null;
+}
+function fullThread(){
+  // every carry-forward ever written, oldest first
+  const out=[];
+  const maxW=practiceWeekNumber(today());
+  for(let w=1; w<=maxW; w++){
+    const rev=weekReviewFor(w);
+    if(rev&&rev.data.carry&&rev.data.carry.trim()){
+      const asg=loadAssignments().find(a=>a.weekNumber===w);
+      const p=asg?getPractice(asg.practiceId):null;
+      out.push({week:w, text:rev.data.carry.trim(), practice:p?p.title:""});
+    }
+  }
+  return out;
+}
+
+function renderPracticeOfWeek(){
+  const card=$("#potw-card"); if(!card) return;
+  const wk=practiceWeekNumber(today());
+  if(wk<1){ card.style.display="none"; return; }
+  card.style.display="block";
+
+  const asg=assignmentFor(wk);
+  const p=getPractice(asg.practiceId);
+  if(!p){ card.style.display="none"; return; }
+
+  const dayN=practiceDayNumber(today());
+  const angle=DAY_ANGLES[dayN-1];
+  const dayContent=dayContentFor(p, dayN);
+  const b=weekBounds(wk);
+
+  $("#potw-title").textContent=p.title;
+  $("#potw-meta").textContent="Week "+wk+" · "+fmtRange(b.start,b.end);
+  renderAlignTags(p);
+
+  // ---- week dots ----
+  const logs=practiceLogsThisWeek(p.practiceId, wk);
+  const byDay={}; logs.forEach(l=>byDay[Number(l.dayNumber)]=l);
+  $("#potw-week").innerHTML=DAY_ANGLES.map(a=>{
+    const l=byDay[a.n];
+    let cls="";
+    if(l&&l.practised) cls="on";
+    else if(l&&l.engaged) cls="half";
+    if(a.n===dayN) cls+=" now";
+    return `<span class="d ${cls}" title="Day ${a.n} — ${a.key}"></span>`;
+  }).join("");
+  const explored=logs.filter(l=>l.engaged||l.practised).length;
+  $("#potw-explored").textContent = explored===0
+    ? "Not yet explored this week."
+    : explored+(explored===1?" day":" days")+" explored";
+
+  // ---- carry-forward from the previous week ----
+  const cf=$("#potw-carry");
+  const carried=lastCarryForward(wk);
+  if(carried && dayN<=4){
+    const thread=fullThread();
+    cf.innerHTML=`<div class="cf-label">↝ Carried forward</div>
+      <div class="cf-quote">“${esc(carried.text)}”</div>
+      <div class="cf-from">From ${esc(carried.practice||"week "+carried.week)} · week ${carried.week}${carried.gap>1?" · "+carried.gap+" weeks ago":""}</div>
+      ${thread.length>1?`<div class="cf-thread">This is week ${thread.length+1} of a continuous thread. <a id="cf-see-thread" style="cursor:pointer">See the whole thread →</a></div>`:""}`;
+    cf.style.display="block";
+    const link=$("#cf-see-thread");
+    if(link) link.onclick=()=>{
+      $$(".tab").forEach(x=>x.classList.remove("active"));
+      $('[data-view="practices"]').classList.add("active");
+      $$(".view").forEach(v=>v.classList.remove("active"));
+      $("#view-practices").classList.add("active");
+      renderThreadCard(true);
+    };
+  } else cf.style.display="none";
+
+  // ---- resurfacing acknowledgement ----
+  const rs=$("#potw-resurface");
+  if(asg.assignmentType==="resurfaced"){
+    const prevWeeks=loadAssignments().filter(a=>a.practiceId===p.practiceId&&a.weekNumber<wk);
+    const lastWk=prevWeeks.length?Math.max(...prevWeeks.map(a=>a.weekNumber)):p.originalWeek;
+    const gap=wk-lastWk;
+    const priorRefl=state.entries.filter(e=>e.person===me&&e.kind==="practice"&&
+      e.practiceId===p.practiceId&&e.reflection&&Number(e.weekNumber)<wk)
+      .sort((a,b2)=>(b2.createdAt||"").localeCompare(a.createdAt||""))[0];
+    rs.innerHTML=`<div class="rs-title">↻ You've worked with this before.</div>
+      <div>Last explored ${gap} week${gap===1?"":"s"} ago.</div>
+      ${priorRefl?`<div class="rs-quote">Last time you noticed: “${esc(priorRefl.reflection)}”</div>`:""}
+      <div style="margin-top:6px">What might you discover this time?</div>`;
+    rs.style.display="block";
+  } else rs.style.display="none";
+
+  // ---- mid-week callback (selective: days 4 and 6 only) ----
+  const cb=$("#potw-callback");
+  const earlier=logs.filter(l=>l.reflection&&Number(l.dayNumber)<dayN)
+    .sort((a,b2)=>Number(a.dayNumber)-Number(b2.dayNumber))[0];
+  if(earlier && (dayN===4||dayN===6)){
+    cb.innerHTML=`<div>Earlier this week you noticed:</div>
+      <div class="cb-quote">“${esc(earlier.reflection)}”</div>
+      <div>Has anything changed since then?</div>`;
+    cb.style.display="block";
+  } else cb.style.display="none";
+
+  // ---- the day ----
+  $("#potw-day-label").textContent=angle.label.replace("Day "+dayN+" — ","Day "+dayN+" · ");
+  $("#pb-focus").textContent=dayContent.focus;
+  $("#pb-invitation").textContent=dayContent.invitation;
+  $("#pb-explore").textContent=dayContent.explore;
+  $("#pb-inspiration").textContent=dayContent.inspiration;
+  const pr=$("#potw-prayer");
+  if(pr) pr.textContent=practicePrayer(angle.key, p);
+
+  const slots=[["morning","☀","Morning"],["day","💬","During the day"],["evening","🌙","Evening"]];
+  $("#potw-ways").innerHTML=slots.map(([k,icon,label])=>{
+    const arr=dayContent.ways[k]||[];
+    const txt=arr.length?arr[wayShuffle%arr.length]:"";
+    return `<div class="pw-way"><div class="pw-label"><span class="pw-icon">${icon}</span>${label}</div>
+      <div class="pw-text">${esc(txt)}</div></div>`;
+  }).join("");
+
+  const phint=$("#potw-hint");
+  if(phint) phint.textContent="Inside: today's focus, a way to explore, a prayer, three moments to practise, and space to note what you saw.";
+
+  // ---- practised checkbox ----
+  const log=practiceLogFor(p.practiceId);
+  const pc=$("#potw-check"), pw=$("#potw-check-wrap"), pl=$("#potw-check-label");
+  const isPractised=!!(log&&log.practised);
+  pc.checked=isPractised; pw.classList.toggle("done",isPractised);
+  pl.textContent=isPractised?"Practised ✓":"I practised this today";
+
+  // ---- reflection ----
+  const rt=$("#potw-refl-text");
+  if(rt && document.activeElement!==rt) rt.value=(log&&log.reflection)?log.reflection:"";
+
+  // ---- day 7 week review ----
+  const wr=$("#potw-week-review");
+  if(dayN===7){
+    const saved=log&&log.text?JSON.parse(log.text||"{}"):{};
+    const prior=lastCarryForward(wk);
+    wr.innerHTML=`<div class="wr-title">Look back on the week</div>
+      ${prior?`<div style="font-size:12.5px;color:var(--dim);margin-bottom:12px;padding:9px 12px;border-radius:9px;background:rgba(131,184,160,.07);border:1px solid rgba(131,184,160,.25)">You began this week carrying: <em>“${esc(prior.text)}”</em><br><span style="color:var(--faint)">Did it hold?</span></div>`:""}
+      <div class="wr-q">Where did this practice become real?</div>
+      <textarea id="wr-real">${esc(saved.real||"")}</textarea>
+      <div class="wr-q">Where was it difficult?</div>
+      <textarea id="wr-hard">${esc(saved.hard||"")}</textarea>
+      <div class="wr-q">What surprised me?</div>
+      <textarea id="wr-surprise">${esc(saved.surprise||"")}</textarea>
+      <div class="wr-q" style="color:var(--leaf)">↝ Carry forward — what do I want to remember from this practice?</div>
+      <textarea id="wr-carry" placeholder="One line. This will greet you at the start of next week.">${esc(saved.carry||"")}</textarea>
+      <div class="potw-refl-actions" style="margin-top:10px">
+        <button class="btn ghost small" id="wr-save">Save week review</button>
+        <span id="wr-msg" style="color:var(--leaf);font-size:12px"></span>
+      </div>
+      <div class="wr-note">The week has ended, but the practice remains in your library.</div>`;
+    wr.style.display="block";
+    $("#wr-save").onclick=async()=>{
+      const payload=JSON.stringify({real:$("#wr-real").value,hard:$("#wr-hard").value,
+        surprise:$("#wr-surprise").value,carry:$("#wr-carry").value});
+      const l=practiceLogFor(p.practiceId);
+      if(l) await updateEntry(l.id,{text:payload});
+      else await addEntry({kind:"practice",practiceId:p.practiceId,date:today(),
+        weekNumber:wk,dayNumber:dayN,engaged:true,practised:false,reflection:"",text:payload});
+      $("#wr-msg").textContent="Saved ✓"; setTimeout(()=>{const m=$("#wr-msg"); if(m)m.textContent="";},1800);
+    };
+  } else wr.style.display="none";
+
+  // mark engaged (viewing the day's content counts)
+  if(!log||!log.engaged) markEngaged(p.practiceId, wk, dayN);
+}
+
+/* ---- Practices tab ---- */
+let openPractice=null;
+function renderThreadCard(scroll){
+  const card=$("#thread-card"), list=$("#thread-list");
+  if(!card||!list) return;
+  const thread=fullThread();
+  if(!thread.length){ card.style.display="none"; return; }
+  list.innerHTML=thread.map(t=>
+    `<div class="thread-item">
+       <div class="ti-week">Week ${t.week}</div>
+       <div class="ti-body">
+         ${t.practice?`<div class="ti-practice">${esc(t.practice)}</div>`:""}
+         <div class="ti-text">“${esc(t.text)}”</div>
+       </div>
+     </div>`).join("");
+  card.style.display="block";
+  if(scroll) setTimeout(()=>card.scrollIntoView({behavior:"smooth",block:"start"}),60);
+}
+
+function renderPracticesTab(){
+  const wk=practiceWeekNumber(today());
+  const asg=wk>=1?assignmentFor(wk):null;
+  const cur=asg?getPractice(asg.practiceId):null;
+  const b=asg?weekBounds(wk):null;
+
+  const sum=$("#practice-current-summary");
+  if(sum){
+    sum.innerHTML=cur
+      ? `<div class="p-card active-practice" data-pid="${cur.practiceId}">
+           <span class="pc-badge ${asg.assignmentType==="resurfaced"?"returning":"new"}">${asg.assignmentType==="resurfaced"?"↻ Returning practice":asg.assignmentType==="manual"?"Chosen by you":"New this week"}</span>
+           <div class="pc-title">${esc(cur.title)}</div>
+           <div class="pc-meta">Week ${wk} · ${fmtRange(b.start,b.end)}<br>Day ${practiceDayNumber(today())} of 7</div>
+         </div>`
+      : `<div class="mut">The Practice of the Week begins on 18 August 2026.</div>`;
+  }
+
+  const assignments=loadAssignments();
+  const grid=$("#practice-library-grid");
+  if(grid){
+    grid.innerHTML=`<div class="plib-grid">`+allPractices().map(p=>{
+      const logs=state.entries.filter(e=>e.person===me&&e.kind==="practice"&&e.practiceId===p.practiceId&&e.practised);
+      const last=logs.map(e=>e.date).sort().slice(-1)[0];
+      const feats=assignments.filter(a=>a.practiceId===p.practiceId);
+      const resurfaced=feats.filter(a=>a.assignmentType==="resurfaced").length;
+      const isCur=cur&&cur.practiceId===p.practiceId;
+      return `<div class="p-card${isCur?" active-practice":""}" data-pid="${p.practiceId}">
+        ${isCur?`<span class="pc-badge ${asg.assignmentType==="resurfaced"?"returning":"new"}">${asg.assignmentType==="resurfaced"?"↻ Returning":"This week"}</span>`:""}
+        <div class="pc-title">${esc(p.title)}</div>
+        <div class="pc-meta">
+          Introduced ${fmtDate(p.dateIntroduced)}<br>
+          Practised ${logs.length} time${logs.length===1?"":"s"}<br>
+          ${last?"Last practised "+fmtDate(last):"Not yet practised"}<br>
+          ${resurfaced>0?"Resurfaced "+resurfaced+"×":"&nbsp;"}
+        </div></div>`;
+    }).join("")+`</div>`;
+    $$(".p-card").forEach(c=>c.onclick=()=>showPracticeDetail(c.dataset.pid));
+  }
+  if(openPractice) showPracticeDetail(openPractice);
+  renderThreadCard(false);
+}
+
+function showPracticeDetail(pid){
+  openPractice=pid;
+  const p=getPractice(pid); if(!p) return;
+  const assignments=loadAssignments().filter(a=>a.practiceId===pid).sort((a,b)=>a.weekNumber-b.weekNumber);
+  const logs=state.entries.filter(e=>e.person===me&&e.kind==="practice"&&e.practiceId===pid);
+  const practisedN=logs.filter(l=>l.practised).length;
+  const refls=logs.filter(l=>l.reflection).sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+  const wk=practiceWeekNumber(today());
+  const isCur=wk>=1&&assignmentFor(wk).practiceId===pid;
+
+  $("#practice-detail").innerHTML=`
+    <div class="pdet-head">
+      <div class="pdet-title">${esc(p.title)}</div>
+      ${isCur?'<span class="pill person">● This week</span>':''}
+    </div>
+    <div class="pdet-core">“${esc(p.core)}”</div>
+    ${p.source?`<div style="font-size:12.5px;color:var(--faint);margin-bottom:10px">Source: ${esc(p.source)}</div>`:""}
+    ${p.tags&&p.tags.length?`<div style="margin-bottom:12px">${p.tags.map(t=>`<span class="pill" style="margin-right:5px">${esc(t)}</span>`).join("")}</div>`:""}
+    ${p.ownWords?`<div class="pdet-section">In my own words</div><div class="pb-text" style="font-style:italic">${esc(p.ownWords)}</div>`:""}
+    <div class="pdet-section">Purpose</div>
+    <div class="pb-text">${esc(p.purpose)}</div>
+    <div class="pdet-section">The practice includes</div>
+    <div class="pdet-list">${p.instructions.map(i=>`<div class="pdet-list-item">${esc(i)}</div>`).join("")}</div>
+    <div class="pdet-section">Daily-life practice</div>
+    <div class="pdet-list">${p.dailyLife.map(i=>`<div class="pdet-list-item">${esc(i)}</div>`).join("")}</div>
+    <div class="pdet-section">History</div>
+    <div class="pdet-hist-row"><span class="hr-week">Introduced</span><span>${fmtDate(p.dateIntroduced)} · originally week ${p.originalWeek}</span></div>
+    <div class="pdet-hist-row"><span class="hr-week">Practised</span><span>${practisedN} time${practisedN===1?"":"s"}</span></div>
+    <div class="pdet-section">Weekly assignments</div>
+    <div class="pdet-history">${assignments.length?assignments.map(a=>
+      `<div class="pdet-hist-row"><span class="hr-week">Week ${a.weekNumber} · ${fmtRange(a.weekStart,a.weekEnd)}</span><span class="hr-type">${a.assignmentType}</span></div>`).join("")
+      :'<div class="mut">No assignments recorded yet.</div>'}</div>
+    <div class="pdet-section">Reflections</div>
+    ${refls.length?refls.map(r=>`<div class="pdet-refl"><div class="pr-date">${fmtDate(r.date)} · week ${r.weekNumber}, day ${r.dayNumber}</div><div class="pr-text">“${esc(r.reflection)}”</div></div>`).join(""):'<div class="mut">No reflections yet.</div>'}
+    ${isCur?"":`<div style="margin-top:16px"><button class="btn ghost small" id="bring-back">Bring this practice back</button>
+      <div style="font-size:12px;color:var(--faint);margin-top:6px">Assigns it to the current week.</div></div>`}`;
+
+  $("#practice-detail-card").style.display="block";
+  const bb=$("#bring-back");
+  if(bb) bb.onclick=()=>{ if(confirm("Assign “"+p.title+"” to this week?")) manuallyAssign(pid); };
+  setTimeout(()=>$("#practice-detail-card").scrollIntoView({behavior:"smooth",block:"nearest"}),50);
+}
+
+/* ================= TWO PILLARS + SIXFOLD ================= */
+function gotoTab(view){
+  $$(".tab").forEach(x=>x.classList.remove("active"));
+  const btn=$('[data-view="'+view+'"]'); if(btn) btn.classList.add("active");
+  $$(".view").forEach(v=>v.classList.remove("active"));
+  const sec=$("#view-"+view); if(sec) sec.classList.add("active");
+}
+
+let openSix=null;
+function renderSixGrid(){
+  const grid=$("#six-grid"); if(!grid) return;
+  const act=activeSixfold();
+  grid.innerHTML=`<div class="six-grid">`+SIXFOLD.map(s=>{
+    const isAct=s.key===act.key;
+    return `<div class="s-card${isAct?" active-week":""}" data-skey="${s.key}">
+      <div class="sc-num">Flow ${s.num} ${s.glyph}</div>
+      <div class="sc-name">${esc(s.name)}</div>
+      <div class="sc-essence">${esc(s.essence)}</div>
+      ${isAct?`<div class="sc-status">● This week · day ${sixfoldDailyIndex()+1} of 7</div>`:""}
+    </div>`;
+  }).join("")+`</div>`;
+  $$(".s-card").forEach(c=>c.onclick=()=>showSixfoldDetail(c.dataset.skey));
+  if(openSix) showSixfoldDetail(openSix);
+}
+function showSixfoldDetail(key){
+  openSix=key;
+  const s=getSixfold(key); if(!s) return;
+  const isAct=activeSixfold().key===key;
+  const todayIdx=sixfoldDailyIndex();
+  $("#six-detail").innerHTML=`
+    <div class="vd-head">
+      <div class="vd-name">${s.glyph} ${esc(s.name)}</div>
+      ${isAct?'<span class="pill" style="border-color:rgba(184,160,255,.5);color:#c3b0ff">● This week</span>':`<span class="pill">Flow ${s.num}</span>`}
+    </div>
+    <div class="vd-desc">${esc(s.essence)}</div>
+    <div class="vd-section">The daily invitation</div>
+    <div class="pb-text">${esc(s.invite)}</div>
+    <div class="vd-section">Seven days of insight</div>
+    ${s.daily.map((d,i)=>`<div class="sd-insight${isAct&&i===todayIdx?" today-insight":""}">
+      <div class="si-day">Day ${i+1}${isAct&&i===todayIdx?" · today":""}</div>${esc(d)}</div>`).join("")}
+    <div style="margin-top:14px"><a href="${SIXFOLD_LINK}" target="_blank" rel="noopener" style="font-size:13px">↗ Open the Sixfold Path in the classroom</a></div>`;
+  $("#six-detail-card").style.display="block";
+  setTimeout(()=>$("#six-detail-card").scrollIntoView({behavior:"smooth",block:"nearest"}),50);
+}
+
+/* alignment tags on the Practice of the Week */
+function renderAlignTags(p){
+  const box=$("#potw-align"); if(!box) return;
+  let html="";
+  if(p.alignType==="sixfold"&&p.alignKey){
+    const s=getSixfold(p.alignKey);
+    if(s) html+=`<div class="align-tag sixfold" data-go="six:${s.key}">
+      <span class="at-kind">Sixfold Path</span><span class="at-name">${s.glyph} ${esc(s.name)}</span></div>`;
+  }
+  if(p.alignVirtue){
+    const v=VIRTUES.find(x=>x.key===p.alignVirtue);
+    if(v) html+=`<div class="align-tag virtue" data-go="virtue:${v.key}">
+      <span class="at-kind">Virtue</span><span class="at-name">💙 ${esc(v.name)}</span></div>`;
+  }
+  if(p.alignType==="virtue"&&p.alignKey&&!p.alignVirtue){
+    const v=VIRTUES.find(x=>x.key===p.alignKey);
+    if(v) html+=`<div class="align-tag virtue" data-go="virtue:${v.key}">
+      <span class="at-kind">Virtue</span><span class="at-name">💙 ${esc(v.name)}</span></div>`;
+  }
+  box.innerHTML=html;
+  box.querySelectorAll(".align-tag").forEach(t=>t.onclick=(ev)=>{
+    ev.stopPropagation();
+    const [kind,k]=t.dataset.go.split(":");
+    if(kind==="six"){ gotoTab("virtues"); showSixfoldDetail(k); }
+    else { gotoTab("virtues"); renderVirtueGrid(); showVirtueDetail(k); }
+  });
+}
+
+/* ================= REDESIGN: orientation, flips, sixfold strip ================= */
+
+/* toast confirmation */
+function toast(msg){
+  let t=document.getElementById("toast");
+  if(!t){ t=document.createElement("div"); t.id="toast"; document.body.appendChild(t); }
+  t.textContent=msg; t.className="show";
+  clearTimeout(t._h); t._h=setTimeout(()=>{ t.className=""; },2400);
+}
+
+function renderOrientation(){
+  const h=new Date().getHours();
+  const part = h<12 ? "Good morning" : (h<18 ? "Good afternoon" : "Good evening");
+  const gl=$("#greet-line"); if(!gl) return;
+  gl.textContent=part+", "+me;
+  const d=new Date();
+  $("#greet-date").textContent=d.toLocaleDateString(undefined,
+    {weekday:"long", day:"numeric", month:"long"});
+}
+
+/* accessible flip: button toggles, Escape closes */
+function initFlips(){
+  document.body.addEventListener("click",e=>{
+    const t=e.target.closest("[data-flip]");
+    if(!t) return;
+    const f=document.getElementById(t.dataset.flip);
+    if(!f) return;
+    const nowFlipped=!f.classList.contains("flipped");
+    f.classList.toggle("flipped",nowFlipped);
+    f.querySelectorAll(".face.front,.face.back").forEach(face=>{
+      const isBack=face.classList.contains("back");
+      face.setAttribute("aria-hidden", String(isBack!==nowFlipped));
+    });
+  });
+  document.body.addEventListener("keydown",e=>{
+    if(e.key==="Escape") $$(".flipper.flipped").forEach(f=>f.classList.remove("flipped"));
+  });
+}
+
+/* compact sixfold strip on Today */
+function renderSixStrip(){
+  const strip=$("#six-strip"); if(!strip) return;
+  const act=activeSixfold();
+  strip.innerHTML=SIXFOLD.map(s=>
+    `<button class="six-chip${s.key===act.key?" now":""}" data-sx="${s.key}"
+        title="${esc(s.essence)}" aria-label="${esc(s.name)}: ${esc(s.essence)}">
+       <span class="sx-n">0${s.num}</span>
+       <span class="sx-g">${s.glyph}</span>
+       <span class="sx-name">${esc(s.name.replace("Right ",""))}</span>
+     </button>`).join("");
+  const now=$("#six-strip-now");
+  if(now) now.innerHTML=`In focus this week: <b style="color:#d6c9ff">${act.glyph} ${esc(act.name)}</b>`;
+  strip.querySelectorAll(".six-chip").forEach(c=>c.onclick=()=>{
+    gotoTab("virtues"); showSixfoldDetail(c.dataset.sx);
+  });
+}
+
+/* mark meditation stages complete as the user progresses */
+function renderStageState(){
+  const stages=$$(".stage");
+  if(!stages.length) return;
+  const prepDone=["pi-breath-cb","pi-mudra-cb"].every(id=>{const c=$("#"+id);return c&&c.checked;});
+  const sat=$("#d-done") && $("#d-done").checked;
+  const logged=state.entries.some(e=>e.person===me&&e.kind==="daily"&&e.date===today());
+  stages[0].classList.toggle("done",prepDone);
+  stages[1].classList.toggle("done",!!sat);
+  stages[2].classList.toggle("done",logged);
+}
+
+/* ---- side rails: virtues (left) · sixfold (right) ---- */
+function renderRails(){
+  const lv=$("#rail-virtues"), rs=$("#rail-sixfold");
+  if(!lv||!rs) return;
+  const actV=activeVirtue(), actS=activeSixfold();
+
+  lv.innerHTML=`<span class="rail-cap">The nine virtues</span>`+VIRTUES.map((v,i)=>{
+    const n=Math.min(virtueDays(v.key).length,7);
+    const cls=(v.key===actV.key?"now":(n>=7?"done":""));
+    return `<button class="rail-node ${cls}" data-rv="${v.key}"
+       aria-label="${esc(v.name)}${v.key===actV.key?" — this week":""}${n>=7?" — embedded":""}">
+       <span class="rn-num">${i+1}</span><span class="rn-dot"></span>
+       <span class="rn-label">${esc(v.name)}${n>=7?" ✓":""}</span></button>`;
+  }).join("");
+
+  rs.innerHTML=`<span class="rail-cap">The Sixfold Path</span>`+SIXFOLD.map(sx=>{
+    const cls=(sx.key===actS.key?"now":"");
+    return `<button class="rail-node ${cls}" data-rs="${sx.key}"
+       aria-label="${esc(sx.name)}${sx.key===actS.key?" — in focus this week":""}">
+       <span class="rn-num">0${sx.num}</span><span class="rn-dot"></span>
+       <span class="rn-label">${sx.glyph} ${esc(sx.name)}</span></button>`;
+  }).join("");
+
+  lv.querySelectorAll("[data-rv]").forEach(b=>b.onclick=()=>{
+    gotoTab("virtues"); renderVirtueGrid(); showVirtueDetail(b.dataset.rv); });
+  rs.querySelectorAll("[data-rs]").forEach(b=>b.onclick=()=>{
+    gotoTab("virtues"); showSixfoldDetail(b.dataset.rs); });
+}
+
+/* ---- sit timer with a soft bell (Web Audio — no files, no dependencies) ---- */
+let timerState={id:null, endsAt:0, total:0, running:false, elapsed:0};
+function bell(kind){
+  try{
+    const Ctx=window.AudioContext||window.webkitAudioContext; if(!Ctx) return;
+    const ctx=new Ctx();
+    const strike=(freq,delay,dur,vol)=>{
+      const o=ctx.createOscillator(), g=ctx.createGain();
+      o.type="sine"; o.frequency.value=freq;
+      o.connect(g); g.connect(ctx.destination);
+      const t=ctx.currentTime+delay;
+      g.gain.setValueAtTime(0,t);
+      g.gain.linearRampToValueAtTime(vol,t+0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+      o.start(t); o.stop(t+dur+0.05);
+    };
+    // a struck bowl: fundamental + shimmering partials
+    const base=kind==="end"?396:528;
+    strike(base,0,3.6,0.30);
+    strike(base*2.01,0,2.4,0.10);
+    strike(base*2.98,0,1.6,0.05);
+    if(kind==="end"){ strike(base,1.5,3.4,0.22); strike(base*2.01,1.5,2.2,0.08); }
+    setTimeout(()=>ctx.close(),6000);
+  }catch(e){}
+}
+function fmtClock(sec){
+  sec=Math.max(0,Math.round(sec));
+  return Math.floor(sec/60)+":"+String(sec%60).padStart(2,"0");
+}
+function tickTimer(){
+  const left=(timerState.endsAt-Date.now())/1000;
+  const disp=$("#tm-display");
+  if(disp) disp.textContent=fmtClock(left);
+  const frac=timerState.total>0?Math.max(0,Math.min(1,1-(left/timerState.total))):0;
+  const ring=$("#tm-ring-arc");
+  if(ring&&timerState.total>0){ const C=289; ring.style.strokeDashoffset=String(C-(frac*C)); }
+  const qt=$("#q-time"); if(qt) qt.textContent=fmtClock(left);
+  const qa=$("#q-arc"); if(qa&&timerState.total>0){ const C=578; qa.style.strokeDashoffset=String(C-(frac*C)); }
+  if(left<=0) finishTimer();
+}
+function startTimer(mins){
+  stopTimer(true);
+  timerState.total=mins*60;
+  timerState.endsAt=Date.now()+timerState.total*1000;
+  timerState.running=true;
+  bell("start");
+  $("#timer-panel").classList.add("running");
+  $("#tm-start").textContent="Stop";
+  enterQuiet();
+  timerState.id=setInterval(tickTimer,250);
+  tickTimer();
+}
+function finishTimer(){
+  const mins=Math.round(timerState.total/60);
+  stopTimer(true);
+  bell("end");
+  const mi=$("#d-min"); if(mi&&!mi.value) mi.value=mins;
+  const dd=$("#d-done"); if(dd&&!dd.checked){ dd.checked=true; renderStageState(); }
+  setTimeout(()=>{ exitQuiet(); showPostSit(mins); },2600);
+  const disp=$("#tm-display"); if(disp) disp.textContent=fmtClock(0);
+}
+function stopTimer(silent){
+  if(timerState.id) clearInterval(timerState.id);
+  timerState.id=null; timerState.running=false;
+  const p=$("#timer-panel"); if(p) p.classList.remove("running");
+  const b=$("#tm-start"); if(b) b.textContent="Begin";
+  if(!silent){
+    const done=Math.round((timerState.total-(timerState.endsAt-Date.now())/1000)/60);
+    if(done>0){ const mi=$("#d-min"); if(mi&&!mi.value) mi.value=done; }
+  }
+}
+function initTimer(){
+  const mins=$("#tm-mins"); if(!mins) return;
+  mins.onchange=()=>{ if(!timerState.running) $("#tm-display").textContent=fmtClock(mins.value*60); };
+  $("#tm-display").textContent=fmtClock(mins.value*60);
+  $("#tm-start").onclick=()=>{
+    if(timerState.running){ stopTimer(false); $("#tm-display").textContent=fmtClock(mins.value*60); }
+    else startTimer(Number(mins.value)||20);
+  };
+  $("#tm-bell").onclick=()=>bell("start");
+}
+
+/* ---- quiet mode: the app steps back during the sit ---- */
+let quietWords=[], quietWordTimer=null, quietAttTimer=null, wakeLock=null;
+function buildQuietWords(){
+  const wk=practiceWeekNumber(today());
+  const w=[];
+  if(wk>=1){
+    const p=getPractice(assignmentFor(wk).practiceId);
+    if(p){ if(p.core) w.push(p.core); (p.instructions||[]).slice(0,3).forEach(i=>w.push(i)); }
+  }
+  const v=activeVirtue(); if(v) w.push(v.prayers[dayOfVirtueWeek()%v.prayers.length]);
+  const s=activeSixfold(); if(s) w.push(s.invite);
+  w.push("Return, gently.","Nothing to achieve. Only to be here.","Let the breath breathe itself.");
+  return w;
+}
+function enterQuiet(){
+  const q=$("#quiet"); if(!q) return;
+  quietWords=buildQuietWords();
+  const wk=practiceWeekNumber(today());
+  const p=wk>=1?getPractice(assignmentFor(wk).practiceId):null;
+  $("#q-practice").textContent=p?p.title:"Meditation";
+  q.classList.add("on"); q.setAttribute("aria-hidden","false");
+  document.body.style.overflow="hidden";
+  // rotate a line every ~50s, fading in and out
+  let i=0;
+  const showWord=()=>{
+    const el=$("#q-word"); if(!el) return;
+    el.classList.remove("show");
+    setTimeout(()=>{ el.textContent=quietWords[i%quietWords.length]; i++; el.classList.add("show"); },1400);
+  };
+  showWord();
+  quietWordTimer=setInterval(showWord,50000);
+
+  // the three attitudes light in turn — a slow rotation through the sit
+  const atts=$$(".q-rail-left .qr-item");
+  let a=0;
+  const cycleAtt=()=>{ atts.forEach((el,k)=>el.classList.toggle("lit",k===a%atts.length)); a++; };
+  cycleAtt();
+  quietAttTimer=setInterval(cycleAtt,40000);
+
+  // posture reminders surface once, early, then settle back
+  const post=$$(".q-rail-right .qr-item");
+  post.forEach((el,k)=>setTimeout(()=>{
+    el.classList.add("lit");
+    setTimeout(()=>el.classList.remove("lit"),5200);
+  }, 1200+k*1700));
+  if("wakeLock" in navigator){ navigator.wakeLock.request("screen").then(l=>wakeLock=l).catch(()=>{}); }
+}
+function exitQuiet(){
+  const q=$("#quiet"); if(!q) return;
+  q.classList.remove("on"); q.setAttribute("aria-hidden","true");
+  document.body.style.overflow="";
+  if(quietWordTimer) clearInterval(quietWordTimer);
+  if(quietAttTimer) clearInterval(quietAttTimer);
+  if(wakeLock){ try{wakeLock.release();}catch(e){} wakeLock=null; }
+}
+function initQuiet(){
+  const ex=$("#q-exit");
+  if(ex) ex.onclick=()=>{ stopTimer(false); exitQuiet(); };
+  document.body.addEventListener("keydown",e=>{
+    if(e.key==="Escape"&&$("#quiet").classList.contains("on")){ stopTimer(false); exitQuiet(); }
+  });
+}
+
+/* ---- year view: 52 weeks of inner work at a glance ---- */
+function renderYearView(){
+  const box=$("#year-grid"); if(!box) return;
+  const asg=loadAssignments();
+  const thisWk=practiceWeekNumber(today());
+  const palette=["#e6b25a","#d98aa6","#83b8a0","#b8a0ff","#e0857f","#7fb3d5","#c9a86a"];
+  const cells=[];
+  for(let w=1; w<=52; w++){
+    const a=asg.find(x=>x.weekNumber===w);
+    const p=a?getPractice(a.practiceId):null;
+    const logs=state.entries.filter(e=>e.person===me&&e.kind==="practice"&&Number(e.weekNumber)===w);
+    const practised=logs.filter(l=>l.practised).length;
+    const engaged=logs.filter(l=>l.engaged||l.practised).length;
+    let cls="yc", style="", title="Week "+w+" — not yet";
+    if(w>thisWk){ cls+=" future"; }
+    else if(p){
+      const idx=allPractices().findIndex(x=>x.practiceId===p.practiceId);
+      const col=palette[idx%palette.length];
+      const strength=practised>=5?1:(practised>=3?.72:(engaged>0?.42:.18));
+      style=`background:${col};opacity:${strength}`;
+      title="Week "+w+" — "+p.title+" · "+practised+"/7 practised";
+    } else { cls+=" empty"; }
+    if(w===thisWk) cls+=" now";
+    cells.push(`<span class="${cls}" style="${style}" title="${esc(title)}"></span>`);
+  }
+  box.innerHTML=cells.join("");
+  const legend=$("#year-legend");
+  if(legend){
+    const used=allPractices().filter(p=>asg.some(a=>a.practiceId===p.practiceId));
+    legend.innerHTML=used.map((p,i)=>{
+      const idx=allPractices().findIndex(x=>x.practiceId===p.practiceId);
+      return `<span class="yl"><i style="background:${palette[idx%palette.length]}"></i>${esc(p.title)}</span>`;
+    }).join("") || `<span class="mut" style="padding:0">Weeks fill in as you practise.</span>`;
+  }
+}
+
+/* ---- reflection search ---- */
+function renderReflectionSearch(){
+  const input=$("#refl-q"), out=$("#refl-results");
+  if(!input||!out) return;
+  const q=input.value.trim().toLowerCase();
+  const all=state.entries.filter(e=>e.person===me &&
+    ((e.kind==="practice"&&e.reflection)||(e.kind==="daily"&&e.reflection)||
+     (e.kind==="insight"&&e.text)));
+  const hits=all.filter(e=>{
+    if(!q) return true;
+    return ((e.reflection||"")+" "+(e.text||"")+" "+(e.lessonTitle||"")).toLowerCase().includes(q);
+  }).sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+  if(!hits.length){
+    out.innerHTML=`<div class="mut">${q?"Nothing found for “"+esc(q)+"”.":"Your reflections will collect here."}</div>`;
+    return;
+  }
+  const mark=t=>{
+    const safe=esc(t);
+    if(!q) return safe;
+    try{ return safe.replace(new RegExp("("+q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")","ig"),'<mark>$1</mark>'); }
+    catch(e){ return safe; }
+  };
+  out.innerHTML=`<div class="refl-count">${hits.length} reflection${hits.length===1?"":"s"}</div>`+
+    hits.slice(0,60).map(e=>{
+      let src="";
+      if(e.kind==="practice"){ const p=getPractice(e.practiceId); src=p?p.title:"Practice"; }
+      else if(e.kind==="daily") src=e.lessonTitle||"Sit";
+      else src="Insight";
+      return `<div class="refl-hit">
+        <div class="rh-meta"><span class="rh-src">${esc(src)}</span><span>${fmtDate(e.date)}</span></div>
+        <div class="rh-text">${mark(e.reflection||e.text||"")}</div></div>`;
+    }).join("");
+}
+
+/* ---- morning glance: one screen until the day has begun ---- */
+let glanceDismissed=safeGet("ijs_glance_"+today())==="1";
+function satToday(){ return state.entries.some(e=>e.person===me&&e.kind==="daily"&&e.date===today()); }
+function showGlance(){
+  const g=$("#glance"), o=$("#orient-zone"); if(!g) return;
+  const zones=$$("#view-today .zone");
+  const rf=$(".recent-fold");
+  // only before anything has happened today, and only in the morning half
+  const early=new Date().getHours()<12;
+  const show=early && !satToday() && !glanceDismissed && !safeGet("ijs_glance_"+today());
+  g.classList.toggle("glance-hidden",!show);
+  [o,rf].forEach(el=>{ if(el) el.style.display=show?"none":""; });
+  zones.forEach(z=>z.style.display=show?"none":"");
+  if(!show) return;
+  const h=new Date().getHours();
+  $("#gl-greet").textContent=(h<12?"Good morning":"Hello")+", "+me;
+  $("#gl-date").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long"});
+  const wk=practiceWeekNumber(today());
+  let inv="Take a few minutes to sit.";
+  if(wk>=1){
+    const p=getPractice(assignmentFor(wk).practiceId);
+    if(p){ const dc=dayContentFor(p,practiceDayNumber(today())); inv=dc.invitation; }
+  }
+  $("#gl-invite").textContent=inv;
+}
+function initGlance(){
+  const b=$("#gl-begin"), o=$("#gl-open"), br=$("#gl-browse");
+  if(b) b.onclick=()=>{
+    glanceDismissed=true; safeSet("ijs_glance_"+today(),"1"); showGlance();
+    const mins=$("#tm-mins");
+    startTimer(Number(mins&&mins.value)||20);
+  };
+  if(o) o.onclick=()=>{
+    glanceDismissed=true; safeSet("ijs_glance_"+today(),"1"); showGlance();
+    setTimeout(()=>{
+      const pair=$(".hero-pair");
+      if(pair) pair.scrollIntoView({behavior:"smooth",block:"start"});
+    },200);
+  };
+  if(br) br.onclick=()=>{
+    glanceDismissed=true; safeSet("ijs_glance_"+today(),"1"); showGlance();
+  };
+}
+
+/* ---- post-sit landing ---- */
+function showPostSit(mins){
+  const p=$("#postsit"); if(!p) return;
+  $("#ps-mins").textContent=mins+(mins===1?" minute":" minutes");
+  p.classList.add("on"); p.setAttribute("aria-hidden","false");
+  document.body.style.overflow="hidden";
+}
+function hidePostSit(){
+  const p=$("#postsit"); if(!p) return;
+  p.classList.remove("on"); p.setAttribute("aria-hidden","true");
+  document.body.style.overflow="";
+  const t=$("#d-refl"); if(t) setTimeout(()=>t.focus(),300);
+}
+function initPostSit(){
+  $$(".ps-choice").forEach(b=>b.onclick=()=>{
+    rating=Number(b.dataset.settle)||0; renderRating();
+    hidePostSit(); toast("Noted — add a reflection when ready");
+  });
+  const sk=$("#ps-skip"); if(sk) sk.onclick=hidePostSit;
+}
+
+/* ---- the weekly letter (Sundays, or day 7 of the practice week) ---- */
+function renderWeeklyLetter(){
+  const box=$("#weekly-letter"); if(!box) return;
+  const wk=practiceWeekNumber(today());
+  const isSunday=new Date().getDay()===0;
+  const dayN=practiceDayNumber(today());
+  if(wk<1 || !(isSunday || dayN===7)){ box.style.display="none"; return; }
+
+  const p=getPractice(assignmentFor(wk).practiceId);
+  const logs=practiceLogsThisWeek(p?p.practiceId:"",wk);
+  const practised=logs.filter(l=>l.practised).length;
+  const b=weekBounds(wk);
+  const sits=state.entries.filter(e=>e.person===me&&e.kind==="daily"&&
+    e.date>=b.start&&e.date<=b.end).length;
+  const refl=logs.filter(l=>l.reflection).sort((x,y)=>
+    (y.reflection||"").length-(x.reflection||"").length)[0];
+  const v=activeVirtue();
+  const vDone=virtueDays(v.key).length;
+  const prior=lastCarryForward(wk);
+
+  let html="";
+  html+=`<p>Week ${wk} is closing. You sat ${sits} time${sits===1?"":"s"}`;
+  html+=practised?` and marked <em>${esc(p?p.title:"the practice")}</em> practised on ${practised} day${practised===1?"":"s"}.`:`.`;
+  html+=`</p>`;
+  if(prior) html+=`<p>You began the week carrying: <em>“${esc(prior.text)}”</em></p>`;
+  if(refl) html+=`<p>The thing you noticed most fully: <em>“${esc(refl.reflection)}”</em></p>`;
+  html+=`<p>${esc(v.name)} stands at ${Math.min(vDone,7)} of 7 days${vDone>=7?" — embedded.":"."}`;
+  html+=` The Sixfold Path held <em>${esc(activeSixfold().name)}</em> this week.</p>`;
+  html+=`<p class="lt-close">Nothing here is a score. It is simply what happened.</p>`;
+  $("#lt-body").innerHTML=html;
+  box.style.display="block";
+}
+
+/* ---- shared presence: who else has sat today ---- */
+function renderPresence(){
+  const box=$("#presence"); if(!box) return;
+  const others=[...new Set(state.entries
+    .filter(e=>e.kind==="daily"&&e.date===today()&&e.person!==me)
+    .map(e=>e.person))].filter(Boolean);
+  if(!others.length){ box.style.display="none"; return; }
+  const initials=n=>n.split(" ").map(w=>w[0]||"").join("").slice(0,2).toUpperCase();
+  const names=others.length===1?others[0]
+    :others.slice(0,-1).join(", ")+" and "+others[others.length-1];
+  box.innerHTML=`<span class="pr-dots">${others.slice(0,3).map(n=>
+    `<span class="pr-av">${esc(initials(n))}</span>`).join("")}</span>`+
+    `<span>${esc(names)} ${others.length===1?"has":"have"} sat today.</span>`;
+  box.style.display="flex";
+}
+
 function renderAll(){
-  renderStrip(); renderAvatar(); renderInvocation(); renderHighlight(); renderPracticeReminder();
+  renderStrip(); renderCurriculumTrack(); renderAvatar(); renderInvocation(); renderHighlight(); renderPracticeReminder();
+  renderOrientation(); renderPracticeOfWeek(); renderPracticesTab(); renderSixGrid();
+  renderSixStrip(); renderStageState(); renderRails();
+  renderYearView(); renderReflectionSearch();
+  renderWeeklyLetter(); renderPresence(); showGlance();
   renderVirtueToday();
   renderTodayList(); renderInsights(); renderQuestions();
   renderProgress(); renderVirtueGrid(); renderEveryone(); updateSyncStatus();
@@ -1466,6 +3938,7 @@ function initEvents(){
     people.push(n); savePeople(); me=n; safeSet(LS_ME,me); renderPeople(); renderAll();
   };
   $("#d-lesson").onchange=updateLessonLink;
+  const ddone=$("#d-done"); if(ddone) ddone.onchange=renderStageState;
   $("#d-daytime").onchange=updateDaytimeLink;
 
   $("#invo-check").onchange=async()=>{
@@ -1491,6 +3964,7 @@ function initEvents(){
     });
     $("#d-refl").value=""; $("#d-min").value=""; $("#d-done").checked=false; rating=0; renderRating();
     $("#d-msg").textContent="Saved ✓"; setTimeout(()=>$("#d-msg").textContent="",1800);
+    toast("Today's sit saved"); renderStageState();
   };
   $("#i-save").onclick=async()=>{
     const t=$("#i-text").value.trim(); if(!t) return;
@@ -1508,15 +3982,39 @@ function initEvents(){
   });
 
   // backup
-  $("#exp-json").onclick=()=>download("inner-journey-backup-"+today()+".json", JSON.stringify(state.entries,null,2), "application/json");
+  $("#exp-json").onclick=()=>download("inner-journey-backup-"+today()+".json",
+    JSON.stringify({entries:state.entries, practices:allPractices(),
+      practiceAssignments:loadAssignments(), people:people}, null, 2), "application/json");
   $("#exp-csv").onclick=()=>download("inner-journey-log-"+today()+".csv", toCSV(state.entries), "text/csv");
   $("#imp-btn").onclick=()=>$("#imp-file").click();
   $("#imp-file").onchange=ev=>{
     const f=ev.target.files[0]; if(!f) return; const rd=new FileReader();
-    rd.onload=()=>{ try{ const arr=JSON.parse(rd.result); if(Array.isArray(arr)){ const ids=new Set(state.entries.map(x=>x.id)); arr.forEach(x=>{if(!ids.has(x.id))state.entries.push(x)}); saveLocal(); renderAll(); setBanner("ok","Restored "+arr.length+" entries into this device. Press Refresh to reconcile with the Sheet."); } }catch(e){ alert("That file couldn't be read as a backup."); } };
+    rd.onload=()=>{
+      try{
+        const parsed=JSON.parse(rd.result);
+        // accept both the new object format and the legacy flat array
+        const entries=Array.isArray(parsed)?parsed:(parsed.entries||[]);
+        const assigns=Array.isArray(parsed)?[]:(parsed.practiceAssignments||[]);
+        const ppl=Array.isArray(parsed)?[]:(parsed.people||[]);
+        const ids=new Set(state.entries.map(x=>x.id));
+        entries.forEach(x=>{ if(!ids.has(x.id)) state.entries.push(normalizeRow(x)); });
+        if(assigns.length){
+          const cur=loadAssignments();
+          const weeks=new Set(cur.map(a=>a.weekNumber));
+          assigns.forEach(a=>{ if(!weeks.has(a.weekNumber)) cur.push(a); });
+          saveAssignments(cur);
+        }
+        ppl.forEach(n=>{ if(n&&!people.includes(n)) people.push(n); });
+        if(ppl.length) savePeople();
+        saveLocal(); renderPeople(); renderAll();
+        setBanner("ok","Restored "+entries.length+" entries into this device. Press Refresh to reconcile with the Sheet.");
+      }catch(e){ alert("That file couldn't be read as a backup."); }
+    };
     rd.readAsText(f);
   };
   $("#refresh").onclick=pullRemote;
+  const rq=$("#refl-q");
+  if(rq) rq.oninput=renderReflectionSearch;
 }
 function download(name,text,type){
   const b=new Blob([text],{type}); const u=URL.createObjectURL(b);
@@ -1532,7 +4030,7 @@ function toCSV(rows){
 function boot(){
   loadLocal();
   $("#d-date").value=today();
-  renderPeople(); renderLessonSelect(); renderRating(); initEvents(); initPresit();
+  renderPeople(); renderLessonSelect(); renderRating(); initEvents(); initPresit(); initFlips(); initTimer(); initQuiet(); initGlance(); initPostSit();
   if(!storageOK) setBanner("warn","This browser is blocking local storage — use the Backup tab to export regularly, or enable storage for this site.");
   else if(!connected) setBanner("warn","Running locally on this device only. Open index.html and paste your Apps Script URL into CONFIG.ENDPOINT to sync with the family.");
   renderAll();
@@ -1542,6 +4040,13 @@ function boot(){
     : "No sync configured yet — everything is on this device only until you set CONFIG.ENDPOINT.";
 }
 boot();
+
+/* install as an app + work offline */
+if("serviceWorker" in navigator && location.protocol.startsWith("http")){
+  window.addEventListener("load",()=>{
+    navigator.serviceWorker.register("./sw.js").catch(()=>{});
+  });
+}
 </script>
 </body>
 </html>
