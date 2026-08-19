@@ -1197,9 +1197,7 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
         <div class="avatar" id="avatar-circle">S</div>
         <span class="stage-badge" id="stage-badge">Stage 1</span>
       </div>
-      <label for="person">Practising as</label>
-      <select id="person" aria-label="Who is practising"></select>
-      <button class="btn ghost small" id="addPerson">+ add</button>
+      <span style="color:var(--dim);font-size:13px">Smriti</span>
     </div>
   </header>
 
@@ -1838,11 +1836,10 @@ const INVOCATIONS = [
 /* ==================== 3) STATE + STORAGE ==================== */
 const LS_KEY="ijs_log_v1";
 const LS_PEOPLE="ijs_people_v1";
-const LS_ME="ijs_me_v1";
 const LS_ASSIGN="ijs_practice_assignments_v1";
 const LS_PRACTICES="ijs_practices_v1";
 let state={ entries:[] };
-let me="";
+let me="Smriti";
 let people=[];
 let rating=0;
 let storageOK=true;
@@ -1853,7 +1850,7 @@ function safeSet(k,v){ try{localStorage.setItem(k,v);return true}catch(e){storag
 function loadLocal(){
   try{ state.entries = JSON.parse(safeGet(LS_KEY)||"[]"); }catch(e){ state.entries=[]; }
   try{ people = JSON.parse(safeGet(LS_PEOPLE)||"null") || ["Shruti","Smriti"]; }catch(e){ people=["Shruti","Smriti"]; }
-  me = safeGet(LS_ME) || people[0] || "Shruti";
+  me = "Smriti";
 }
 function saveLocal(){ safeSet(LS_KEY, JSON.stringify(state.entries)); }
 function savePeople(){ safeSet(LS_PEOPLE, JSON.stringify(people)); }
@@ -1936,10 +1933,6 @@ async function deleteEntry(id){
 }
 
 /* ==================== 6) RENDER ==================== */
-function renderPeople(){
-  const sel=$("#person"); sel.innerHTML="";
-  people.forEach(p=>{ const o=document.createElement("option"); o.value=p; o.textContent=p; if(p===me)o.selected=true; sel.appendChild(o); });
-}
 function renderLessonSelect(){
   const sel=$("#d-lesson"); sel.innerHTML="";
   PHASES.forEach(ph=>{
@@ -4300,12 +4293,6 @@ function initEvents(){
     $$(".view").forEach(v=>v.classList.remove("active"));
     $("#view-"+t.dataset.view).classList.add("active");
   });
-  $("#person").onchange=e=>{ me=e.target.value; safeSet(LS_ME,me); renderAll(); };
-  $("#addPerson").onclick=()=>{
-    const name=prompt("Name of the person to add:"); if(!name) return;
-    const n=name.trim(); if(!n||people.includes(n)) return;
-    people.push(n); savePeople(); me=n; safeSet(LS_ME,me); renderPeople(); renderAll();
-  };
   $("#d-lesson").onchange=updateLessonLink;
   const ddone=$("#d-done"); if(ddone) ddone.onchange=renderStageState;
   const dsel=$("#d-daytime"); if(dsel) dsel.onchange=updateDaytimeLink;
@@ -4376,7 +4363,7 @@ function initEvents(){
         }
         ppl.forEach(n=>{ if(n&&!people.includes(n)) people.push(n); });
         if(ppl.length) savePeople();
-        saveLocal(); renderPeople(); renderAll();
+        saveLocal(); renderAll();
         setBanner("ok","Restored "+entries.length+" entries into this device. Press Refresh to reconcile with the Sheet.");
       }catch(e){ alert("That file couldn't be read as a backup."); }
     };
@@ -4400,7 +4387,7 @@ function toCSV(rows){
 function boot(){
   loadLocal();
   $("#d-date").value=today();
-  renderPeople(); renderLessonSelect(); renderRating(); initEvents(); initPresit(); initFlips(); initQuiet(); initGlance(); initPostSit(); initBegin();
+  renderLessonSelect(); renderRating(); initEvents(); initPresit(); initFlips(); initTimer(); initQuiet(); initGlance(); initPostSit(); initBegin();
   if(!storageOK) setBanner("warn","This browser is blocking local storage — use the Backup tab to export regularly, or enable storage for this site.");
   else if(!connected) setBanner("warn","Running locally on this device only. Open index.html and paste your Apps Script URL into CONFIG.ENDPOINT to sync with the family.");
   renderAll();
