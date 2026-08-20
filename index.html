@@ -632,6 +632,141 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
   background:linear-gradient(135deg,var(--dawn),var(--lotus));margin-right:-7px;
   border:1.5px solid var(--panel)}
 
+
+/* ══════════ TRIPTYCH: rails flank the daily journey ══════════ */
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+.triptych{display:grid;gap:20px;margin-top:22px;
+  grid-template-columns:minmax(150px,186px) minmax(0,1fr) minmax(150px,186px);
+  align-items:start}
+@media(max-width:1080px){
+  .triptych{grid-template-columns:1fr;gap:14px}
+  .centre{order:1} .rail-six{order:2} .rail-virtue{order:3}
+}
+
+/* ── side rails ── */
+.siderail{position:sticky;top:16px}
+@media(max-width:1080px){.siderail{position:static}}
+.rail-fold{border:1px solid var(--line);border-radius:13px;background:rgba(24,29,56,.55);
+  overflow:hidden}
+.rail-fold>summary{list-style:none;cursor:pointer;padding:12px 14px;display:flex;
+  align-items:center;justify-content:space-between;transition:background .18s}
+.rail-fold>summary::-webkit-details-marker{display:none}
+.rail-fold>summary::after{content:"›";color:var(--faint);font-size:16px;
+  transition:transform .25s ease}
+.rail-fold[open]>summary::after{transform:rotate(90deg)}
+.rail-fold>summary:hover{background:rgba(255,255,255,.03)}
+.sr-cap{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
+.rail-six .sr-cap{color:#a58fe8}
+.rail-virtue .sr-cap{color:var(--lotus);opacity:.85}
+.sr-items{padding:4px 6px 8px}
+.sr-note{padding:2px 14px 12px;font-size:10.5px;color:var(--faint);line-height:1.5;opacity:.7}
+@media(max-width:1080px){
+  .sr-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:4px}
+}
+
+/* rail items — lamps, not progress */
+.sr-item{display:flex;align-items:center;gap:10px;padding:9px 9px;border-radius:9px;
+  cursor:pointer;background:none;border:none;font:inherit;width:100%;text-align:left;
+  transition:background .18s}
+.sr-item:hover{background:rgba(255,255,255,.04)}
+.sr-item:focus-visible{outline:2px solid var(--dawn-line);outline-offset:-2px}
+.sr-lamp{width:7px;height:7px;border-radius:50%;flex:0 0 auto;background:rgba(255,255,255,.16);
+  transition:background .4s,box-shadow .4s,transform .4s}
+.rail-six .sr-item:hover .sr-lamp{background:#b8a0ff;box-shadow:0 0 10px rgba(184,160,255,.6)}
+.rail-virtue .sr-item:hover .sr-lamp{background:var(--lotus);box-shadow:0 0 10px rgba(217,138,166,.6)}
+.sr-item.lit .sr-lamp{transform:scale(1.5)}
+.rail-six .sr-item.lit .sr-lamp{background:#b8a0ff;
+  box-shadow:0 0 14px rgba(184,160,255,.75),0 0 0 4px rgba(184,160,255,.1)}
+.rail-virtue .sr-item.lit .sr-lamp{background:var(--dawn);
+  box-shadow:0 0 14px rgba(230,178,90,.75),0 0 0 4px rgba(230,178,90,.1)}
+.sr-item.embedded .sr-lamp{background:rgba(131,184,160,.6)}
+.sr-num{font-size:9px;color:var(--faint);width:14px;flex:0 0 auto}
+.sr-name{font-size:12px;color:var(--dim);line-height:1.3}
+.sr-item.lit .sr-name{color:var(--mist)}
+.sr-now{display:block;font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--dawn);margin-top:2px}
+.rail-six .sr-item.lit .sr-now{color:#b8a0ff}
+
+/* floating tooltip */
+.railtip{position:fixed;z-index:70;max-width:270px;padding:13px 15px;border-radius:12px;
+  background:var(--raised);border:1px solid var(--line2);box-shadow:0 12px 34px rgba(0,0,0,.5);
+  opacity:0;pointer-events:none;transform:translateY(6px);
+  transition:opacity .2s ease,transform .2s ease}
+.railtip.on{opacity:1;transform:translateY(0)}
+.railtip .rt-title{font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--dawn);margin-bottom:7px}
+.railtip.six .rt-title{color:#b8a0ff}
+.railtip .rt-def{font-size:13px;color:var(--mist);line-height:1.55}
+.railtip .rt-extra{font-size:12.5px;color:var(--dim);line-height:1.55;margin-top:9px;
+  padding-top:9px;border-top:1px solid var(--line)}
+.railtip .rt-extra b{color:var(--faint);font-weight:500;font-size:10px;
+  letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:3px}
+
+/* ── centre cards ── */
+.centre{display:flex;flex-direction:column;gap:16px;min-width:0}
+.card-week,.card-lesson,.card-med{background:var(--panel);border:1px solid var(--line2);
+  border-radius:16px;padding:20px;box-shadow:0 1px 2px rgba(0,0,0,.25)}
+
+/* 1 · this week */
+.card-week{background:linear-gradient(160deg,rgba(217,138,166,.07),rgba(230,178,90,.05) 55%,transparent)}
+.cw-cap{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:14px}
+.cw-split{display:grid;grid-template-columns:1fr 1px 1fr;gap:18px}
+@media(max-width:640px){.cw-split{grid-template-columns:1fr;gap:16px}
+  .cw-div{height:1px;width:100%}}
+.cw-div{background:linear-gradient(transparent,var(--line2) 18%,var(--line2) 82%,transparent)}
+.cw-half{min-width:0}
+.cw-kind{display:flex;align-items:center;gap:7px;font-size:10px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+.cw-name{font-family:'Spectral',serif;font-size:23px;font-weight:500;line-height:1.15}
+.cw-virtue .cw-name{color:#f2d3de}
+.cw-practice .cw-name{color:#f6dcae}
+.cw-role{font-size:12px;color:var(--faint);margin-top:3px}
+.cw-invite{margin-top:13px;padding-top:12px;border-top:1px solid var(--line)}
+.cw-act{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin-top:13px;flex-wrap:wrap}
+.cw-more{margin-top:18px;padding-top:16px;border-top:1px solid var(--line2)}
+.cw-more[hidden]{display:none}
+
+/* 2 · lesson */
+.cl-cap{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:11px}
+.cl-stage{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--dawn);margin-bottom:6px}
+.cl-title{font-family:'Spectral',serif;font-size:21px;font-weight:500;color:var(--mist);line-height:1.25}
+.cl-sub{font-size:12.5px;color:var(--faint);margin-top:5px}
+.cl-act{display:flex;align-items:center;gap:14px;margin-top:15px;flex-wrap:wrap}
+.cl-act .btn{text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
+.inline-check{margin-top:14px}
+.journey{margin-top:15px;padding-top:14px;border-top:1px solid var(--line);
+  max-height:340px;overflow-y:auto}
+.journey[hidden]{display:none}
+.jl-level{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--dawn);
+  margin:12px 0 6px}
+.jl-level:first-child{margin-top:0}
+.jl-stage{font-size:11.5px;color:var(--dim);margin:9px 0 4px;padding-left:2px}
+.jl-lesson{display:flex;align-items:center;gap:9px;padding:6px 8px;border-radius:8px;
+  cursor:pointer;font-size:12.5px;color:var(--faint);background:none;border:none;
+  width:100%;text-align:left;font-family:inherit;line-height:1.4}
+.jl-lesson:hover{background:rgba(255,255,255,.04);color:var(--mist)}
+.jl-mark{flex:0 0 auto;font-size:11px;width:13px}
+.jl-lesson.done{color:var(--dim)} .jl-lesson.done .jl-mark{color:var(--leaf)}
+.jl-lesson.current{color:var(--mist);background:var(--dawn-soft)}
+.jl-lesson.current .jl-mark{color:var(--dawn)}
+
+/* 3 · meditation */
+.cm-cap{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:14px}
+.cm-tech-label{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dawn);margin-bottom:5px}
+.cm-tech-name{font-family:'Spectral',serif;font-size:26px;font-weight:500;color:#f6dcae;line-height:1.15}
+.cm-tech-week{font-size:12px;color:var(--faint);margin-top:4px}
+.cm-block{margin-top:13px}
+.cm-rule{height:1px;background:linear-gradient(90deg,var(--line2),transparent 78%);margin:18px 0}
+.cm-att-head{font-family:'Spectral',serif;font-size:15px;letter-spacing:.06em;
+  color:var(--lotus);margin-bottom:4px}
+.cm-prep-head,.cm-log-head{font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--faint);margin-bottom:10px}
+.btn-begin{width:100%;margin-top:18px;min-height:52px;font-size:15px;border-radius:12px}
+.cm-log .field{margin-bottom:13px}
+
 /* toast */
 #toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);
   background:var(--raised);border:1px solid var(--line2);color:var(--mist);
@@ -1092,7 +1227,7 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
   <!-- TODAY -->
   <section class="view active" id="view-today">
 
-    <!-- ⓪ MORNING GLANCE — the whole app, before you've begun -->
+    <!-- morning glance -->
     <div class="glance" id="glance">
       <div class="g-greet" id="gl-greet"></div>
       <div class="g-date" id="gl-date"></div>
@@ -1108,289 +1243,233 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
       </div>
     </div>
 
-    <!-- ① ORIENTATION -->
-    <div class="orient" id="orient-zone">
-      <div class="orient-main">
+    <div id="today-full">
+      <!-- header -->
+      <div class="orient" id="orient-zone">
         <h1 class="greet" id="greet-line"></h1>
         <div class="greet-date" id="greet-date"></div>
-      </div>
-      <div class="letter" id="weekly-letter" style="display:none">
-        <div class="lt-cap">Your week</div>
-        <div class="lt-body" id="lt-body"></div>
-      </div>
-      <div class="presence" id="presence" style="display:none"></div>
-      <div class="orient-thought">
-        <div class="zone-eyebrow">A thought for today</div>
-        <div class="thought-text" id="hl-text"></div>
-        <button class="again" id="hl-again">↻ another</button>
-      </div>
-      <details class="invo-fold" id="invo">
-        <summary>
-          <span class="if-title">The Three Sacred Attitudes</span>
-          <span class="if-meta" id="invo-streak"></span>
-        </summary>
-        <div class="prayer" id="invo-text"></div>
-        <div class="invo-foot">
-          <label class="pill-check" id="invo-check-wrap">
-            <input type="checkbox" id="invo-check" /> <span id="invo-check-label">Read aloud</span>
-          </label>
-          <button class="again" id="invo-again" title="Draw a different one for today">↻ another</button>
+        <div class="letter" id="weekly-letter" style="display:none">
+          <div class="lt-cap">Your week</div>
+          <div class="lt-body" id="lt-body"></div>
         </div>
-      </details>
-    </div>
-
-    <!-- ② THIS WEEK'S INNER PRACTICE -->
-    <div class="zone">
-      <div class="zone-head">
-        <div class="zone-title">This week's inner practice</div>
-        <div class="zone-sub">Two things to live with this week, held within the wider path.</div>
+        <div class="presence" id="presence" style="display:none"></div>
       </div>
 
-      <div class="hero-pair">
-        <!-- VIRTUE CARD -->
-        <div class="flipwrap" id="virtue-today-card">
-          <div class="flipper" id="virtue-flipper">
-            <!-- front -->
-            <div class="face front v-face">
-              <div class="face-cap"><span class="cap-dot v-dot"></span>Virtue of the week</div>
-              <div class="face-title" id="vt-name"></div>
-              <div class="face-lede" id="vt-essence"></div>
-              <div class="face-today">
-                <div class="ft-label">Today</div>
-                <div class="ft-text" id="vt-prayer"></div>
+      <!-- THREE-COLUMN JOURNEY -->
+      <div class="triptych">
+
+        <!-- ◀ LEFT RAIL — SIXFOLD PATH -->
+        <aside class="siderail rail-six" id="rail-six">
+          <details class="rail-fold" open>
+            <summary><span class="sr-cap">Sixfold Path</span></summary>
+            <div class="sr-items" id="six-items"></div>
+            <div class="sr-note">The wider framework. Not something to complete.</div>
+          </details>
+        </aside>
+
+        <!-- ● CENTRE — TODAY'S JOURNEY -->
+        <main class="centre">
+
+          <!-- 1. THIS WEEK: virtue + practice, one card -->
+          <section class="card-week">
+            <div class="cw-cap">This week</div>
+            <div class="cw-split">
+              <div class="cw-half cw-virtue">
+                <div class="cw-kind"><span class="cap-dot v-dot"></span>Virtue</div>
+                <div class="cw-name" id="vt-name"></div>
+                <div class="cw-role">The quality to cultivate</div>
+                <div class="cw-invite">
+                  <div class="ft-label">Today</div>
+                  <div class="ft-text" id="vt-prayer"></div>
+                </div>
+                <div class="dotrow" id="vt-dotrow"></div>
+                <div class="cw-act">
+                  <label class="pill-check" id="vt-check-wrap">
+                    <input type="checkbox" id="vt-check" /> <span id="vt-check-label">Practised</span>
+                  </label>
+                  <button class="ghostlink" id="vt-tab-link">Explore →</button>
+                </div>
               </div>
-              <div class="dotrow" id="vt-dotrow"></div>
-              <div class="hover-hint" id="vt-hint"></div>
-              <div class="face-actions">
-                <label class="pill-check" id="vt-check-wrap">
-                  <input type="checkbox" id="vt-check" /> <span id="vt-check-label">Practised today</span>
+
+              <div class="cw-div"></div>
+
+              <div class="cw-half cw-practice">
+                <div class="cw-kind"><span class="cap-dot p-dot"></span>Practice</div>
+                <div class="cw-name" id="potw-title"></div>
+                <div class="cw-role" id="potw-meta">The behaviour to live</div>
+                <div class="align-row" id="potw-align"></div>
+                <div class="cw-invite">
+                  <div class="ft-label" id="potw-day-label"></div>
+                  <div class="ft-text" id="pb-invitation"></div>
+                </div>
+                <div class="dotrow" id="potw-week"></div>
+                <div class="face-explored" id="potw-explored"></div>
+                <div class="cw-act">
+                  <label class="pill-check" id="potw-check-wrap">
+                    <input type="checkbox" id="potw-check" /> <span id="potw-check-label">Practised</span>
+                  </label>
+                  <button class="ghostlink" id="potw-expand">Practise →</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- practice depth, revealed in place -->
+            <div class="cw-more" id="potw-more" hidden>
+              <div class="potw-carry" id="potw-carry" style="display:none"></div>
+              <div class="potw-resurface" id="potw-resurface" style="display:none"></div>
+              <div class="potw-callback" id="potw-callback" style="display:none"></div>
+              <div class="b-label">Today's focus</div>
+              <div class="b-text" id="pb-focus"></div>
+              <div class="b-label">A way to explore</div>
+              <div class="b-text" id="pb-explore"></div>
+              <div class="b-label">Inspiration</div>
+              <div class="b-quote" id="pb-inspiration"></div>
+              <div class="b-label">Ways to practise</div>
+              <div class="potw-ways" id="potw-ways"></div>
+              <button class="again" id="potw-another">↻ another way</button>
+              <div class="b-label">What did I notice?</div>
+              <textarea id="potw-refl-text" placeholder="A word, a moment, an observation…"></textarea>
+              <div class="cw-act" style="margin-top:8px">
+                <button class="btn ghost small" id="potw-refl-save">Save reflection</button>
+                <span id="potw-refl-msg" class="okmsg"></span>
+                <a class="ghostlink" id="potw-tab-link">Full practice →</a>
+              </div>
+              <div class="potw-prayer-wrap">
+                <div class="b-label">A prayer for today</div>
+                <div class="potw-prayer" id="potw-prayer"></div>
+                <button class="again" id="potw-prayer-again">↻ another prayer</button>
+              </div>
+              <div class="potw-week-review" id="potw-week-review" style="display:none"></div>
+            </div>
+          </section>
+
+          <!-- 2. TODAY'S LESSON -->
+          <section class="card-lesson">
+            <div class="cl-cap">🎥 Today's lesson</div>
+            <div class="cl-stage" id="lesson-stage"></div>
+            <div class="cl-title" id="lesson-title"></div>
+            <div class="cl-sub" id="lesson-sub">Continue your journey</div>
+            <div class="cl-act">
+              <a class="btn" id="lesson-watch" target="_blank" rel="noopener">Watch lesson ↗</a>
+              <button class="ghostlink" id="lesson-journey-toggle">Journey →</button>
+            </div>
+            <div class="journey" id="journey" hidden></div>
+            <label class="check inline-check"><input type="checkbox" id="d-done" /> I studied this lesson</label>
+            <select id="d-lesson" class="sr-only" aria-hidden="true" tabindex="-1"></select>
+            <a class="sr-only" id="d-lesson-link"></a>
+          </section>
+
+          <!-- 3. TODAY'S MEDITATION + TECHNIQUE -->
+          <section class="card-med">
+            <div class="cm-cap">🧘 Today's meditation</div>
+
+            <div class="cm-tech">
+              <div class="cm-tech-label">Today's meditation technique</div>
+              <div class="cm-tech-name" id="tech-name"></div>
+              <div class="cm-tech-week" id="tech-week"></div>
+              <div class="cm-block">
+                <div class="b-label" id="tech-angle-label">Today's focus</div>
+                <div class="b-text" id="tech-focus"></div>
+              </div>
+              <div class="cm-block">
+                <div class="b-label">Why we practise it</div>
+                <div class="b-text" id="tech-why"></div>
+              </div>
+              <a class="lessonlink" id="tech-link" target="_blank" rel="noopener"></a>
+            </div>
+
+            <div class="cm-rule"></div>
+
+            <div class="cm-att">
+              <div class="cm-att-head">Love · Focus · Surrender</div>
+              <div class="cm-block">
+                <div class="b-label">Today's reminder</div>
+                <div class="b-text" id="att-reminder"></div>
+              </div>
+              <div class="cm-block">
+                <div class="b-label">Today's prayer</div>
+                <div class="b-quote" id="att-prayer"></div>
+                <button class="again" id="att-again">↻ another</button>
+              </div>
+            </div>
+
+            <div class="cm-rule"></div>
+
+            <div class="cm-prep">
+              <div class="cm-prep-head">Prepare to sit</div>
+              <div class="presit" id="presit">
+                <label class="presit-item" id="pi-breath">
+                  <input type="checkbox" id="pi-breath-cb" />
+                  <div><div class="pi-text">Steady, deep breathing</div></div>
                 </label>
-                <button class="flipbtn" data-flip="virtue-flipper" aria-label="More about this virtue">Explore →</button>
-              </div>
-            </div>
-            <!-- back -->
-            <div class="face back v-face">
-              <div class="face-cap"><span class="cap-dot v-dot"></span><span id="vt-back-name"></span>
-                <button class="closebtn" data-flip="virtue-flipper" aria-label="Back to summary">✕</button></div>
-              <div class="back-scroll">
-                <div class="b-label">What this cultivates</div>
-                <div class="b-text" id="vt-desc"></div>
-                <div class="b-label">Ways into it today</div>
-                <div class="vt-ideas" id="vt-ideas"></div>
-                <div class="b-label">This week</div>
-                <div class="b-text" id="vt-ring-label"></div>
-              </div>
-              <div class="face-actions">
-                <a class="ghostlink" id="vt-tab-link">See full virtue →</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- PRACTICE CARD -->
-        <div class="flipwrap" id="potw-card">
-          <div class="flipper" id="potw-flipper">
-            <!-- front -->
-            <div class="face front p-face">
-              <div class="face-cap"><span class="cap-dot p-dot"></span>Practice of the week</div>
-              <div class="face-title" id="potw-title"></div>
-              <div class="face-meta" id="potw-meta"></div>
-              <div class="align-row" id="potw-align"></div>
-              <div class="face-today">
-                <div class="ft-label" id="potw-day-label"></div>
-                <div class="ft-text" id="pb-invitation"></div>
-              </div>
-              <div class="dotrow" id="potw-week"></div>
-              <div class="face-explored" id="potw-explored"></div>
-              <div class="hover-hint" id="potw-hint"></div>
-              <div class="face-actions">
-                <label class="pill-check" id="potw-check-wrap">
-                  <input type="checkbox" id="potw-check" /> <span id="potw-check-label">Practised today</span>
+                <label class="presit-item" id="pi-tongue">
+                  <input type="checkbox" id="pi-tongue-cb" />
+                  <div><div class="pi-text">Tongue gently against the roof of the mouth</div></div>
                 </label>
-                <button class="flipbtn" data-flip="potw-flipper" aria-label="More about this practice">Practise →</button>
+                <label class="presit-item" id="pi-mudra">
+                  <input type="checkbox" id="pi-mudra-cb" />
+                  <div><div class="pi-text">Hands clasped slightly above the navel</div></div>
+                </label>
+                <label class="presit-item" id="pi-divineform" style="display:none">
+                  <input type="checkbox" id="pi-divineform-cb" />
+                  <div><div class="pi-text">Connect with your Divine Form</div></div>
+                </label>
               </div>
-            </div>
-            <!-- back -->
-            <div class="face back p-face">
-              <div class="face-cap"><span class="cap-dot p-dot"></span>Right now
-                <button class="closebtn" data-flip="potw-flipper" aria-label="Back to summary">✕</button></div>
-              <div class="back-scroll">
-                <div class="potw-carry" id="potw-carry" style="display:none"></div>
-                <div class="potw-resurface" id="potw-resurface" style="display:none"></div>
-                <div class="potw-callback" id="potw-callback" style="display:none"></div>
-                <div class="b-label">Today's focus</div>
-                <div class="b-text" id="pb-focus"></div>
-                <div class="b-label">A way to explore</div>
-                <div class="b-text" id="pb-explore"></div>
-                <div class="b-label">Inspiration</div>
-                <div class="b-quote" id="pb-inspiration"></div>
-                <div class="prayer-mini">
-                  <div class="b-label">A prayer for today</div>
-                  <div class="potw-prayer" id="potw-prayer"></div>
-                  <button class="again" id="potw-prayer-again">↻ another prayer</button>
-                </div>
-                <div class="b-label">Ways to practise</div>
-                <div class="potw-ways" id="potw-ways"></div>
-                <button class="again" id="potw-another">↻ another way</button>
-                <div class="b-label">What did I notice?</div>
-                <textarea id="potw-refl-text" placeholder="A word, a moment, an observation…"></textarea>
-                <div class="face-actions" style="margin-top:8px">
-                  <button class="btn ghost small" id="potw-refl-save">Save reflection</button>
-                  <span id="potw-refl-msg" class="okmsg"></span>
-                </div>
-                <div class="potw-week-review" id="potw-week-review" style="display:none"></div>
-              </div>
-              <div class="face-actions">
-                <a class="ghostlink" id="potw-tab-link">See full practice →</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- SIXFOLD STRIP -->
-      <div class="six-strip-head">
-        <span class="zone-eyebrow">The Sixfold Path — the wider framework</span>
-        <span class="six-strip-now" id="six-strip-now"></span>
-      </div>
-      <div class="six-strip" id="six-strip"></div>
-    </div>
-
-    <!-- ③ MEDITATION -->
-    <div class="zone">
-      <div class="zone-head">
-        <div class="zone-title">Meditation</div>
-        <div class="zone-sub">Prepare, sit, then record how it went.</div>
-      </div>
-
-      <ol class="stages">
-        <!-- PREPARE -->
-        <li class="stage">
-          <div class="stage-mark">1</div>
-          <div class="stage-body">
-            <div class="stage-title">Prepare</div>
-            <div class="presit" id="presit">
-              <label class="presit-item" id="pi-breath">
-                <input type="checkbox" id="pi-breath-cb" />
-                <div>
-                  <div class="pi-text">Settle your breathing</div>
-                  <div class="pi-sub">Two to five minutes of slow, deep breaths to quieten the nervous system.</div>
-                </div>
-              </label>
-              <label class="presit-item" id="pi-mudra">
-                <input type="checkbox" id="pi-mudra-cb" />
-                <div>
-                  <div class="pi-text">Find your mudra</div>
-                  <div class="pi-sub">Held slightly above the legs, not resting on the thighs — sustain for at least 10 minutes to go deeper.</div>
-                </div>
-              </label>
-              <label class="presit-item" id="pi-divineform" style="display:none">
-                <input type="checkbox" id="pi-divineform-cb" />
-                <div>
-                  <div class="pi-text">Connect with your Divine Form</div>
-                  <div class="pi-sub">Gaze softly at your picture first — let the form enter the heart, then carry it into the sit.</div>
-                </div>
-              </label>
-            </div>
-            <div class="prep-notes">
-              <div class="tech-line" id="tech-line"></div>
               <div class="sandesh" id="sandesh-reminder" style="display:none">
                 <div class="sd-icon">📖</div>
-                <div class="sd-body">
-                  <div class="sd-text">Read one page of <em>Sat Sandesh</em> before you sit.</div>
-                </div>
+                <div class="sd-body"><div class="sd-text">Read one page of <em>Sat Sandesh</em> before you sit.</div></div>
               </div>
             </div>
-          </div>
-        </li>
 
-        <!-- SIT -->
-        <li class="stage">
-          <div class="stage-mark">2</div>
-          <div class="stage-body">
-            <div class="stage-title">Sit</div>
-            <div class="sit-card">
-              <div class="row2">
-                <div class="field">
-                  <label for="d-date">Date</label>
-                  <input type="date" id="d-date" />
-                </div>
-                <div class="field">
-                  <label for="d-lesson">Today's lesson</label>
-                  <select id="d-lesson"></select>
-                  <a class="lessonlink" id="d-lesson-link" target="_blank" rel="noopener"></a>
-                </div>
-              </div>
-              <label class="check" id="d-done-wrap"><input type="checkbox" id="d-done" /> I sat today</label>
+            <button class="btn btn-begin" id="begin-med">Begin meditation</button>
 
-              <div class="timer-panel" id="timer-panel">
-                <div class="tm-ring-wrap">
-                  <svg class="tm-ring" viewBox="0 0 100 100" aria-hidden="true">
-                    <circle cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="3"/>
-                    <circle id="tm-ring-arc" cx="50" cy="50" r="46" fill="none" stroke="var(--dawn)"
-                      stroke-width="3" stroke-linecap="round" stroke-dasharray="289"
-                      stroke-dashoffset="289" transform="rotate(-90 50 50)"/>
-                  </svg>
-                  <div class="tm-display" id="tm-display">20:00</div>
-                </div>
-                <div class="tm-controls">
-                  <label class="tm-label" for="tm-mins">Length</label>
-                  <select id="tm-mins">
-                    <option>5</option><option>10</option><option>15</option>
-                    <option selected>20</option><option>25</option><option>30</option>
-                    <option>40</option><option>45</option><option>60</option>
-                  </select>
-                  <div class="tm-btns">
-                    <button class="btn" id="tm-start">Begin</button>
-                    <button class="btn ghost small" id="tm-bell" title="Hear the bell">🔔</button>
-                  </div>
-                  <div class="tm-note">A bell sounds at the start and the end. Minutes fill in automatically.</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </li>
+            <div class="cm-rule"></div>
 
-        <!-- REFLECT & LOG -->
-        <li class="stage">
-          <div class="stage-mark">3</div>
-          <div class="stage-body">
-            <div class="stage-title">Reflect &amp; log</div>
-            <div class="sit-card">
+            <div class="cm-log">
+              <div class="cm-log-head">Reflect &amp; log</div>
               <div class="row2">
                 <div class="field">
                   <label for="d-min">Minutes</label>
-                  <input type="number" id="d-min" min="0" step="5" placeholder="e.g. 20" />
+                  <input type="number" id="d-min" min="0" step="5" placeholder="20" />
                 </div>
                 <div class="field">
-                  <label>How settled was the sit?</label>
+                  <label>Settledness</label>
                   <div class="rating" id="d-rating" role="group" aria-label="Settledness 1 to 5"></div>
                 </div>
               </div>
               <div class="field">
-                <label for="d-daytime">Daytime Divine Life practice</label>
-                <select id="d-daytime"></select>
-                <a class="lessonlink" id="d-daytime-link" target="_blank" rel="noopener"></a>
+                <label for="d-refl">What did you notice?</label>
+                <textarea id="d-refl" placeholder="A word, a moment, an observation…"></textarea>
               </div>
-              <div class="field">
-                <label for="d-refl">Evening reflection</label>
-                <textarea id="d-refl" placeholder="What did I notice today? Where did the quality show up — or not?"></textarea>
-              </div>
+              <input type="date" id="d-date" class="sr-only" tabindex="-1" />
               <div class="actions">
                 <button class="btn" id="d-save">Save today's sit</button>
                 <span id="d-msg" class="okmsg"></span>
               </div>
             </div>
-          </div>
-        </li>
-      </ol>
-    </div>
+          </section>
 
-    <details class="recent-fold">
-      <summary><span class="if-title">Your recent days</span></summary>
-      <div id="today-list"></div>
-    </details>
+          <details class="recent-fold">
+            <summary><span class="if-title">Your recent days</span></summary>
+            <div id="today-list"></div>
+          </details>
+        </main>
+
+        <!-- ▶ RIGHT RAIL — VIRTUES -->
+        <aside class="siderail rail-virtue" id="rail-virtue">
+          <details class="rail-fold" open>
+            <summary><span class="sr-cap">The nine virtues</span></summary>
+            <div class="sr-items" id="virtue-items"></div>
+            <div class="sr-note">Qualities to cultivate, one each week.</div>
+          </details>
+        </aside>
+      </div>
+
+      <!-- floating tooltip for both rails -->
+      <div class="railtip" id="railtip" role="tooltip" aria-hidden="true"></div>
+    </div>
   </section>
+
 
 
   <!-- INSIGHTS -->
@@ -1572,7 +1651,7 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
   <section class="view" id="view-data">
     <div class="card">
       <h2>Backup &amp; restore</h2>
-      <p class="sub">Data stays in this browser unless you configure optional Google Sheets sync. These backups are extra copies you own.</p>
+      <p class="sub">The Google Sheet is your live store. These are extra safety copies you own.</p>
       <div class="actions">
         <button class="btn ghost" id="exp-json">Download full backup (.json)</button>
         <button class="btn ghost" id="exp-csv">Download log (.csv)</button>
@@ -1589,7 +1668,7 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
   </section>
 
   <footer>
-    Inner Journey School practice log · data stays on this device unless sync is configured ·
+    Inner Journey School practice log · data lives in your shared Google Sheet ·
     lesson links open the live classroom.
   </footer>
 </div>
@@ -1601,8 +1680,8 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
       SECRET is an optional passphrase; must match the one in Code.gs.
    ==================================================================== */
 const CONFIG = {
-  ENDPOINT: "https://script.google.com/macros/s/AKfycbwa1BdQ0L9wKmSZTyX6g1tCOz-ljCm1CkhQTZSk1eBcB6exgi1JJIT_iKpVnmn-N-eKmQ/exec",
-  SECRET:   "pray"
+  ENDPOINT: "",            // e.g. "https://script.google.com/macros/s/AKfy.../exec"
+  SECRET:   ""             // e.g. "lotus-2026"  (optional; match Code.gs)
 };
 
 /* ==================== 2) CURRICULUM (verified links) ==================== */
@@ -1869,16 +1948,17 @@ function renderLessonSelect(){
     sel.appendChild(g);
   });
   updateLessonLink();
-  const day=$("#d-daytime"); day.innerHTML="";
+  const day=$("#d-daytime"); if(!day) return;
+  day.innerHTML="";
   DAYTIME.forEach(([t,u])=>{ const o=document.createElement("option"); o.value=t; o.dataset.url=u; o.textContent=t; day.appendChild(o); });
   updateDaytimeLink();
 }
 function updateLessonLink(){
-  const s=$("#d-lesson"); const o=s.options[s.selectedIndex]; const a=$("#d-lesson-link");
+  const s=$("#d-lesson"); if(!s) return; const o=s.options[s.selectedIndex]; const a=$("#d-lesson-link");
   if(o&&o.dataset.url){ a.href=o.dataset.url; a.textContent="↗ open this lesson in the classroom"; } else a.textContent="";
 }
 function updateDaytimeLink(){
-  const s=$("#d-daytime"); const o=s.options[s.selectedIndex]; const a=$("#d-daytime-link");
+  const s=$("#d-daytime"); if(!s) return; const o=s.options[s.selectedIndex]; const a=$("#d-daytime-link");
   if(o&&o.dataset.url){ a.href=o.dataset.url; a.textContent="↗ open this teaching"; } else a.textContent="";
 }
 function renderRating(){
@@ -2044,8 +2124,9 @@ function invoDoneEntry(){
   return state.entries.find(e=>e.person===me&&e.kind==="invocation"&&e.date===today());
 }
 function renderInvocation(){
+  if(!$("#invo-text")) return;   /* panel removed in the triptych redesign */
   const p=todaysInvocation();
-  $("#invo-text").innerHTML=prayerHTML(p);
+  {const _it=$("#invo-text"); if(_it) _it.innerHTML=prayerHTML(p);}
   const done=invoDoneEntry();
   const cb=$("#invo-check"), wrap=$("#invo-check-wrap"), lbl=$("#invo-check-label");
   cb.checked=!!done;
@@ -2083,7 +2164,7 @@ function todaysHighlight(){
   return HIGHLIGHTS[((base+hlShuffle)%HIGHLIGHTS.length)];
 }
 function renderHighlight(){
-  $("#hl-text").textContent=todaysHighlight();
+  {const _ht=$("#hl-text"); if(_ht) _ht.textContent=todaysHighlight();}
 }
 
 /* ---- rotating practice reminder ---- */
@@ -2841,6 +2922,7 @@ function renderVirtueToday(){
   const bn=$("#vt-back-name"); if(bn) bn.textContent=v.name;
   const ess=$("#vt-essence"); if(ess) ess.textContent=v.desc.split(".")[0]+".";
   const desc=$("#vt-desc"); if(desc) desc.textContent=v.desc;
+  const rl0=$("#vt-ring-label"); if(rl0) rl0.textContent="";
 
   const prayerIdx=(dayIdx+vtShuffle)%v.prayers.length;
   $("#vt-prayer").textContent=v.prayers[prayerIdx];
@@ -2943,9 +3025,9 @@ function showVirtueDetail(vkey){
   setTimeout(()=>$("#virtue-detail-card").scrollIntoView({behavior:"smooth",block:"nearest"}),50);
 }
 function initPresit(){
-  ["breath","mudra"].forEach(k=>{
+  ["breath","tongue","mudra"].forEach(k=>{
     const cb=$("#pi-"+k+"-cb"), item=$("#pi-"+k);
-    if(cb && item) cb.onchange=()=>{ item.classList.toggle("checked",cb.checked); renderStageState(); };
+    if(cb && item) cb.onchange=()=>item.classList.toggle("checked",cb.checked);
   });
 
   // divine form check — shown on 3 out of 7 days, stable by date hash
@@ -2967,6 +3049,20 @@ function initPresit(){
     else await addEntry({kind:"practice",practiceId:asg.practiceId,date:today(),
       weekNumber:wk,dayNumber:dayN,engaged:true,practised:potwCb.checked,reflection:""});
   };
+
+  const pexp=$("#potw-expand"), pmore=$("#potw-more");
+  if(pexp&&pmore) pexp.onclick=()=>{
+    pmore.hidden=!pmore.hidden;
+    pexp.textContent=pmore.hidden?"Practise →":"Close ↑";
+    if(!pmore.hidden) setTimeout(()=>pmore.scrollIntoView({behavior:"smooth",block:"nearest"}),60);
+  };
+  const jtog=$("#lesson-journey-toggle"), jbox=$("#journey");
+  if(jtog&&jbox) jtog.onclick=()=>{
+    jbox.hidden=!jbox.hidden;
+    jtog.textContent=jbox.hidden?"Journey →":"Close ↑";
+  };
+  const attAgain=$("#att-again");
+  if(attAgain) attAgain.onclick=()=>{ attShuffle++; renderAttitudes(); };
 
   const another=$("#potw-another");
   if(another) another.onclick=()=>{ wayShuffle++; renderPracticeOfWeek(); };
@@ -3161,7 +3257,7 @@ function fullThread(){
 }
 
 function renderPracticeOfWeek(){
-  const card=$("#potw-card"); if(!card) return;
+  const card=$("#potw-card")||$(".card-week"); if(!card) return;
   const wk=practiceWeekNumber(today());
   if(wk<1){ card.style.display="none"; return; }
   card.style.display="block";
@@ -3496,14 +3592,19 @@ function toast(msg){
   clearTimeout(t._h); t._h=setTimeout(()=>{ t.className=""; },2400);
 }
 
+/* ---- guards: panels removed in the triptych redesign ---- */
+function renderSixStrip(){}
+function renderStageState(){}
+function renderInvocation(){ if(!$("#invo-text")) return; }
+function renderHighlight(){ if(!$("#hl-text")) return; }
+function renderPracticeReminder(){ const el=$("#tech-line"); if(!el) return; }
 function renderOrientation(){
   const h=new Date().getHours();
-  const part = h<12 ? "Good morning" : (h<18 ? "Good afternoon" : "Good evening");
+  const part=h<12?"Good morning":(h<18?"Good afternoon":"Good evening");
   const gl=$("#greet-line"); if(!gl) return;
   gl.textContent=part+", "+me;
-  const d=new Date();
-  $("#greet-date").textContent=d.toLocaleDateString(undefined,
-    {weekday:"long", day:"numeric", month:"long"});
+  $("#greet-date").textContent=new Date().toLocaleDateString(undefined,
+    {weekday:"long",day:"numeric",month:"long"});
 }
 
 /* accessible flip: button toggles, Escape closes */
@@ -3624,14 +3725,14 @@ function tickTimer(){
   const qa=$("#q-arc"); if(qa&&timerState.total>0){ const C=578; qa.style.strokeDashoffset=String(C-(frac*C)); }
   if(left<=0) finishTimer();
 }
-function startTimer(mins){
+function startTimer(mins){ /* retained for the glance path; open-ended when mins<=0 */
   stopTimer(true);
   timerState.total=mins*60;
   timerState.endsAt=Date.now()+timerState.total*1000;
   timerState.running=true;
   bell("start");
-  $("#timer-panel").classList.add("running");
-  $("#tm-start").textContent="Stop";
+  const _tp=$("#timer-panel"); if(_tp) _tp.classList.add("running");
+  const _ts=$("#tm-start"); if(_ts) _ts.textContent="Stop";
   enterQuiet();
   timerState.id=setInterval(tickTimer,250);
   tickTimer();
@@ -3643,7 +3744,7 @@ function finishTimer(){
   const mi=$("#d-min"); if(mi&&!mi.value) mi.value=mins;
   const dd=$("#d-done"); if(dd&&!dd.checked){ dd.checked=true; renderStageState(); }
   setTimeout(()=>{ exitQuiet(); showPostSit(mins); },2600);
-  const disp=$("#tm-display"); if(disp) disp.textContent=fmtClock(0);
+  const disp2=$("#tm-display"); if(disp2) disp2.textContent=fmtClock(0);
 }
 function stopTimer(silent){
   if(timerState.id) clearInterval(timerState.id);
@@ -3656,7 +3757,7 @@ function stopTimer(silent){
   }
 }
 function initTimer(){
-  const mins=$("#tm-mins"); if(!mins) return;
+  const mins=$("#tm-mins"); if(!mins) return; /* timer removed in triptych redesign */
   mins.onchange=()=>{ if(!timerState.running) $("#tm-display").textContent=fmtClock(mins.value*60); };
   $("#tm-display").textContent=fmtClock(mins.value*60);
   $("#tm-start").onclick=()=>{
@@ -3725,7 +3826,7 @@ function initQuiet(){
   const ex=$("#q-exit");
   if(ex) ex.onclick=()=>{ stopTimer(false); exitQuiet(); };
   document.body.addEventListener("keydown",e=>{
-    if(e.key==="Escape"&&$("#quiet").classList.contains("on")){ stopTimer(false); exitQuiet(); }
+    if(e.key==="Escape"&&$("#quiet").classList.contains("on")){ endSit(); }
   });
 }
 
@@ -3828,8 +3929,7 @@ function initGlance(){
   const b=$("#gl-begin"), o=$("#gl-open"), br=$("#gl-browse");
   if(b) b.onclick=()=>{
     glanceDismissed=true; safeSet("ijs_glance_"+today(),"1"); showGlance();
-    const mins=$("#tm-mins");
-    startTimer(Number(mins&&mins.value)||20);
+    beginSit();
   };
   if(o) o.onclick=()=>{
     glanceDismissed=true; safeSet("ijs_glance_"+today(),"1"); showGlance();
@@ -3913,10 +4013,279 @@ function renderPresence(){
   box.style.display="flex";
 }
 
+/* ══════════ TECHNIQUE OF THE WEEK ══════════
+   PROVISIONAL library — built from techniques already verified in the
+   classroom. Replace wholesale when the School technique list is supplied;
+   nothing here is invented beyond the practical framing.               */
+const TECHNIQUE_LIBRARY = [
+  { techId:"t1", name:"So-Hum", link:L1+"93099ccd2e6d4613901fa677575f6b12",
+    why:"So-Hum rides the breath itself — 'So' on the in-breath, 'Hum' on the out. It needs no props and no counting, which makes it the steadiest doorway back whenever the mind has scattered.",
+    angles:["Understand the technique: silently sound 'So' as the breath enters, 'Hum' as it leaves. Nothing more.",
+      "Notice the experience: where in the body do you actually feel the breath turning around?",
+      "Refine the practice: let the syllables get quieter than the breath, not louder.",
+      "Explore subtlety: is there a gap between 'So' and 'Hum'? Rest there.",
+      "Practise with greater steadiness: when the mantra drops away, simply pick it up again without comment.",
+      "Notice obstacles: what pulls you off it most reliably — sound, thought, discomfort?",
+      "Reflect: has So-Hum begun to continue on its own outside the sit?"] },
+  { techId:"t2", name:"21 repetitions of OM", link:L1+"5a6849b92ee248b6814109966c8f6e2c",
+    why:"Chanting OM twenty-one times before sitting settles the nervous system through vibration rather than instruction. The body quietens first, and the mind follows it.",
+    angles:["Understand the technique: twenty-one slow OMs, each one complete before the next begins.",
+      "Notice the experience: where does the vibration land — chest, throat, skull?",
+      "Refine the practice: let the tail of each OM fade fully into silence before starting again.",
+      "Explore subtlety: the silence between two OMs is part of the practice, not a pause in it.",
+      "Practise with greater steadiness: keep the pitch and length even from the first to the twenty-first.",
+      "Notice obstacles: does the counting itself become a distraction? Let it be loose.",
+      "Reflect: what is the quality of the silence after the twenty-first?"] },
+  { techId:"t3", name:"Nadi Shodhana", link:L1+"82951119f0c74ce087f53b55e89c88d5",
+    why:"Alternate-nostril breathing balances the two sides before stillness is attempted. It is preparation as much as practice — the mind arrives already evened out.",
+    angles:["Understand the technique: alternate the nostrils, slow and unforced, for five to ten minutes.",
+      "Notice the experience: one nostril is usually more open. Which, today?",
+      "Refine the practice: let the out-breath be a little longer than the in-breath.",
+      "Explore subtlety: notice the moment of change-over — that is where the balancing happens.",
+      "Practise with greater steadiness: no strain, no retention beyond what is comfortable.",
+      "Notice obstacles: watch for the breath becoming effortful; ease off immediately if so.",
+      "Reflect: does the mind settle faster on days you do this first?"] },
+  { techId:"t4", name:"Trataka", link:WD+"c217937286d14abf9d08b6b9dcb1b8ed",
+    why:"Steady gazing trains single-pointed attention through the eyes, which is often easier than training it directly through thought. The stillness of the gaze becomes the stillness of the mind.",
+    angles:["Understand the technique: soft, steady gaze at a flame or fixed point — looking, not staring.",
+      "Notice the experience: how long before the urge to blink or glance away arrives?",
+      "Refine the practice: relax the forehead and jaw while the eyes stay steady.",
+      "Explore subtlety: when you close the eyes, the after-image is part of the practice.",
+      "Practise with greater steadiness: return the gaze gently each time it wanders.",
+      "Notice obstacles: strain is the enemy here. Soft is stronger than hard.",
+      "Reflect: has the steadiness of the gaze carried into the sit itself?"] },
+];
+const TECH_ANGLE_LABELS=["Understand the technique","Notice the experience","Refine the practice",
+  "Explore subtlety","Practise with greater steadiness","Notice obstacles","Reflect"];
+const LS_TECH_ASSIGN="ijs_technique_assignments_v1";
+function getTechnique(id){ return TECHNIQUE_LIBRARY.find(t=>t.techId===id); }
+function loadTechAssign(){ try{return JSON.parse(safeGet(LS_TECH_ASSIGN)||"[]");}catch(e){return [];} }
+function saveTechAssign(a){ safeSet(LS_TECH_ASSIGN,JSON.stringify(a)); }
+
+function techniqueFor(weekNumber){
+  let list=loadTechAssign();
+  let found=list.find(a=>a.weekNumber===weekNumber);
+  if(found) return found;
+  const b=weekBounds(weekNumber);
+  const prev=list.filter(a=>a.weekNumber<weekNumber).sort((x,y)=>y.weekNumber-x.weekNumber);
+  const lastId=prev.length?prev[0].techId:null;
+  const pool=TECHNIQUE_LIBRARY.filter(t=>t.techId!==lastId);
+  const cands=pool.length?pool:TECHNIQUE_LIBRARY.slice();
+  let best=null,bestScore=-1;
+  cands.forEach(t=>{
+    const feats=list.filter(a=>a.techId===t.techId);
+    const lastWk=feats.length?Math.max(...feats.map(a=>a.weekNumber)):0;
+    const since=weekNumber-lastWk;
+    const jitter=(hashDate(b.start+t.techId)%100)/1000;
+    const score=(since*3)-(feats.length*2)+jitter;
+    if(score>bestScore){ bestScore=score; best=t; }
+  });
+  found={weekNumber,weekStart:b.start,weekEnd:b.end,
+    techId:best?best.techId:TECHNIQUE_LIBRARY[0].techId,
+    assignmentType:"auto",assignedAt:new Date().toISOString()};
+  list.push(found); saveTechAssign(list);
+  return found;
+}
+function renderTechnique(){
+  const nameEl=$("#tech-name"); if(!nameEl) return;
+  const wk=Math.max(1,practiceWeekNumber(today()));
+  const asg=techniqueFor(wk);
+  const t=getTechnique(asg.techId); if(!t) return;
+  const dayN=Math.max(1,practiceDayNumber(today()));
+  const b=weekBounds(wk);
+  nameEl.textContent=t.name;
+  $("#tech-week").textContent="This week's technique · "+fmtRange(b.start,b.end);
+  $("#tech-angle-label").textContent=TECH_ANGLE_LABELS[dayN-1];
+  $("#tech-focus").textContent=t.angles[dayN-1];
+  $("#tech-why").textContent=t.why;
+  const lk=$("#tech-link");
+  if(lk&&t.link){ lk.href=t.link; lk.textContent="↗ open this technique in the classroom"; }
+}
+
+/* ══════════ LOVE · FOCUS · SURRENDER (daily reminder + prayer) ══════════ */
+const ATT_REMINDERS=[
+  "Love opens the sit. Begin by wishing yourself well before you ask anything of your attention.",
+  "Focus is not force. Returning gently is stronger than gripping hard.",
+  "Surrender is what you reach for when love and focus have both grown tired.",
+  "Hold all three lightly. If one slips, another is still holding you.",
+  "Love softens the body, focus steadies the mind, surrender releases the outcome.",
+  "You cannot force surrender. You can only stop resisting.",
+  "The three are one movement: open, steady, release.",
+];
+let attShuffle=0;
+function renderAttitudes(){
+  const r=$("#att-reminder"); if(!r) return;
+  const d=Math.max(0,practiceDayNumber(today())-1);
+  r.textContent=ATT_REMINDERS[d%ATT_REMINDERS.length];
+  const p=$("#att-prayer");
+  const pool=INVOCATIONS;
+  const idx=(hashDate(today()+"ATT")+attShuffle)%pool.length;
+  const pr=pool[idx];
+  if(p) p.textContent=pr.close||prayerText(pr).split("\n").pop();
+}
+
+/* ══════════ TODAY'S LESSON — next in the journey ══════════ */
+function nextLesson(){
+  const done=new Set(state.entries.filter(e=>e.person===me&&e.kind==="daily"&&e.lessonTitle)
+    .map(e=>e.lessonTitle));
+  for(const ph of PHASES){
+    for(const [title,url] of ph.lessons){
+      if(!done.has(title)) return {title,url,phase:ph};
+    }
+  }
+  const last=PHASES[PHASES.length-1];
+  const [t,u]=last.lessons[last.lessons.length-1];
+  return {title:t,url:u,phase:last,allDone:true};
+}
+function renderLessonCard(){
+  const tEl=$("#lesson-title"); if(!tEl) return;
+  const nx=nextLesson();
+  tEl.textContent=nx.title;
+  $("#lesson-stage").textContent=nx.phase.label.toUpperCase();
+  $("#lesson-sub").textContent=nx.allDone
+    ? "You've studied every lesson. Revisit any time."
+    : "Continue your journey";
+  const w=$("#lesson-watch"); if(w) w.href=nx.url;
+  // keep the hidden select in sync so saving still works unchanged
+  const sel=$("#d-lesson");
+  if(sel){ [...sel.options].forEach(o=>{ if(o.value===nx.title) o.selected=true; }); updateLessonLink(); }
+  const dn=$("#d-done");
+  const doneToday=state.entries.some(e=>e.person===me&&e.kind==="daily"&&
+    e.date===today()&&e.lessonTitle===nx.title);
+  if(dn&&document.activeElement!==dn) dn.checked=doneToday;
+}
+function renderJourney(){
+  const j=$("#journey"); if(!j) return;
+  const done=new Set(state.entries.filter(e=>e.person===me&&e.kind==="daily"&&e.lessonTitle)
+    .map(e=>e.lessonTitle));
+  const cur=nextLesson().title;
+  let html="", lastLevel="";
+  PHASES.forEach(ph=>{
+    const level=ph.label.split("·")[0].trim();
+    if(level!==lastLevel){ html+=`<div class="jl-level">${esc(level)}</div>`; lastLevel=level; }
+    const stage=(ph.label.split("·")[1]||"").trim();
+    if(stage) html+=`<div class="jl-stage">${esc(stage)}</div>`;
+    ph.lessons.forEach(([title,url])=>{
+      const isDone=done.has(title), isCur=title===cur;
+      const mark=isDone?"✓":(isCur?"●":"○");
+      html+=`<button class="jl-lesson${isDone?" done":""}${isCur?" current":""}"
+        data-jl="${esc(title)}" data-url="${esc(url)}">
+        <span class="jl-mark">${mark}</span><span>${esc(title)}</span></button>`;
+    });
+  });
+  j.innerHTML=html;
+  j.querySelectorAll("[data-jl]").forEach(b=>b.onclick=()=>{
+    const sel=$("#d-lesson");
+    if(sel){ [...sel.options].forEach(o=>{ if(o.value===b.dataset.jl) o.selected=true; }); updateLessonLink(); }
+    $("#lesson-title").textContent=b.dataset.jl;
+    const w=$("#lesson-watch"); if(w) w.href=b.dataset.url;
+    j.hidden=true;
+    toast("Lesson selected");
+  });
+}
+
+/* ══════════ RAILS + TOOLTIP ══════════ */
+function renderRails(){
+  const six=$("#six-items"), vir=$("#virtue-items");
+  if(!six||!vir) return;
+  const actS=activeSixfold(), actV=activeVirtue();
+
+  six.innerHTML=SIXFOLD.map(s=>
+    `<button class="sr-item${s.key===actS.key?" lit":""}" data-tip="six:${s.key}">
+       <span class="sr-lamp"></span><span class="sr-num">0${s.num}</span>
+       <span class="sr-name">${esc(s.name)}${s.key===actS.key?'<span class="sr-now">In focus</span>':''}</span>
+     </button>`).join("");
+
+  vir.innerHTML=VIRTUES.map((v,i)=>{
+    const n=Math.min(virtueDays(v.key).length,7);
+    const lit=v.key===actV.key;
+    return `<button class="sr-item${lit?" lit":""}${n>=7?" embedded":""}" data-tip="virtue:${v.key}">
+       <span class="sr-lamp"></span><span class="sr-num">${i+1}</span>
+       <span class="sr-name">${esc(v.name)}${lit?'<span class="sr-now">This week</span>':''}</span>
+     </button>`;
+  }).join("");
+
+  const wire=(el)=>el.querySelectorAll("[data-tip]").forEach(b=>{
+    b.onmouseenter=e=>showTip(b);
+    b.onmouseleave=hideTip;
+    b.onfocus=()=>showTip(b);
+    b.onblur=hideTip;
+    b.onclick=()=>{
+      const [kind,k]=b.dataset.tip.split(":");
+      if(kind==="six"){ gotoTab("virtues"); showSixfoldDetail(k); }
+      else { gotoTab("virtues"); renderVirtueGrid(); showVirtueDetail(k); }
+      hideTip();
+    };
+  });
+  wire(six); wire(vir);
+}
+function showTip(btn){
+  const tip=$("#railtip"); if(!tip) return;
+  const [kind,k]=btn.dataset.tip.split(":");
+  let html="";
+  if(kind==="six"){
+    const s=getSixfold(k); if(!s) return;
+    tip.className="railtip six";
+    html=`<div class="rt-title">${s.glyph} ${esc(s.name)}</div>
+      <div class="rt-def">${esc(s.essence)}</div>
+      <div class="rt-extra"><b>In daily life</b>${esc(s.invite)}</div>`;
+  } else {
+    const v=VIRTUES.find(x=>x.key===k); if(!v) return;
+    const isNow=activeVirtue().key===k;
+    tip.className="railtip";
+    html=`<div class="rt-title">${esc(v.name)}</div>
+      <div class="rt-def">${esc(v.desc.split(".")[0])}.</div>
+      ${isNow?`<div class="rt-extra"><b>Today's reflection</b>${esc(v.prayers[dayOfVirtueWeek()%v.prayers.length])}</div>`:""}`;
+  }
+  tip.innerHTML=html;
+  tip.setAttribute("aria-hidden","false");
+  tip.classList.add("on");
+  const r=btn.getBoundingClientRect();
+  const isLeftRail=!!btn.closest(".rail-six");
+  tip.style.top=Math.max(10,Math.min(window.innerHeight-tip.offsetHeight-10,
+    r.top+r.height/2-tip.offsetHeight/2))+"px";
+  tip.style.left=isLeftRail
+    ? Math.min(window.innerWidth-tip.offsetWidth-10, r.right+12)+"px"
+    : Math.max(10, r.left-tip.offsetWidth-12)+"px";
+}
+function hideTip(){
+  const tip=$("#railtip"); if(!tip) return;
+  tip.classList.remove("on"); tip.setAttribute("aria-hidden","true");
+}
+
+
+/* ---- open-ended sit: no clock, just the space ---- */
+let sitStart=0;
+function beginSit(){
+  sitStart=Date.now();
+  timerState.total=0; timerState.endsAt=0; timerState.running=true;
+  bell("start");
+  enterQuiet();
+  const qt=$("#q-time"); if(qt) qt.textContent="";
+  const qa=$("#q-arc"); if(qa) qa.style.strokeDashoffset="578";
+}
+function endSit(){
+  const mins=sitStart?Math.max(1,Math.round((Date.now()-sitStart)/60000)):0;
+  timerState.running=false;
+  bell("end");
+  exitQuiet();
+  const mi=$("#d-min"); if(mi&&!mi.value&&mins) mi.value=mins;
+  const dn=$("#d-done"); if(dn) dn.checked=true;
+  if(mins) showPostSit(mins);
+  sitStart=0;
+}
+function initBegin(){
+  const b=$("#begin-med");
+  if(b) b.onclick=beginSit;
+  const ex=$("#q-exit");
+  if(ex){ ex.textContent="I'm done"; ex.onclick=endSit; }
+}
+
 function renderAll(){
-  renderStrip(); renderCurriculumTrack(); renderAvatar(); renderInvocation(); renderHighlight(); renderPracticeReminder();
+  renderStrip(); renderCurriculumTrack(); renderAvatar();
   renderOrientation(); renderPracticeOfWeek(); renderPracticesTab(); renderSixGrid();
-  renderSixStrip(); renderStageState(); renderRails();
+  renderRails(); renderTechnique(); renderAttitudes();
+  renderLessonCard(); renderJourney();
   renderYearView(); renderReflectionSearch();
   renderWeeklyLetter(); renderPresence(); showGlance();
   renderVirtueToday();
@@ -3939,9 +4308,10 @@ function initEvents(){
   };
   $("#d-lesson").onchange=updateLessonLink;
   const ddone=$("#d-done"); if(ddone) ddone.onchange=renderStageState;
-  $("#d-daytime").onchange=updateDaytimeLink;
+  const dsel=$("#d-daytime"); if(dsel) dsel.onchange=updateDaytimeLink;
 
-  $("#invo-check").onchange=async()=>{
+  const _invocb=$("#invo-check");
+  if(_invocb) _invocb.onchange=async()=>{
     const existing=invoDoneEntry();
     if($("#invo-check").checked && !existing){
       await addEntry({kind:"invocation",date:today(),text:prayerText(todaysInvocation())});
@@ -3949,17 +4319,17 @@ function initEvents(){
       await deleteEntry(existing.id);
     } else { renderInvocation(); }
   };
-  $("#invo-again").onclick=()=>{ invoShuffle++; renderInvocation(); };
-  $("#hl-again").onclick=()=>{ hlShuffle++; renderHighlight(); };
+  const _invo_again=$("#invo-again"); if(_invo_again) _invo_again.onclick=()=>{ invoShuffle++; renderInvocation(); };
+  const _hl_again=$("#hl-again"); if(_hl_again) _hl_again.onclick=()=>{ hlShuffle++; renderHighlight(); };
 
   $("#d-save").onclick=async()=>{
     const ls=$("#d-lesson"), lo=ls.options[ls.selectedIndex];
-    const ds=$("#d-daytime"), dop=ds.options[ds.selectedIndex];
+    const ds=$("#d-daytime"), dop=ds?ds.options[ds.selectedIndex]:null;
     await addEntry({
       kind:"daily", date:$("#d-date").value||today(),
       phase:lo?lo.parentNode.label:"", lessonTitle:$("#d-lesson").value, lessonUrl:lo?lo.dataset.url:"",
       formalDone:$("#d-done").checked, minutes:$("#d-min").value||"", rating:rating||"",
-      daytimeText:$("#d-daytime").value, daytimeUrl:dop?dop.dataset.url:"",
+      daytimeText:"", daytimeUrl:"",
       reflection:$("#d-refl").value.trim()
     });
     $("#d-refl").value=""; $("#d-min").value=""; $("#d-done").checked=false; rating=0; renderRating();
@@ -4030,7 +4400,7 @@ function toCSV(rows){
 function boot(){
   loadLocal();
   $("#d-date").value=today();
-  renderPeople(); renderLessonSelect(); renderRating(); initEvents(); initPresit(); initFlips(); initTimer(); initQuiet(); initGlance(); initPostSit();
+  renderPeople(); renderLessonSelect(); renderRating(); initEvents(); initPresit(); initFlips(); initQuiet(); initGlance(); initPostSit(); initBegin();
   if(!storageOK) setBanner("warn","This browser is blocking local storage — use the Backup tab to export regularly, or enable storage for this site.");
   else if(!connected) setBanner("warn","Running locally on this device only. Open index.html and paste your Apps Script URL into CONFIG.ENDPOINT to sync with the family.");
   renderAll();
