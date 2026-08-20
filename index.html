@@ -46,7 +46,8 @@ a:hover{text-decoration:underline}
 .wrap{max-width:860px;margin:0 auto;padding:22px 18px 90px}
 
 /* header */
-header.top{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;justify-content:space-between;margin-bottom:6px}
+header.top{position:relative;display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;justify-content:space-between;margin-bottom:6px}
+.header-date{position:absolute;top:-16px;right:0;font-size:12px;color:var(--faint);white-space:nowrap}
 .brand h1{font-family:'Spectral',serif;font-weight:500;font-size:26px;letter-spacing:.2px;margin:0;line-height:1.15}
 .brand p{margin:3px 0 0;color:var(--dim);font-size:13px}
 .who{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
@@ -1184,6 +1185,7 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
 <div class="wrap">
 
   <header class="top">
+    <div class="header-date" id="gl-date"></div>
     <div class="brand">
       <h1>Inner Journey — Practice Log</h1>
       <p>The lotus rises from the mud toward the light. One day at a time.</p>
@@ -1220,11 +1222,6 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
 
   <!-- TODAY -->
   <section class="view active" id="view-today">
-
-    <!-- morning glance -->
-    <div class="glance" id="glance">
-      <div class="g-date" id="gl-date"></div>
-    </div>
 
     <div id="today-full">
       <!-- header -->
@@ -3573,8 +3570,10 @@ function renderOrientation(){
   const part=h<12?"":(h<18?"Good afternoon":"Good evening");
   const gl=$("#greet-line"); if(!gl) return;
   gl.textContent=part?part+", "+me:me;
-  $("#greet-date").textContent=new Date().toLocaleDateString(undefined,
+  const dateText=new Date().toLocaleDateString(undefined,
     {weekday:"long",day:"numeric",month:"long"});
+  $("#greet-date").textContent=dateText;
+  const headerDate=$("#gl-date"); if(headerDate) headerDate.textContent=dateText;
 }
 
 /* accessible flip: button toggles, Escape closes */
@@ -3885,7 +3884,6 @@ function showGlance(){
   zones.forEach(z=>z.style.display=show?"none":"");
   if(!show) return;
   const h=new Date().getHours();
-  $("#gl-date").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long"});
 }
 function initGlance(){
 }
