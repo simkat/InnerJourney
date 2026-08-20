@@ -759,9 +759,14 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 .cm-card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
 .cm-card-head .cm-cap{margin-bottom:0}
 .meditation-toggle{font-size:13px;white-space:nowrap}
-.med-form{animation:med-reveal .3s ease both}
-.med-form[hidden]{display:none}
-@keyframes med-reveal{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.card-med{perspective:1400px;overflow:hidden}
+.med-card-inner{position:relative;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,.16,.2,1)}
+.med-card-inner.flipped{transform:rotateY(180deg)}
+.med-face{backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.med-face.med-front{position:relative}
+.med-face.med-back{position:absolute;inset:0;transform:rotateY(180deg);overflow-y:auto}
+.med-form{margin-top:0}
+@media(prefers-reduced-motion:reduce){.med-card-inner{transition:none}}
 .cm-tech-label{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dawn);margin-bottom:5px}
 .cm-tech-name{font-family:'Spectral',serif;font-size:26px;font-weight:500;color:#f6dcae;line-height:1.15}
 .cm-tech-week{font-size:12px;color:var(--faint);margin-top:4px}
@@ -1345,6 +1350,8 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
 
           <!-- 3. TODAY'S MEDITATION + TECHNIQUE -->
           <section class="card-med">
+            <div class="med-card-inner" id="med-card-inner">
+              <div class="med-face med-front">
             <div class="cm-card-head">
               <div class="cm-cap">🧘 Today's meditation</div>
               <button class="ghostlink meditation-toggle" id="meditation-toggle" type="button"
@@ -1378,8 +1385,15 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
                 <button class="again" id="att-again">↻ another</button>
               </div>
             </div>
+              </div>
 
-            <div class="med-form" id="med-form" hidden>
+              <div class="med-face med-back">
+                <div class="cm-card-head">
+                  <div class="cm-cap">🧘 Meditation</div>
+                  <button class="ghostlink meditation-toggle" id="meditation-toggle-back" type="button"
+                    aria-expanded="true" aria-controls="med-form">Overview ←</button>
+                </div>
+            <div class="med-form" id="med-form">
               <div class="cm-rule"></div>
 
             <div class="cm-prep">
@@ -1434,6 +1448,7 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
                 <span id="d-msg" class="okmsg"></span>
               </div>
             </div>
+              </div>
             </div>
           </section>
 
@@ -4223,13 +4238,18 @@ function endSit(){
   sitStart=0;
 }
 function initBegin(){
-  const meditationToggle=$("#meditation-toggle"), medForm=$("#med-form");
-  if(meditationToggle&&medForm) meditationToggle.onclick=()=>{
-    const open=medForm.hidden;
-    medForm.hidden=!open;
-    meditationToggle.setAttribute("aria-expanded",String(open));
-    meditationToggle.textContent=open?"Overview ←":"Meditation →";
+  const medCard=$("#med-card-inner");
+  const toggleMeditation=(flipped)=>{
+    if(!medCard) return;
+    medCard.classList.toggle("flipped",flipped);
+    const front=$("#meditation-toggle"), back=$("#meditation-toggle-back");
+    if(front) front.setAttribute("aria-expanded",String(flipped));
+    if(back) back.setAttribute("aria-expanded",String(flipped));
   };
+  const meditationToggle=$("#meditation-toggle");
+  if(meditationToggle) meditationToggle.onclick=()=>toggleMeditation(true);
+  const meditationToggleBack=$("#meditation-toggle-back");
+  if(meditationToggleBack) meditationToggleBack.onclick=()=>toggleMeditation(false);
   const b=$("#begin-med");
   if(b) b.onclick=beginSit;
   const ex=$("#q-exit");
