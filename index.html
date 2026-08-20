@@ -1226,8 +1226,6 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
     <div id="today-full">
       <!-- header -->
       <div class="orient" id="orient-zone">
-        <h1 class="greet" id="greet-line"></h1>
-        <div class="greet-date" id="greet-date"></div>
         <div class="letter" id="weekly-letter" style="display:none">
           <div class="lt-cap">Your week</div>
           <div class="lt-body" id="lt-body"></div>
@@ -3566,13 +3564,8 @@ function renderInvocation(){ if(!$("#invo-text")) return; }
 function renderHighlight(){ if(!$("#hl-text")) return; }
 function renderPracticeReminder(){ const el=$("#tech-line"); if(!el) return; }
 function renderOrientation(){
-  const h=new Date().getHours();
-  const part=h<12?"":(h<18?"Good afternoon":"Good evening");
-  const gl=$("#greet-line"); if(!gl) return;
-  gl.textContent=part?part+", "+me:me;
   const dateText=new Date().toLocaleDateString(undefined,
     {weekday:"long",day:"numeric",month:"long"});
-  $("#greet-date").textContent=dateText;
   const headerDate=$("#gl-date"); if(headerDate) headerDate.textContent=dateText;
 }
 
