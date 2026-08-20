@@ -779,6 +779,39 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 .btn-begin{width:100%;margin-top:18px;min-height:52px;font-size:15px;border-radius:12px}
 .cm-log .field{margin-bottom:13px}
 
+
+/* ── Love · Focus · Surrender flip card ── */
+.attwrap{perspective:1300px}
+.attflip{position:relative;transform-style:preserve-3d;
+  transition:transform .5s cubic-bezier(.4,.16,.2,1)}
+.attflip.flipped{transform:rotateY(180deg)}
+.attface{backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  border:1px solid rgba(217,138,166,.28);border-radius:13px;padding:15px 16px;
+  background:linear-gradient(158deg,rgba(217,138,166,.08),rgba(230,178,90,.03) 62%,transparent)}
+.attface.attfront{position:relative}
+.attface.attback{position:absolute;inset:0;transform:rotateY(180deg);display:flex;flex-direction:column}
+.cm-att-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  font-family:'Spectral',serif;font-size:15px;letter-spacing:.06em;
+  color:var(--lotus);margin-bottom:10px}
+.att-more{font-size:12px;white-space:nowrap;font-family:'Inter',system-ui,sans-serif;
+  letter-spacing:0;color:var(--dawn)}
+.att-scroll{flex:1;overflow-y:auto;margin:0 -4px;padding:0 4px}
+.att-scroll::-webkit-scrollbar{width:4px}
+.att-scroll::-webkit-scrollbar-thumb{background:var(--line2);border-radius:4px}
+.att-part{margin-bottom:13px;padding-left:12px;border-left:2px solid}
+.att-part.att-love{border-color:var(--dawn)}
+.att-part.att-focus{border-color:var(--lotus)}
+.att-part.att-surrender{border-color:var(--leaf)}
+.ap-name{font-size:10px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px}
+.att-love .ap-name{color:var(--dawn)}
+.att-focus .ap-name{color:var(--lotus)}
+.att-surrender .ap-name{color:var(--leaf)}
+.ap-text{font-family:'Spectral',serif;font-style:italic;font-size:14px;
+  color:var(--mist);line-height:1.65}
+.att-close{font-family:'Spectral',serif;font-size:14.5px;color:var(--mist);
+  line-height:1.65;margin-top:4px;padding-top:11px;border-top:1px solid var(--line)}
+@media(prefers-reduced-motion:reduce){.attflip{transition:none}}
+
 /* toast */
 #toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);
   background:var(--raised);border:1px solid var(--line2);color:var(--mist);
@@ -1374,15 +1407,53 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
             </div>
 
             <div class="cm-att">
-              <div class="cm-att-head">Love · Focus · Surrender</div>
-              <div class="cm-block">
-                <div class="b-label">Today's reminder</div>
-                <div class="b-text" id="att-reminder"></div>
-              </div>
-              <div class="cm-block">
-                <div class="b-label">Today's prayer</div>
-                <div class="b-quote" id="att-prayer"></div>
-                <button class="again" id="att-again">↻ another</button>
+              <div class="attwrap" id="attwrap">
+                <div class="attflip" id="attflip">
+
+                  <!-- front: today's reminder + prayer -->
+                  <div class="attface attfront">
+                    <div class="cm-att-head">
+                      <span>Love · Focus · Surrender</span>
+                      <button class="ghostlink att-more" id="att-more" type="button"
+                        aria-expanded="false" aria-controls="att-back">Know more →</button>
+                    </div>
+                    <div class="cm-block">
+                      <div class="b-label">Today's reminder</div>
+                      <div class="b-text" id="att-reminder"></div>
+                    </div>
+                    <div class="cm-block">
+                      <div class="b-label">Today's prayer</div>
+                      <div class="b-quote" id="att-prayer"></div>
+                      <button class="again" id="att-again">↻ another</button>
+                    </div>
+                  </div>
+
+                  <!-- back: the full three-part invocation -->
+                  <div class="attface attback" id="att-back">
+                    <div class="cm-att-head">
+                      <span>The three sacred attitudes</span>
+                      <button class="ghostlink att-more" id="att-less" type="button"
+                        aria-label="Back to today's reminder">Back ←</button>
+                    </div>
+                    <div class="att-scroll">
+                      <div class="att-part att-love">
+                        <div class="ap-name">Love</div>
+                        <div class="ap-text" id="ap-love"></div>
+                      </div>
+                      <div class="att-part att-focus">
+                        <div class="ap-name">Focus</div>
+                        <div class="ap-text" id="ap-focus"></div>
+                      </div>
+                      <div class="att-part att-surrender">
+                        <div class="ap-name">Surrender</div>
+                        <div class="ap-text" id="ap-surrender"></div>
+                      </div>
+                      <div class="att-close" id="ap-close"></div>
+                      <button class="again" id="att-full-again">↻ another invocation</button>
+                    </div>
+                  </div>
+
+                </div>
               </div>
             </div>
               </div>
@@ -1853,6 +1924,7 @@ function saveLocal(){ safeSet(LS_KEY, JSON.stringify(state.entries)); }
 function savePeople(){ safeSet(LS_PEOPLE, JSON.stringify(people)); }
 
 /* ==================== 4) SYNC (Apps Script) ==================== */
+if(typeof CONFIG==="undefined"){ window.CONFIG={ENDPOINT:"",SECRET:""}; }
 const connected = !!CONFIG.ENDPOINT;
 let lastSync="never";
 
@@ -3053,6 +3125,21 @@ function initPresit(){
   };
   const attAgain=$("#att-again");
   if(attAgain) attAgain.onclick=()=>{ attShuffle++; renderAttitudes(); };
+  const attFullAgain=$("#att-full-again");
+  if(attFullAgain) attFullAgain.onclick=()=>{ attShuffle++; renderAttitudes(); };
+
+  const attFlip=$("#attflip"), attMore=$("#att-more"), attLess=$("#att-less"), attWrap=$("#attwrap");
+  const setAtt=(on)=>{
+    if(!attFlip) return;
+    attFlip.classList.toggle("flipped",on);
+    if(attMore) attMore.setAttribute("aria-expanded",String(on));
+    const front=$(".attfront"), back=$("#att-back");
+    if(attWrap&&front&&back) attWrap.style.minHeight=(on?back.scrollHeight:front.scrollHeight)+"px";
+    if(back) back.setAttribute("aria-hidden",String(!on));
+    if(front) front.setAttribute("aria-hidden",String(on));
+  };
+  if(attMore) attMore.onclick=()=>setAtt(true);
+  if(attLess) attLess.onclick=()=>setAtt(false);
 
   const another=$("#potw-another");
   if(another) another.onclick=()=>{ wayShuffle++; renderPracticeOfWeek(); };
@@ -4080,11 +4167,28 @@ function renderAttitudes(){
   const r=$("#att-reminder"); if(!r) return;
   const d=Math.max(0,practiceDayNumber(today())-1);
   r.textContent=ATT_REMINDERS[d%ATT_REMINDERS.length];
-  const p=$("#att-prayer");
+
+  // the full three-part invocation lives on the back of the card
   const pool=INVOCATIONS;
-  const idx=(hashDate(today()+"ATT")+attShuffle)%pool.length;
-  const pr=pool[idx];
-  if(p) p.textContent=pr.close||prayerText(pr).split("\n").pop();
+  const inv=pool[(hashDate(today()+"ATT")+attShuffle)%pool.length];
+
+  const p=$("#att-prayer");
+  if(p) p.textContent=inv.close;
+
+  const setPart=(id,txt)=>{ const el=$(id); if(el) el.textContent=txt; };
+  setPart("#ap-love",inv.love);
+  setPart("#ap-focus",inv.focus);
+  setPart("#ap-surrender",inv.surrender);
+  setPart("#ap-close",inv.close);
+
+  // the flip needs an explicit height: match the wrapper to the taller face
+  const wrap=$("#attwrap"), front=$(".attfront"), back=$("#att-back");
+  if(wrap&&front&&back){
+    requestAnimationFrame(()=>{
+      const flipped=$("#attflip")&&$("#attflip").classList.contains("flipped");
+      wrap.style.minHeight=(flipped?back.scrollHeight:front.scrollHeight)+"px";
+    });
+  }
 }
 
 /* ══════════ TODAY'S LESSON — next in the journey ══════════ */
