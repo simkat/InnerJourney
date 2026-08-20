@@ -756,6 +756,12 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 
 /* 3 · meditation */
 .cm-cap{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:14px}
+.cm-card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.cm-card-head .cm-cap{margin-bottom:0}
+.meditation-toggle{font-size:13px;white-space:nowrap}
+.med-form{animation:med-reveal .3s ease both}
+.med-form[hidden]{display:none}
+@keyframes med-reveal{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
 .cm-tech-label{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dawn);margin-bottom:5px}
 .cm-tech-name{font-family:'Spectral',serif;font-size:26px;font-weight:500;color:#f6dcae;line-height:1.15}
 .cm-tech-week{font-size:12px;color:var(--faint);margin-top:4px}
@@ -1339,7 +1345,11 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
 
           <!-- 3. TODAY'S MEDITATION + TECHNIQUE -->
           <section class="card-med">
-            <div class="cm-cap">🧘 Today's meditation</div>
+            <div class="cm-card-head">
+              <div class="cm-cap">🧘 Today's meditation</div>
+              <button class="ghostlink meditation-toggle" id="meditation-toggle" type="button"
+                aria-expanded="false" aria-controls="med-form">Meditation →</button>
+            </div>
 
             <div class="cm-tech">
               <div class="cm-tech-label">Today's meditation technique</div>
@@ -1356,8 +1366,6 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
               <a class="lessonlink" id="tech-link" target="_blank" rel="noopener"></a>
             </div>
 
-            <div class="cm-rule"></div>
-
             <div class="cm-att">
               <div class="cm-att-head">Love · Focus · Surrender</div>
               <div class="cm-block">
@@ -1371,7 +1379,8 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
               </div>
             </div>
 
-            <div class="cm-rule"></div>
+            <div class="med-form" id="med-form" hidden>
+              <div class="cm-rule"></div>
 
             <div class="cm-prep">
               <div class="cm-prep-head">Prepare to sit</div>
@@ -1424,6 +1433,7 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
                 <button class="btn" id="d-save">Save today's sit</button>
                 <span id="d-msg" class="okmsg"></span>
               </div>
+            </div>
             </div>
           </section>
 
@@ -4213,6 +4223,13 @@ function endSit(){
   sitStart=0;
 }
 function initBegin(){
+  const meditationToggle=$("#meditation-toggle"), medForm=$("#med-form");
+  if(meditationToggle&&medForm) meditationToggle.onclick=()=>{
+    const open=medForm.hidden;
+    medForm.hidden=!open;
+    meditationToggle.setAttribute("aria-expanded",String(open));
+    meditationToggle.textContent=open?"Overview ←":"Meditation →";
+  };
   const b=$("#begin-med");
   if(b) b.onclick=beginSit;
   const ex=$("#q-exit");
