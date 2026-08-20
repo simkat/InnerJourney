@@ -3573,9 +3573,9 @@ function renderHighlight(){ if(!$("#hl-text")) return; }
 function renderPracticeReminder(){ const el=$("#tech-line"); if(!el) return; }
 function renderOrientation(){
   const h=new Date().getHours();
-  const part=h<12?"Good morning":(h<18?"Good afternoon":"Good evening");
+  const part=h<12?"":(h<18?"Good afternoon":"Good evening");
   const gl=$("#greet-line"); if(!gl) return;
-  gl.textContent=part+", "+me;
+  gl.textContent=part?part+", "+me:me;
   $("#greet-date").textContent=new Date().toLocaleDateString(undefined,
     {weekday:"long",day:"numeric",month:"long"});
 }
@@ -3888,7 +3888,7 @@ function showGlance(){
   zones.forEach(z=>z.style.display=show?"none":"");
   if(!show) return;
   const h=new Date().getHours();
-  $("#gl-greet").textContent=(h<12?"Good morning":"Hello")+", "+me;
+  $("#gl-greet").textContent=h<12?me:"Hello, "+me;
   $("#gl-date").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long"});
   const wk=practiceWeekNumber(today());
   let inv="Take a few minutes to sit.";
