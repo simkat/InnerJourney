@@ -1223,7 +1223,6 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
 
     <!-- morning glance -->
     <div class="glance" id="glance">
-      <div class="g-greet" id="gl-greet"></div>
       <div class="g-date" id="gl-date"></div>
     </div>
 
@@ -3886,7 +3885,6 @@ function showGlance(){
   zones.forEach(z=>z.style.display=show?"none":"");
   if(!show) return;
   const h=new Date().getHours();
-  $("#gl-greet").textContent=h<12?me:"Hello, "+me;
   $("#gl-date").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long"});
 }
 function initGlance(){
