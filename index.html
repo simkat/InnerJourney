@@ -143,6 +143,7 @@ section.view.active{display:block}
 .presit-item .pi-text{font-size:14px;line-height:1.5;color:var(--mist)}
 .presit-item .pi-sub{font-size:12px;color:var(--faint);margin-top:2px}
 .presit-item.checked .pi-text{color:var(--leaf)}
+.pi-group-label{padding:2px 0 3px;color:var(--dawn);font-size:10px;letter-spacing:.13em;text-transform:uppercase}
 
 /* practice reminder banner */
 .practice-reminder{border:1px solid var(--dawn-line);border-radius:var(--r);
@@ -810,6 +811,24 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 .cm-tech-week{font-size:12px;color:var(--faint);margin-top:4px}
 .cm-block{margin-top:13px}
 .cm-rule{height:1px;background:linear-gradient(90deg,var(--line2),transparent 78%);margin:18px 0}
+.med-framework{margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+.med-framework-head{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dawn);margin-bottom:9px}
+.med-stage{padding:9px 0;border-bottom:1px solid var(--line)}
+.med-stage:last-child{border-bottom:none;padding-bottom:0}
+.med-stage-title{font-family:'Spectral',serif;font-size:16px;color:var(--mist);margin-bottom:2px}
+.med-stage-title span{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dawn);margin-right:7px}
+.med-stage-text{font-size:13px;color:var(--dim);line-height:1.55}
+.aar{margin-top:15px;padding:13px 14px;border:1px solid var(--line2);border-radius:12px;background:var(--night)}
+.aar-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px}
+.aar-title{font-family:'Spectral',serif;font-size:17px;color:var(--mist)}
+.aar-sub{font-size:11px;color:var(--faint)}
+.aar-note{font-family:'Spectral',serif;font-style:italic;font-size:13.5px;line-height:1.5;color:var(--dim);margin:2px 0 9px}
+.aar-item{display:flex;align-items:flex-start;gap:9px;padding:8px 0;border-top:1px solid var(--line);cursor:pointer}
+.aar-item input{width:auto;flex:0 0 auto;margin-top:3px;accent-color:var(--leaf)}
+.aar-item-text{font-size:13px;color:var(--mist);line-height:1.45}
+.aar-item-text strong{color:var(--dawn);font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-right:5px}
+.aar-item-text small{display:block;color:var(--dim);font-size:12px;margin-top:2px}
+.aar-item.checked .aar-item-text{color:var(--leaf)}
 .cm-att-head{font-family:'Spectral',serif;font-size:15px;letter-spacing:.06em;
   color:var(--lotus);margin-bottom:4px}
 .cm-prep-head,.cm-log-head{font-size:10px;letter-spacing:.16em;text-transform:uppercase;
@@ -1442,6 +1461,40 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
                 <div class="b-label">Why we practise it</div>
                 <div class="b-text" id="tech-why"></div>
               </div>
+              <div class="med-framework">
+                <div class="med-framework-head">Three stages of meditation</div>
+                <div class="med-stage">
+                  <div class="med-stage-title"><span>1</span>Gather</div>
+                  <div class="med-stage-text">Bring attention together before you sit. Use gentle breathwork, ask "Who am I?", read one meaningful page, or move slowly with the breath until the mind has one place to rest.</div>
+                </div>
+                <div class="med-stage">
+                  <div class="med-stage-title"><span>2</span>Flow</div>
+                  <div class="med-stage-text">Enter the chosen practice fully. Let the breath, mantra, gaze, or other method become steady enough that you are absorbed in doing it rather than watching yourself do it.</div>
+                </div>
+                <div class="med-stage">
+                  <div class="med-stage-title"><span>3</span>Merge</div>
+                  <div class="med-stage-text">Let the effort soften. The practice, the one practising, and the object of attention are no longer held apart; awareness rests in the experience without needing to control or name it.</div>
+                </div>
+                <div class="aar" id="aar-checklist">
+                  <div class="aar-head">
+                    <div class="aar-title">When distraction appears</div>
+                    <div class="aar-sub">AAR practice</div>
+                  </div>
+                  <div class="aar-note">The strength of mind developed by working with AAR is immense. Every distraction becomes another opportunity to train clarity, steadiness, and freedom.</div>
+                  <label class="aar-item" id="aar-awareness">
+                    <input type="checkbox" id="aar-awareness-cb" />
+                    <div class="aar-item-text"><strong>Awareness</strong> Notice: the mind has wandered.<small>Seeing the distraction is already the beginning of clarity.</small></div>
+                  </label>
+                  <label class="aar-item" id="aar-acknowledgement">
+                    <input type="checkbox" id="aar-acknowledgement-cb" />
+                    <div class="aar-item-text"><strong>Acknowledgement</strong> Meet it without judgement and thank it for the test.<small>Without distractions, there would be no opportunity to develop the mind.</small></div>
+                  </label>
+                  <label class="aar-item" id="aar-return">
+                    <input type="checkbox" id="aar-return-cb" />
+                    <div class="aar-item-text"><strong>Return</strong> Let it go and come back to the meditation.<small>No worry, anger, liking, or disliking. Simply return.</small></div>
+                  </label>
+                </div>
+              </div>
               <a class="lessonlink" id="tech-link" target="_blank" rel="noopener"></a>
             </div>
 
@@ -1509,10 +1562,24 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
             <div class="cm-prep">
               <div class="cm-prep-head">Prepare to sit</div>
               <div class="presit" id="presit">
+                <div class="pi-group-label">Gather attention</div>
                 <label class="presit-item" id="pi-breath">
                   <input type="checkbox" id="pi-breath-cb" />
-                  <div><div class="pi-text">Steady, deep breathing</div></div>
+                  <div><div class="pi-text">Breathing exercise</div><div class="pi-sub">Take a few slow breaths and let the body settle.</div></div>
                 </label>
+                <label class="presit-item" id="pi-inquiry">
+                  <input type="checkbox" id="pi-inquiry-cb" />
+                  <div><div class="pi-text">Contemplative inquiry: “Who am I?”</div><div class="pi-sub">Rest with the question without trying to solve it.</div></div>
+                </label>
+                <label class="presit-item" id="pi-reading">
+                  <input type="checkbox" id="pi-reading-cb" />
+                  <div><div class="pi-text">Read one page slowly</div><div class="pi-sub">Choose a meaningful passage and let one idea gather your attention.</div></div>
+                </label>
+                <label class="presit-item" id="pi-flow">
+                  <input type="checkbox" id="pi-flow-cb" />
+                  <div><div class="pi-text">Gentle movement or flow</div><div class="pi-sub">Stretch, walk, or move with the breath for a few minutes.</div></div>
+                </label>
+                <div class="pi-group-label">Set the body</div>
                 <label class="presit-item" id="pi-tongue">
                   <input type="checkbox" id="pi-tongue-cb" />
                   <div><div class="pi-text">Tongue gently against the roof of the mouth</div></div>
@@ -1634,7 +1701,11 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
   <section class="view" id="view-practices">
     <div class="card">
       <h2>Add this week's practice</h2>
-      <p class="sub">Paste what your teacher gave you. It's stored permanently, word for word, and becomes this week's practice straight away.</p>
+      <p class="sub">Paste what your teacher gave you. It's stored permanently, word for word, and becomes the practice for the selected week.</p>
+      <div class="field">
+        <label for="np-start">Start date</label>
+        <input type="date" id="np-start" required />
+      </div>
       <div class="field">
         <label for="np-title">Practice name</label>
         <input type="text" id="np-title" placeholder="e.g. Right Speech" />
@@ -2276,6 +2347,7 @@ const HIGHLIGHTS = [
   "A practitioner who is sincere but imperfect is further along the path than one who is perfect but insincere. Show up honestly, every day.",
   "Inner communion through prayer is not a performance for the Divine. It is a conversation between your deepest self and the source from which it comes.",
   "Open awareness is the sky. Thoughts, feelings, sensations are weather passing through. You are not the weather. You are the sky.",
+  "The genuine seeker should not appear, or strive to appear great, which is how greatness itself is achieved. - Deus",
 ];
 function todaysHighlight(){
   const base=hashDate(today()+"H");
@@ -2663,7 +2735,8 @@ function getPractice(pid){ return allPractices().find(p=>p.practiceId===pid); }
 
 async function addPractice(fields){
   const list=loadCustomPractices();
-  const wk=practiceWeekNumber(today());
+  const startDate=fields.startDate||today();
+  const wk=practiceWeekNumber(startDate);
   const p={
     practiceId:"u"+uid(),
     title:fields.title.trim(),
@@ -2677,7 +2750,7 @@ async function addPractice(fields){
     alignVirtue:fields.alignVirtue||"",
     ownWords:(fields.ownWords||"").trim(),
     tags:(fields.tags||"").split(",").map(s=>s.trim()).filter(Boolean),
-    dateIntroduced:today(),
+    dateIntroduced:startDate,
     originalWeek:wk,
   };
   list.push(p); saveCustomPractices(list);
@@ -3143,7 +3216,7 @@ function showVirtueDetail(vkey){
   setTimeout(()=>$("#virtue-detail-card").scrollIntoView({behavior:"smooth",block:"nearest"}),50);
 }
 function initPresit(){
-  ["breath","tongue","mudra"].forEach(k=>{
+  ["breath","inquiry","reading","flow","tongue","mudra"].forEach(k=>{
     const cb=$("#pi-"+k+"-cb"), item=$("#pi-"+k);
     if(cb && item) cb.onchange=()=>item.classList.toggle("checked",cb.checked);
   });
@@ -3156,6 +3229,11 @@ function initPresit(){
     divineItem.style.display=showToday?"flex":"none";
     if(divineCb) divineCb.onchange=()=>divineItem.classList.toggle("checked",divineCb.checked);
   }
+
+  ["awareness","acknowledgement","return"].forEach(k=>{
+    const cb=$("#aar-"+k+"-cb"), item=$("#aar-"+k);
+    if(cb&&item) cb.onchange=()=>item.classList.toggle("checked",cb.checked);
+  });
 
   // ---- Practice of the Week ----
   const potwCb=$("#potw-check");
@@ -3209,6 +3287,8 @@ function initPresit(){
   };
 
   const npSave=$("#np-save");
+  const npStart=$("#np-start");
+  if(npStart){ npStart.value=today(); npStart.min=PRACTICE_ANCHOR; }
   // populate alignment dropdowns
   const nsx=$("#np-six"), nvt=$("#np-virtue");
   if(nsx&&!nsx.options.length){
@@ -3220,9 +3300,12 @@ function initPresit(){
       VIRTUES.map(v=>`<option value="${v.key}">${v.name}</option>`).join("");
   }
   if(npSave) npSave.onclick=async()=>{
+    const startDate=npStart?npStart.value:"";
+    if(!startDate){ alert("Choose a start date for the practice."); return; }
     const title=$("#np-title").value.trim();
     if(!title){ alert("Give the practice a name."); return; }
     await addPractice({
+      startDate,
       title, core:$("#np-core").value, purpose:$("#np-purpose").value,
       instructions:$("#np-inst").value, dailyLife:$("#np-daily").value,
       source:$("#np-source").value, tags:$("#np-tags").value, ownWords:$("#np-own").value,
@@ -3230,8 +3313,9 @@ function initPresit(){
     });
     ["np-title","np-core","np-purpose","np-inst","np-daily","np-source","np-tags","np-own"]
       .forEach(id=>{ const el=$("#"+id); if(el) el.value=""; });
+    if(npStart) npStart.value=startDate;
     if(nsx) nsx.value=""; if(nvt) nvt.value="";
-    $("#np-msg").textContent="Added — it's this week's practice ✓";
+    $("#np-msg").textContent="Added — starting "+fmtDate(startDate)+" ✓";
     setTimeout(()=>{const m=$("#np-msg"); if(m)m.textContent="";},2600);
   };
 
