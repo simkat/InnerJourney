@@ -403,6 +403,35 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
   body::after{display:none}
 }
 
+/* light theme */
+:root[data-theme="light"]{
+  --night:#ffffff; --panel:#ffffff; --raised:#f1f3f2;
+  --line:rgba(20,25,24,.18); --line2:rgba(20,25,24,.38);
+  --mist:#17201e; --dim:#3f4d49; --faint:#5d6a66;
+  --dawn:#8a5500; --dawn-soft:rgba(138,85,0,.14); --dawn-line:rgba(138,85,0,.58);
+  --lotus:#963b60; --leaf:#176b50; --danger:#a73d36;
+}
+:root[data-theme="light"] body{
+  background:var(--night);
+}
+:root[data-theme="light"] body::before,
+:root[data-theme="light"] body::after{display:none}
+:root[data-theme="light"] .face-title,
+:root[data-theme="light"] .cw-virtue .cw-name,
+:root[data-theme="light"] .cw-practice .cw-name,
+:root[data-theme="light"] .cm-tech-name,
+:root[data-theme="light"] .v-face .face-title,
+:root[data-theme="light"] .p-face .face-title,
+:root[data-theme="light"] .pillar .pl-name,
+:root[data-theme="light"] .s-card .sc-name{color:var(--mist)}
+:root[data-theme="light"] .btn{color:#fffaf0}
+
+.theme-toggle{background:transparent;color:var(--dim);border:1px solid var(--line2);
+  border-radius:999px;padding:8px 12px;font:inherit;font-size:12px;cursor:pointer;
+  transition:color .18s,border-color .18s,background .18s}
+.theme-toggle:hover{color:var(--mist);border-color:var(--dawn-line);background:var(--dawn-soft)}
+.theme-toggle:focus-visible{outline:2px solid var(--dawn-line);outline-offset:3px}
+
 
 /* ══════════ SIDE RAILS — the two pillars, as architecture ══════════ */
 .rail{position:fixed;top:0;bottom:0;width:74px;z-index:5;display:none;
@@ -1240,6 +1269,7 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
         <span class="stage-badge" id="stage-badge">Stage 1</span>
       </div>
       <span style="color:var(--dim);font-size:13px">Smriti</span>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false">Sun theme</button>
     </div>
   </header>
 
@@ -1906,6 +1936,7 @@ const LS_KEY="ijs_log_v1";
 const LS_PEOPLE="ijs_people_v1";
 const LS_ASSIGN="ijs_practice_assignments_v1";
 const LS_PRACTICES="ijs_practices_v1";
+const LS_THEME="ijs_theme_v1";
 let state={ entries:[] };
 let me="Smriti";
 let people=[];
@@ -1914,6 +1945,22 @@ let storageOK=true;
 
 function safeGet(k){ try{return localStorage.getItem(k)}catch(e){storageOK=false;return null} }
 function safeSet(k,v){ try{localStorage.setItem(k,v);return true}catch(e){storageOK=false;return false} }
+
+function initTheme(){
+  const root=document.documentElement;
+  const toggle=$("#theme-toggle");
+  const apply=theme=>{
+    const light=theme==="light";
+    root.dataset.theme=light?"light":"dark";
+    toggle.textContent=light?"Dark theme":"Sun theme";
+    toggle.setAttribute("aria-pressed",String(light));
+  };
+  apply(safeGet(LS_THEME)==="light"?"light":"dark");
+  toggle.addEventListener("click",()=>{
+    const next=root.dataset.theme==="light"?"dark":"light";
+    apply(next); safeSet(LS_THEME,next);
+  });
+}
 
 function loadLocal(){
   try{ state.entries = JSON.parse(safeGet(LS_KEY)||"[]"); }catch(e){ state.entries=[]; }
@@ -4471,6 +4518,7 @@ function toCSV(rows){
 
 /* ==================== 8) BOOT ==================== */
 function boot(){
+  initTheme();
   loadLocal();
   $("#d-date").value=today();
   renderLessonSelect(); renderRating(); initEvents(); initPresit(); initFlips(); initTimer(); initQuiet(); initGlance(); initPostSit(); initBegin();
