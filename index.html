@@ -628,6 +628,16 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 .ritual-back-title{font-family:'Spectral',serif;font-size:23px;color:var(--mist);margin-bottom:9px}
 .ritual-back p{color:var(--dim);font-size:14px;line-height:1.65;max-width:42ch;margin:0}
 .ritual-back .ritual-flip{margin-top:20px}
+.ritual-done{display:none}
+.daily-ritual.completed .ritual-front,.daily-ritual.completed .ritual-back{display:none}
+.daily-ritual.completed .ritual-done{display:block}
+.ritual-done-title{font-family:'Spectral',serif;font-size:25px;color:var(--mist);margin-top:10px}
+.ritual-done p{font-size:13px;color:var(--dim);margin:8px 0 0}
+.ritual-complete{margin-top:17px;padding:9px 14px;border:1px solid rgba(131,184,160,.45);border-radius:999px;
+  background:rgba(131,184,160,.1);color:var(--leaf);font:inherit;font-size:12px;cursor:pointer}
+.ritual-complete:hover{background:rgba(131,184,160,.17)}
+.ritual-reopen{margin-top:17px;padding:0;border:0;background:none;color:var(--faint);font:inherit;font-size:12px;cursor:pointer}
+.ritual-reopen:hover{color:var(--dawn)}
 .daily-reflection{margin:16px 0 18px;padding:20px;border:1px solid var(--line2);border-radius:16px;background:var(--panel)}
 .daily-reflection h3{font-family:'Spectral',serif;font-size:20px;font-weight:500;margin:0 0 5px}
 .daily-reflection .sub{margin-bottom:15px}
@@ -1469,12 +1479,19 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
           </div>
         </div>
         <button class="ritual-flip" id="ritual-flip" type="button">Open the five-minute ritual ↗</button>
+        <button class="ritual-complete" id="ritual-complete" type="button">I’ve completed this ritual</button>
         </div>
         <div class="ritual-back">
           <div class="ritual-eyebrow">A gentle return</div>
           <div class="ritual-back-title">You do not need a perfect pause.</div>
           <p>Take one breath, remember the Divine, and let the weekly practice meet the next ordinary thing you do. You can return here whenever the day gets noisy.</p>
           <button class="ritual-flip" id="ritual-flip-back" type="button">Back to today’s thought ↩</button>
+        </div>
+        <div class="ritual-done">
+          <div class="ritual-eyebrow">Five-minute ritual</div>
+          <div class="ritual-done-title">Done for today.</div>
+          <p>You arrived, received, and carried something into the day. Let it continue quietly.</p>
+          <button class="ritual-reopen" id="ritual-reopen" type="button">↺ Reopen ritual</button>
         </div>
       </section>
 
@@ -2666,6 +2683,8 @@ let ritualShuffle=0;
 function renderDailyRitual(){
   const thought=$("#ritual-title");
   if(!thought) return;
+  const card=$(".daily-ritual");
+  if(card) card.classList.toggle("completed",safeGet("ijs_ritual_done_"+today())==="1");
   const dateEl=$("#ritual-date");
   if(dateEl) dateEl.textContent=fmtDate(today());
   thought.textContent=todaysHighlight();
@@ -5053,6 +5072,15 @@ function initEvents(){
   const ritualFlip=$("#ritual-flip"), ritualFlipBack=$("#ritual-flip-back");
   if(ritualFlip) ritualFlip.onclick=()=>setRitualFlip(true);
   if(ritualFlipBack) ritualFlipBack.onclick=()=>setRitualFlip(false);
+  const ritualComplete=$("#ritual-complete"), ritualReopen=$("#ritual-reopen");
+  if(ritualComplete) ritualComplete.onclick=()=>{
+    safeSet("ijs_ritual_done_"+today(),"1");
+    if(ritualCard) ritualCard.classList.add("completed");
+  };
+  if(ritualReopen) ritualReopen.onclick=()=>{
+    safeSet("ijs_ritual_done_"+today(),"0");
+    if(ritualCard) ritualCard.classList.remove("completed");
+  };
   const weekCard=$("#week-card");
   const setWeekFlip=(flipped)=>{
     if(!weekCard) return;
