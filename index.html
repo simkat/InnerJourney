@@ -608,6 +608,15 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
   border:1px solid var(--dawn-line);border-radius:50%;color:var(--dawn);font-size:11px}
 .ritual-refresh{margin-top:18px;padding:0;border:0;background:none;color:var(--faint);font:inherit;font-size:12px;cursor:pointer}
 .ritual-refresh:hover{color:var(--dawn)}
+.ritual-flip{margin-top:12px;padding:8px 13px;border:1px solid var(--line2);border-radius:999px;
+  background:transparent;color:var(--dim);font:inherit;font-size:12px;cursor:pointer}
+.ritual-flip:hover{border-color:var(--dawn-line);color:var(--dawn);background:var(--dawn-soft)}
+.ritual-back{display:none}
+.daily-ritual.flipped .ritual-front{display:none}
+.daily-ritual.flipped .ritual-back{display:block}
+.ritual-back-title{font-family:'Spectral',serif;font-size:23px;color:var(--mist);margin-bottom:9px}
+.ritual-back p{color:var(--dim);font-size:14px;line-height:1.65;max-width:42ch;margin:0}
+.ritual-back .ritual-flip{margin-top:20px}
 .daily-reflection{margin:16px 0 18px;padding:20px;border:1px solid var(--line2);border-radius:16px;background:var(--panel)}
 .daily-reflection h3{font-family:'Spectral',serif;font-size:20px;font-weight:500;margin:0 0 5px}
 .daily-reflection .sub{margin-bottom:15px}
@@ -628,12 +637,19 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 /* Today is a landing page; the full library remains in its tabs. */
 #view-today .strip,#view-today .curr-track,#view-today .card-lesson,#view-today .card-med,
 #view-today .rail-six{display:none}
-#view-today .triptych{display:block}
-#view-today .centre{max-width:980px;margin:0 auto}
+#view-today #today-full{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+#view-today .orient{grid-column:1 / -1}
+#view-today .schedule-card{display:none}
+#view-today .triptych{display:block;grid-column:2;grid-row:2}
+#view-today .centre{max-width:none;margin:0}
 #view-today .card-week{margin-top:0}
 #view-today .cw-more{display:none!important}
 #view-today .cw-half{min-height:245px}
 #view-today .zone{margin-top:12px}
+@media(max-width:850px){
+  #view-today #today-full{display:block}
+  #view-today .triptych{margin-top:20px}
+}
 
 
 /* ── quiet-mode rails: attitudes left · posture right ── */
@@ -1396,6 +1412,7 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
       </div>
 
       <section class="daily-ritual" aria-labelledby="ritual-title">
+        <div class="ritual-front">
         <div class="ritual-top">
           <div class="ritual-eyebrow">Your five-minute ritual</div>
           <div class="ritual-time">Today · <span id="ritual-date"></span></div>
@@ -1412,6 +1429,14 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
             <div class="ritual-step"><b>2</b><span>Receive today’s thought.</span></div>
             <div class="ritual-step"><b>3</b><span>Carry the weekly practice into one moment.</span></div>
           </div>
+        </div>
+        <button class="ritual-flip" id="ritual-flip" type="button">Open the five-minute ritual ↗</button>
+        </div>
+        <div class="ritual-back">
+          <div class="ritual-eyebrow">A gentle return</div>
+          <div class="ritual-back-title">You do not need a perfect pause.</div>
+          <p>Take one breath, remember the Divine, and let the weekly practice meet the next ordinary thing you do. You can return here whenever the day gets noisy.</p>
+          <button class="ritual-flip" id="ritual-flip-back" type="button">Back to today’s thought ↩</button>
         </div>
       </section>
 
@@ -4916,6 +4941,15 @@ function initEvents(){
   const _hl_again=$("#hl-again"); if(_hl_again) _hl_again.onclick=()=>{ hlShuffle++; renderHighlight(); };
   const ritualAgain=$("#ritual-refresh");
   if(ritualAgain) ritualAgain.onclick=()=>{ hlShuffle++; renderDailyRitual(); };
+  const ritualCard=$(".daily-ritual");
+  const setRitualFlip=(flipped)=>{
+    if(!ritualCard) return;
+    ritualCard.classList.toggle("flipped",flipped);
+    ritualCard.setAttribute("aria-label",flipped?"Five-minute ritual guidance":"Daily inspiration");
+  };
+  const ritualFlip=$("#ritual-flip"), ritualFlipBack=$("#ritual-flip-back");
+  if(ritualFlip) ritualFlip.onclick=()=>setRitualFlip(true);
+  if(ritualFlipBack) ritualFlipBack.onclick=()=>setRitualFlip(false);
 
   const dailyReflectionSave=$("#daily-reflection-save");
   if(dailyReflectionSave) dailyReflectionSave.onclick=async()=>{
