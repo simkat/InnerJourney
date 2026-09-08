@@ -588,6 +588,48 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 .rh-text mark{background:rgba(230,178,90,.28);color:var(--mist);border-radius:3px;padding:0 2px}
 .stat .n .of{font-size:15px;color:var(--faint);font-weight:400}
 
+/* focused five-minute daily ritual */
+.daily-ritual{position:relative;overflow:hidden;margin:22px 0 18px;padding:25px 28px 24px;
+  border:1px solid rgba(230,178,90,.34);border-radius:22px;
+  background:linear-gradient(120deg,rgba(230,178,90,.14),rgba(217,138,166,.08) 48%,rgba(131,184,160,.07));
+  box-shadow:0 20px 60px rgba(0,0,0,.16)}
+.daily-ritual::before{content:"";position:absolute;width:260px;height:260px;right:-110px;top:-150px;
+  border-radius:50%;border:1px solid rgba(230,178,90,.18);box-shadow:0 0 0 18px rgba(230,178,90,.035),0 0 0 38px rgba(230,178,90,.025)}
+.ritual-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
+.ritual-eyebrow{color:var(--dawn);font-size:10px;letter-spacing:.19em;text-transform:uppercase}
+.ritual-time{color:var(--dim);font-size:12px}
+.ritual-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(220px,.65fr);gap:26px;align-items:end}
+.ritual-kicker{font-size:12px;color:var(--faint);margin-bottom:8px}
+.ritual-text{font-family:'Spectral',serif;font-size:24px;line-height:1.35;color:var(--mist);max-width:23ch}
+.ritual-source{font-size:12px;color:var(--dim);margin-top:12px}
+.ritual-steps{display:grid;gap:8px}
+.ritual-step{display:flex;align-items:center;gap:10px;color:var(--dim);font-size:12.5px}
+.ritual-step b{display:flex;align-items:center;justify-content:center;width:23px;height:23px;flex:0 0 auto;
+  border:1px solid var(--dawn-line);border-radius:50%;color:var(--dawn);font-size:11px}
+.ritual-refresh{margin-top:18px;padding:0;border:0;background:none;color:var(--faint);font:inherit;font-size:12px;cursor:pointer}
+.ritual-refresh:hover{color:var(--dawn)}
+.daily-reflection{margin:16px 0 18px;padding:20px;border:1px solid var(--line2);border-radius:16px;background:var(--panel)}
+.daily-reflection h3{font-family:'Spectral',serif;font-size:20px;font-weight:500;margin:0 0 5px}
+.daily-reflection .sub{margin-bottom:15px}
+.daily-reflection .field{margin-bottom:11px}
+.daily-reflection textarea{min-height:54px}
+.daily-reflection-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+@media(max-width:650px){
+  .daily-ritual{padding:22px 20px}
+  .ritual-grid{grid-template-columns:1fr;gap:20px}
+  .ritual-text{font-size:22px}
+}
+
+/* Today is a landing page; the full library remains in its tabs. */
+#view-today .strip,#view-today .curr-track,#view-today .card-lesson,#view-today .card-med,
+#view-today .rail-six{display:none}
+#view-today .triptych{display:block}
+#view-today .centre{max-width:760px;margin:0 auto}
+#view-today .card-week{margin-top:0}
+#view-today .cw-more{display:none!important}
+#view-today .cw-half{min-height:245px}
+#view-today .zone{margin-top:12px}
+
 
 /* ── quiet-mode rails: attitudes left · posture right ── */
 .q-rail{position:absolute;top:0;bottom:0;width:150px;display:flex;flex-direction:column;
@@ -1348,6 +1390,26 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
         <div class="presence" id="presence" style="display:none"></div>
       </div>
 
+      <section class="daily-ritual" aria-labelledby="ritual-title">
+        <div class="ritual-top">
+          <div class="ritual-eyebrow">Your five-minute ritual</div>
+          <div class="ritual-time">Today · <span id="ritual-date"></span></div>
+        </div>
+        <div class="ritual-grid">
+          <div>
+            <div class="ritual-kicker">A thought to carry</div>
+            <div class="ritual-text" id="ritual-title"></div>
+            <div class="ritual-source">A different doorway into the same inner light.</div>
+            <button class="ritual-refresh" id="ritual-refresh" type="button">↻ Show another doorway</button>
+          </div>
+          <div class="ritual-steps" aria-label="Five-minute ritual steps">
+            <div class="ritual-step"><b>1</b><span>Arrive with one slow breath.</span></div>
+            <div class="ritual-step"><b>2</b><span>Receive today’s thought.</span></div>
+            <div class="ritual-step"><b>3</b><span>Carry the weekly practice into one moment.</span></div>
+          </div>
+        </div>
+      </section>
+
       <section class="schedule-card" id="practice-schedule-card" aria-label="Practice schedule">
         <h2>This week's practice</h2>
         <div class="schedule-current" id="schedule-current"></div>
@@ -1440,6 +1502,27 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
                 <button class="again" id="potw-prayer-again">↻ another prayer</button>
               </div>
               <div class="potw-week-review" id="potw-week-review" style="display:none"></div>
+            </div>
+          </section>
+
+          <section class="daily-reflection" aria-labelledby="daily-reflection-title">
+            <h3 id="daily-reflection-title">A small reflection for today</h3>
+            <p class="sub">Your weekly practice matters most when it meets ordinary life. A few honest lines are enough.</p>
+            <div class="field">
+              <label for="daily-divine-focus">Did you find it easier to remain focused on the Divine throughout your day?</label>
+              <textarea id="daily-divine-focus" placeholder="What did you notice?"></textarea>
+            </div>
+            <div class="field">
+              <label for="daily-helped">Was there anything in particular that helped?</label>
+              <textarea id="daily-helped" placeholder="A person, reminder, prayer, pause, or practice…"></textarea>
+            </div>
+            <div class="field">
+              <label for="daily-pulled">What regularly pulled your attention away?</label>
+              <textarea id="daily-pulled" placeholder="Share freely — noticing is already part of the practice."></textarea>
+            </div>
+            <div class="daily-reflection-actions">
+              <button class="btn" id="daily-reflection-save" type="button">Save today’s reflection</button>
+              <span id="daily-reflection-msg" class="okmsg" role="status"></span>
             </div>
           </section>
 
@@ -2215,7 +2298,7 @@ async function pushRemote(action,payload){
 }
 function normalizeRow(row){
   const o={};
-  ["id","createdAt","person","kind","date","phase","lessonTitle","lessonUrl","formalDone","minutes","rating","daytimeText","daytimeUrl","reflection","text","status","virtueKey","virtueName","practiceId","weekNumber","dayNumber","engaged","practised"]
+  ["id","createdAt","person","kind","date","phase","lessonTitle","lessonUrl","formalDone","minutes","rating","daytimeText","daytimeUrl","reflection","text","status","virtueKey","virtueName","practiceId","weekNumber","dayNumber","engaged","practised","divineFocus","helped","pulled"]
     .forEach(k=>o[k]=row[k]!==undefined?row[k]:"");
   // booleans arrive from Sheets as strings
   o.engaged=(o.engaged===true||o.engaged==="true"||o.engaged==="TRUE");
@@ -2479,6 +2562,33 @@ function todaysHighlight(){
 }
 function renderHighlight(){
   {const _ht=$("#hl-text"); if(_ht) _ht.textContent=todaysHighlight();}
+}
+
+let ritualShuffle=0;
+function renderDailyRitual(){
+  const thought=$("#ritual-title");
+  if(!thought) return;
+  const dateEl=$("#ritual-date");
+  if(dateEl) dateEl.textContent=fmtDate(today());
+  thought.textContent=todaysHighlight();
+}
+
+function practiceReflectionForToday(){
+  const wk=practiceWeekNumber(today());
+  if(wk<1) return null;
+  const asg=assignmentFor(wk);
+  return asg?practiceLogFor(asg.practiceId):null;
+}
+
+function renderDailyReflection(){
+  const focus=$("#daily-divine-focus");
+  if(!focus) return;
+  const log=practiceReflectionForToday();
+  if(document.activeElement!==focus) focus.value=log&&log.divineFocus?log.divineFocus:"";
+  const helped=$("#daily-helped");
+  if(helped&&document.activeElement!==helped) helped.value=log&&log.helped?log.helped:"";
+  const pulled=$("#daily-pulled");
+  if(pulled&&document.activeElement!==pulled) pulled.value=log&&log.pulled?log.pulled:"";
 }
 
 /* ---- rotating practice reminder ---- */
@@ -4727,7 +4837,7 @@ function renderAll(){
   renderRails(); renderTechnique(); renderAttitudes();
   renderLessonCard(); renderJourney();
   renderYearView(); renderReflectionSearch();
-  renderWeeklyLetter(); renderPresence(); showGlance();
+  renderWeeklyLetter(); renderPresence(); renderDailyRitual(); renderDailyReflection(); showGlance();
   renderVirtueToday();
   renderTodayList(); renderInsights(); renderQuestions();
   renderProgress(); renderVirtueGrid(); renderEveryone(); updateSyncStatus();
@@ -4755,6 +4865,30 @@ function initEvents(){
   };
   const _invo_again=$("#invo-again"); if(_invo_again) _invo_again.onclick=()=>{ invoShuffle++; renderInvocation(); };
   const _hl_again=$("#hl-again"); if(_hl_again) _hl_again.onclick=()=>{ hlShuffle++; renderHighlight(); };
+  const ritualAgain=$("#ritual-refresh");
+  if(ritualAgain) ritualAgain.onclick=()=>{ hlShuffle++; renderDailyRitual(); };
+
+  const dailyReflectionSave=$("#daily-reflection-save");
+  if(dailyReflectionSave) dailyReflectionSave.onclick=async()=>{
+    const wk=practiceWeekNumber(today());
+    if(wk<1){ toast("The weekly practice has not started yet."); return; }
+    const asg=assignmentFor(wk), dayN=practiceDayNumber(today());
+    const fields={
+      divineFocus:$("#daily-divine-focus").value.trim(),
+      helped:$("#daily-helped").value.trim(),
+      pulled:$("#daily-pulled").value.trim()
+    };
+    if(!fields.divineFocus&&!fields.helped&&!fields.pulled){
+      toast("Write one honest line before saving.");
+      return;
+    }
+    const log=practiceLogFor(asg.practiceId);
+    if(log) await updateEntry(log.id,Object.assign(fields,{engaged:true}));
+    else await addEntry({kind:"practice",practiceId:asg.practiceId,date:today(),
+      weekNumber:wk,dayNumber:dayN,engaged:true,practised:false,reflection:"",...fields});
+    const msg=$("#daily-reflection-msg");
+    if(msg){ msg.textContent="Saved for today ✓"; setTimeout(()=>{msg.textContent="";},2200); }
+  };
 
   $("#d-save").onclick=async()=>{
     const ls=$("#d-lesson"), lo=ls.options[ls.selectedIndex];
