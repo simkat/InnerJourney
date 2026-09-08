@@ -1436,6 +1436,7 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
 
   <nav class="tabs" role="tablist">
     <button class="tab active" data-view="today">Today</button>
+    <button class="tab" data-view="recent">Recent days</button>
     <button class="tab" data-view="meditation">Meditation</button>
     <button class="tab" data-view="insights">Insights</button>
     <button class="tab" data-view="questions">Questions</button>
@@ -1857,10 +1858,6 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
             </div>
           </section>
 
-          <details class="recent-fold">
-            <summary><span class="if-title">Your recent days</span></summary>
-            <div id="today-list"></div>
-          </details>
         </main>
 
         <!-- ▶ RIGHT RAIL — VIRTUES -->
@@ -1878,6 +1875,13 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
     </div>
   </section>
 
+  <section class="view" id="view-recent">
+    <div class="card">
+      <h2>Your recent days</h2>
+      <p class="sub">A quiet record of the days you have returned to practice.</p>
+      <div id="today-list"></div>
+    </div>
+  </section>
 
   <!-- MEDITATION REFERENCE -->
   <section class="view" id="view-meditation">
