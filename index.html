@@ -959,10 +959,12 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 .cm-rule{height:1px;background:linear-gradient(90deg,var(--line2),transparent 78%);margin:18px 0}
 .med-framework{margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
 .med-framework-head{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dawn);margin-bottom:9px}
-.med-stage{padding:9px 0;border-bottom:1px solid var(--line)}
-.med-stage:last-child{border-bottom:none;padding-bottom:0}
-.med-stage-title{font-family:'Spectral',serif;font-size:16px;color:var(--mist);margin-bottom:2px}
-.med-stage-title span{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dawn);margin-right:7px}
+.med-stage{display:grid;grid-template-columns:30px minmax(0,1fr);gap:12px;position:relative;padding:9px 0 15px}
+.med-stage:not(:last-child)::before{content:"";position:absolute;left:14px;top:35px;bottom:0;width:1px;background:linear-gradient(180deg,rgba(240,201,126,.7),rgba(184,160,255,.22))}
+.med-stage-mark{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;width:29px;height:29px;border:1px solid rgba(240,201,126,.7);border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(240,201,126,.3),rgba(20,20,32,.96) 68%);box-shadow:0 0 0 4px rgba(240,201,126,.04),0 0 18px rgba(240,201,126,.12);font-size:10px;color:var(--dawn)}
+.med-stage:last-child{padding-bottom:0}
+.med-stage-title{font-family:'Spectral',serif;font-size:17px;color:var(--mist);margin:1px 0 3px}
+.med-stage-title span{display:none}
 .med-stage-text{font-size:13px;color:var(--dim);line-height:1.55}
 .aar{margin-top:15px;padding:13px 14px;border:1px solid var(--line2);border-radius:12px;background:var(--night)}
 .aar-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px}
@@ -1715,16 +1717,22 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
               <div class="med-framework">
                 <div class="med-framework-head">Three stages of meditation</div>
                 <div class="med-stage">
-                  <div class="med-stage-title"><span>1</span>Gather</div>
+                  <div class="med-stage-mark">1</div>
+                  <div><div class="med-stage-title">Gather</div>
                   <div class="med-stage-text">Bring attention together before you sit. Use gentle breathwork, ask "Who am I?", read one meaningful page, or move slowly with the breath until the mind has one place to rest.</div>
+                  </div>
                 </div>
                 <div class="med-stage">
-                  <div class="med-stage-title"><span>2</span>Flow</div>
+                  <div class="med-stage-mark">2</div>
+                  <div><div class="med-stage-title">Flow</div>
                   <div class="med-stage-text">Enter the chosen practice fully. Let the breath, mantra, gaze, or other method become steady enough that you are absorbed in doing it rather than watching yourself do it.</div>
+                  </div>
                 </div>
                 <div class="med-stage">
-                  <div class="med-stage-title"><span>3</span>Merge</div>
+                  <div class="med-stage-mark">3</div>
+                  <div><div class="med-stage-title">Merge</div>
                   <div class="med-stage-text">Let the effort soften. The practice, the one practising, and the object of attention are no longer held apart; awareness rests in the experience without needing to control or name it.</div>
+                  </div>
                 </div>
                 <div class="aar" id="aar-checklist">
                   <div class="aar-head">
@@ -1917,16 +1925,22 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
       <div class="med-framework">
         <div class="med-framework-head">Three stages of meditation</div>
         <div class="med-stage">
-          <div class="med-stage-title"><span>1</span>Gather</div>
+          <div class="med-stage-mark">1</div>
+          <div><div class="med-stage-title">Gather</div>
           <div class="med-stage-text">Bring attention together before you sit. Use gentle breathwork, ask "Who am I?", read one meaningful page, or move slowly with the breath until the mind has one place to rest.</div>
+          </div>
         </div>
         <div class="med-stage">
-          <div class="med-stage-title"><span>2</span>Flow</div>
+          <div class="med-stage-mark">2</div>
+          <div><div class="med-stage-title">Flow</div>
           <div class="med-stage-text">Enter the chosen practice fully. Let the breath, mantra, gaze, or other method become steady enough that you are absorbed in doing it rather than watching yourself do it.</div>
+          </div>
         </div>
         <div class="med-stage">
-          <div class="med-stage-title"><span>3</span>Merge</div>
+          <div class="med-stage-mark">3</div>
+          <div><div class="med-stage-title">Merge</div>
           <div class="med-stage-text">Let the effort soften. The practice, the one practising, and the object of attention are no longer held apart; awareness rests in the experience without needing to control or name it. Remember that you have always been one with the Divine light.</div>
+          </div>
         </div>
       </div>
     </div>
