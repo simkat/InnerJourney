@@ -1,6 +1,6 @@
 /* Inner Journey — offline shell.
    Network-first for the page (so updates arrive), cache fallback when offline. */
-const CACHE = 'inner-journey-v1';
+const CACHE = 'inner-journey-v2';
 const SHELL = ['./', './index.html', './icon.svg', './manifest.json'];
 
 self.addEventListener('install', e => {

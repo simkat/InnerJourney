@@ -163,6 +163,13 @@ section.view.active{display:block}
 .potw-eye{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dawn);margin-bottom:6px}
 .potw-title{font-family:'Spectral',serif;font-weight:500;font-size:23px;color:var(--mist);line-height:1.2}
 .potw-meta{font-size:12.5px;color:var(--faint);margin-top:3px}
+.potw-affirmation{margin-top:10px;color:var(--dawn);font-family:'Spectral',serif;font-style:italic;font-size:15px}
+.schedule-card{margin:0 0 16px;padding:16px 18px;border:1px solid var(--dawn-line);border-radius:var(--r);background:var(--dawn-soft)}
+.schedule-card h2{font-family:'Spectral',serif;font-size:18px;font-weight:500;margin:0 0 10px}
+.schedule-current{color:var(--dawn);font-size:15px;font-weight:600}
+.schedule-list{display:flex;flex-wrap:wrap;gap:7px 16px;margin-top:11px;color:var(--dim);font-size:13px}
+.schedule-list span{white-space:nowrap}
+.schedule-list .current{color:var(--mist);font-weight:600}
 
 
 /* ══════════ REDESIGN: zones, hero flip cards, meditation stages ══════════ */
@@ -1341,6 +1348,12 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
         <div class="presence" id="presence" style="display:none"></div>
       </div>
 
+      <section class="schedule-card" id="practice-schedule-card" aria-label="Practice schedule">
+        <h2>This week's practice</h2>
+        <div class="schedule-current" id="schedule-current"></div>
+        <div class="schedule-list" id="schedule-list"></div>
+      </section>
+
       <!-- THREE-COLUMN JOURNEY -->
       <div class="triptych">
 
@@ -1383,6 +1396,7 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
                 <div class="cw-kind"><span class="cap-dot p-dot"></span>Practice</div>
                 <div class="cw-name" id="potw-title"></div>
                 <div class="cw-role" id="potw-meta">The behaviour to live</div>
+                <div class="potw-affirmation" id="potw-affirmation"></div>
                 <div class="align-row" id="potw-align"></div>
                 <div class="cw-invite">
                   <div class="ft-label" id="potw-day-label"></div>
@@ -2521,6 +2535,24 @@ const practiceSchedule = [
   {date:"2026-10-03",week:"Week 4",affirmation:"God"},
   {date:"2026-10-04",week:"Week 4",affirmation:"God"},
 ];
+function scheduledPracticeFor(dateStr){
+  return practiceSchedule.find(item=>item.date===dateStr)||null;
+}
+function renderPracticeSchedule(){
+  const card=$("#practice-schedule-card"), current=$("#schedule-current"), list=$("#schedule-list");
+  if(!card||!current||!list) return;
+  const todayEntry=scheduledPracticeFor(today());
+  const weeks=[];
+  practiceSchedule.forEach(item=>{
+    if(!weeks.some(week=>week.week===item.week)) weeks.push(item);
+  });
+  current.textContent=todayEntry
+    ? todayEntry.week+" (this week's practice): "+todayEntry.affirmation
+    : "No scheduled practice for today.";
+  list.innerHTML=weeks.map(item=>
+    `<span class="${todayEntry&&item.week===todayEntry.week?"current":""}">${esc(item.week)}: ${esc(item.affirmation)}</span>`
+  ).join("");
+}
 
 const DAY_ANGLES = [
   {n:1, key:"ARRIVE",    label:"Day 1 — Arrive"},
@@ -3635,9 +3667,13 @@ function renderPracticeOfWeek(){
   const angle=DAY_ANGLES[dayN-1];
   const dayContent=dayContentFor(p, dayN);
   const b=weekBounds(wk);
+  const scheduled=scheduledPracticeFor(today());
 
   $("#potw-title").textContent=p.title;
   $("#potw-meta").textContent="Week "+wk+" · "+fmtRange(b.start,b.end);
+  $("#potw-affirmation").textContent=scheduled
+    ? "Today's affirmation: “"+scheduled.affirmation+"”"
+    : "";
   renderAlignTags(p);
 
   // ---- week dots ----
@@ -4687,7 +4723,7 @@ function initBegin(){
 
 function renderAll(){
   renderStrip(); renderCurriculumTrack(); renderAvatar();
-  renderOrientation(); renderPracticeOfWeek(); renderPracticesTab(); renderSixGrid();
+  renderOrientation(); renderPracticeSchedule(); renderPracticeOfWeek(); renderPracticesTab(); renderSixGrid();
   renderRails(); renderTechnique(); renderAttitudes();
   renderLessonCard(); renderJourney();
   renderYearView(); renderReflectionSearch();
