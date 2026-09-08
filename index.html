@@ -670,6 +670,26 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 .home-meditation .hm-link{display:inline-block;margin-top:18px;color:var(--dawn);font-size:12px}
 .home-meditation .hm-mark{display:flex;align-items:center;gap:8px;margin-top:18px;color:var(--dim);font-size:12px}
 .home-meditation .hm-mark input{width:auto;accent-color:var(--leaf)}
+.home-meditation{perspective:1200px;overflow:hidden}
+.home-meditation-inner{position:relative;min-height:430px;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.2,.75,.25,1)}
+.home-meditation.flipped .home-meditation-inner{transform:rotateY(180deg)}
+.home-med-front,.home-med-back{backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.home-med-front{position:relative;z-index:1}
+.home-med-back{position:absolute;inset:0;transform:rotateY(180deg);overflow:auto;padding:20px;background:var(--panel);z-index:2}
+.home-med-back .ritual-top{margin-bottom:13px}
+.home-med-back .ritual-text{font-size:21px}
+.home-med-back .ritual-grid{display:block}
+.home-med-back .ritual-steps{margin-top:16px}
+.med-record{margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
+.med-record h3{font-family:'Spectral',serif;font-size:20px;font-weight:500;margin:0 0 4px}
+.med-record .sub{font-size:12px;color:var(--dim);margin:0 0 11px}
+.med-record textarea{min-height:52px}
+.med-hints{display:flex;flex-wrap:wrap;gap:5px;margin:5px 0}
+.med-hints button{border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--faint);
+  padding:4px 8px;font:inherit;font-size:11px;cursor:pointer}
+.med-hints button:hover{color:var(--dawn);border-color:var(--dawn-line);background:var(--dawn-soft)}
+.home-med-back .ritual-flip{margin-top:16px}
+#view-today .daily-ritual{display:none}
 #view-today .cw-virtue,#view-today .cw-div{display:none}
 #view-today .cw-practice{width:100%}
 #view-today .cw-split{display:block}
@@ -1460,43 +1480,9 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
         <div class="presence" id="presence" style="display:none"></div>
       </div>
 
-      <section class="daily-ritual" aria-labelledby="ritual-title">
-        <div class="ritual-front">
-        <div class="ritual-top">
-          <div class="ritual-eyebrow">Your five-minute ritual</div>
-          <div class="ritual-time">Today · <span id="ritual-date"></span></div>
-        </div>
-        <div class="ritual-grid">
-          <div>
-            <div class="ritual-kicker">A thought to carry</div>
-            <div class="ritual-text" id="ritual-title"></div>
-            <div class="ritual-source">A different doorway into the same inner light.</div>
-            <button class="ritual-refresh" id="ritual-refresh" type="button">↻ Show another doorway</button>
-          </div>
-          <div class="ritual-steps" aria-label="Five-minute ritual steps">
-            <div class="ritual-step"><b>1</b><span>Arrive with one slow breath.</span></div>
-            <div class="ritual-step"><b>2</b><span>Receive today’s thought.</span></div>
-            <div class="ritual-step"><b>3</b><span>Carry the weekly practice into one moment.</span></div>
-          </div>
-        </div>
-        <button class="ritual-flip" id="ritual-flip" type="button">Open the five-minute ritual ↗</button>
-        <button class="ritual-complete" id="ritual-complete" type="button">I’ve completed this ritual</button>
-        </div>
-        <div class="ritual-back">
-          <div class="ritual-eyebrow">A gentle return</div>
-          <div class="ritual-back-title">You do not need a perfect pause.</div>
-          <p>Take one breath, remember the Divine, and let the weekly practice meet the next ordinary thing you do. You can return here whenever the day gets noisy.</p>
-          <button class="ritual-flip" id="ritual-flip-back" type="button">Back to today’s thought ↩</button>
-        </div>
-        <div class="ritual-done">
-          <div class="ritual-eyebrow">Five-minute ritual</div>
-          <div class="ritual-done-title">Done for today.</div>
-          <p>You arrived, received, and carried something into the day. Let it continue quietly.</p>
-          <button class="ritual-reopen" id="ritual-reopen" type="button">↺ Reopen ritual</button>
-        </div>
-      </section>
-
       <section class="home-meditation" aria-labelledby="home-meditation-title">
+        <div class="home-meditation-inner">
+        <div class="home-med-front">
         <span class="hm-cap">Today’s meditation practice</span>
         <span class="hm-date" id="home-meditation-date"></span>
         <div class="hm-title" id="home-meditation-title"></div>
@@ -1505,6 +1491,42 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
         <div class="hm-why" id="home-meditation-why"></div>
         <a class="hm-link" id="home-meditation-link" target="_blank" rel="noopener">Open this meditation lesson ↗</a>
         <label class="hm-mark"><input type="checkbox" id="home-meditation-done" /> I practised this today</label>
+        <button class="ritual-flip" id="home-med-open" type="button">Open five-minute ritual ↗</button>
+        <button class="ritual-flip" id="med-record-open" type="button">Record meditation experience ↗</button>
+        </div>
+        <div class="home-med-back">
+          <div class="ritual-top">
+            <div class="ritual-eyebrow">Your five-minute ritual</div>
+            <div class="ritual-time">Today · <span id="ritual-date"></span></div>
+          </div>
+          <div class="ritual-kicker">A thought to carry</div>
+          <div class="ritual-text" id="ritual-title"></div>
+          <div class="ritual-source">A different doorway into the same inner light.</div>
+          <button class="ritual-refresh" id="ritual-refresh" type="button">↻ Show another doorway</button>
+          <div class="ritual-steps" aria-label="Five-minute ritual steps">
+            <div class="ritual-step"><b>1</b><span>Arrive with one slow breath.</span></div>
+            <div class="ritual-step"><b>2</b><span>Receive today’s thought.</span></div>
+            <div class="ritual-step"><b>3</b><span>Carry the weekly practice into one moment.</span></div>
+          </div>
+          <button class="ritual-complete" id="ritual-complete" type="button">I’ve completed this ritual</button>
+          <div class="med-record" id="med-record">
+            <h3>Record meditation experience</h3>
+            <p class="sub">Use a few words now, or return later and add more.</p>
+            <div class="field">
+              <label for="med-experience">What did you notice?</label>
+              <div class="med-hints" data-target="med-experience"><button type="button">More settled</button><button type="button">Scattered at first</button><button type="button">A moment of stillness</button></div>
+              <textarea id="med-experience" placeholder="A sensation, thought, feeling, or moment…"></textarea>
+            </div>
+            <div class="field">
+              <label for="med-helped">What helped you return?</label>
+              <div class="med-hints" data-target="med-helped"><button type="button">The breath</button><button type="button">The mantra</button><button type="button">A gentle return</button></div>
+              <textarea id="med-helped" placeholder="What supported your attention?"></textarea>
+            </div>
+            <div class="daily-reflection-actions"><button class="btn" id="med-record-save" type="button">Save meditation experience</button><span class="reflection-state" id="med-record-msg">Your draft saves as you type.</span></div>
+          </div>
+          <button class="ritual-flip" id="home-med-close" type="button">Back to meditation ↩</button>
+        </div>
+        </div>
       </section>
 
       <section class="schedule-card" id="practice-schedule-card" aria-label="Practice schedule">
@@ -2417,7 +2439,7 @@ async function pushRemote(action,payload){
 }
 function normalizeRow(row){
   const o={};
-  ["id","createdAt","person","kind","date","phase","lessonTitle","lessonUrl","formalDone","minutes","rating","daytimeText","daytimeUrl","reflection","text","status","virtueKey","virtueName","practiceId","weekNumber","dayNumber","engaged","practised","divineFocus","helped","pulled"]
+  ["id","createdAt","person","kind","date","phase","lessonTitle","lessonUrl","formalDone","minutes","rating","daytimeText","daytimeUrl","reflection","text","status","virtueKey","virtueName","practiceId","weekNumber","dayNumber","engaged","practised","divineFocus","helped","pulled","medExperience","medHelped"]
     .forEach(k=>o[k]=row[k]!==undefined?row[k]:"");
   // booleans arrive from Sheets as strings
   o.engaged=(o.engaged===true||o.engaged==="true"||o.engaged==="TRUE");
@@ -5067,24 +5089,41 @@ function initEvents(){
   const _hl_again=$("#hl-again"); if(_hl_again) _hl_again.onclick=()=>{ hlShuffle++; renderHighlight(); };
   const ritualAgain=$("#ritual-refresh");
   if(ritualAgain) ritualAgain.onclick=()=>{ hlShuffle++; renderDailyRitual(); };
-  const ritualCard=$(".daily-ritual");
+  const ritualCard=$(".home-meditation");
   const setRitualFlip=(flipped)=>{
     if(!ritualCard) return;
     ritualCard.classList.toggle("flipped",flipped);
     ritualCard.setAttribute("aria-label",flipped?"Five-minute ritual guidance":"Daily inspiration");
   };
-  const ritualFlip=$("#ritual-flip"), ritualFlipBack=$("#ritual-flip-back");
+  const ritualFlip=$("#home-med-open"), ritualFlipBack=$("#home-med-close");
   if(ritualFlip) ritualFlip.onclick=()=>setRitualFlip(true);
   if(ritualFlipBack) ritualFlipBack.onclick=()=>setRitualFlip(false);
-  const ritualComplete=$("#ritual-complete"), ritualReopen=$("#ritual-reopen");
+  const ritualComplete=$("#ritual-complete"), ritualReopen=null;
   if(ritualComplete) ritualComplete.onclick=()=>{
     safeSet("ijs_ritual_done_"+today(),"1");
     if(ritualCard) ritualCard.classList.add("completed");
   };
-  if(ritualReopen) ritualReopen.onclick=()=>{
-    safeSet("ijs_ritual_done_"+today(),"0");
-    if(ritualCard) ritualCard.classList.remove("completed");
+  const medRecordOpen=$("#med-record-open");
+  if(medRecordOpen) medRecordOpen.onclick=()=>setRitualFlip(true);
+  const medDone=$("#home-meditation-done");
+  if(medDone) medDone.onchange=()=>safeSet("ijs_home_meditation_"+today(),medDone.checked?"1":"0");
+  const medRecordSave=$("#med-record-save");
+  const medExperience=$("#med-experience"), medHelped=$("#med-helped");
+  const latestMed=state.entries.filter(e=>e.person===me&&e.kind==="meditation"&&e.date===today()).slice(-1)[0];
+  if(medExperience&&latestMed) medExperience.value=latestMed.medExperience||"";
+  if(medHelped&&latestMed) medHelped.value=latestMed.medHelped||"";
+  if(medRecordSave) medRecordSave.onclick=async()=>{
+    const experience=medExperience?medExperience.value.trim():"";
+    const helped=medHelped?medHelped.value.trim():"";
+    if(!experience&&!helped){ toast("Add one honest line before saving."); return; }
+    await addEntry({kind:"meditation",date:today(),medExperience:experience,medHelped:helped,text:experience});
+    const msg=$("#med-record-msg"); if(msg){msg.textContent="Saved for today ✓";msg.className="okmsg";}
   };
+  $$(".med-hints button").forEach(button=>button.onclick=()=>{
+    const target=$("#"+button.parentElement.dataset.target); if(!target) return;
+    target.value=target.value.trim()?target.value.trim()+" "+button.textContent.toLowerCase()+". ":button.textContent+". ";
+    target.focus();
+  });
   const weekCard=$("#week-card");
   const setWeekFlip=(flipped)=>{
     if(!weekCard) return;
