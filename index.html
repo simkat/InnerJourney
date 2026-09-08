@@ -649,6 +649,21 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 .week-card-back .daily-reflection h3{margin-top:0}
 .week-card-back .daily-reflection-actions{margin-bottom:2px}
 .week-reflection-toggle{margin-top:13px}
+.home-meditation{grid-column:1;grid-row:3;background:linear-gradient(160deg,rgba(131,184,160,.11),rgba(184,160,255,.07));
+  border:1px solid rgba(131,184,160,.35);border-radius:var(--r);padding:20px;min-height:100%}
+.home-meditation .hm-cap{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--leaf)}
+.home-meditation .hm-date{float:right;color:var(--faint);font-size:11px}
+.home-meditation .hm-title{font-family:'Spectral',serif;font-size:25px;line-height:1.15;color:var(--mist);margin-top:18px}
+.home-meditation .hm-angle{font-size:12px;color:var(--dawn);margin-top:7px}
+.home-meditation .hm-focus{font-size:14px;line-height:1.6;color:var(--dim);margin-top:16px}
+.home-meditation .hm-why{font-size:12px;line-height:1.55;color:var(--faint);margin-top:11px}
+.home-meditation .hm-link{display:inline-block;margin-top:18px;color:var(--dawn);font-size:12px}
+.home-meditation .hm-mark{display:flex;align-items:center;gap:8px;margin-top:18px;color:var(--dim);font-size:12px}
+.home-meditation .hm-mark input{width:auto;accent-color:var(--leaf)}
+#view-today .cw-virtue,#view-today .cw-div{display:none}
+#view-today .cw-practice{width:100%}
+#view-today .cw-split{display:block}
+#view-today .home-meditation{display:block}
 @media(max-width:650px){
   .daily-ritual{padding:22px 20px}
   .ritual-grid{grid-template-columns:1fr;gap:20px}
@@ -661,8 +676,9 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 #view-today #today-full{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
 #view-today .orient{grid-column:1 / -1}
 #view-today .schedule-card{display:block;grid-column:1 / -1;grid-row:2}
-#view-today .daily-ritual{grid-column:1;grid-row:3}
+#view-today .daily-ritual{grid-column:1 / -1;grid-row:4}
 #view-today .triptych{display:block;grid-column:2;grid-row:3}
+#view-today .home-meditation{grid-column:1;grid-row:3}
 #view-today .centre{max-width:none;margin:0}
 #view-today .card-week{margin-top:0}
 #view-today .cw-more{display:none!important}
@@ -1460,6 +1476,17 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
           <p>Take one breath, remember the Divine, and let the weekly practice meet the next ordinary thing you do. You can return here whenever the day gets noisy.</p>
           <button class="ritual-flip" id="ritual-flip-back" type="button">Back to today’s thought ↩</button>
         </div>
+      </section>
+
+      <section class="home-meditation" aria-labelledby="home-meditation-title">
+        <span class="hm-cap">Today’s meditation practice</span>
+        <span class="hm-date" id="home-meditation-date"></span>
+        <div class="hm-title" id="home-meditation-title"></div>
+        <div class="hm-angle" id="home-meditation-angle"></div>
+        <div class="hm-focus" id="home-meditation-focus"></div>
+        <div class="hm-why" id="home-meditation-why"></div>
+        <a class="hm-link" id="home-meditation-link" target="_blank" rel="noopener">Open this meditation lesson ↗</a>
+        <label class="hm-mark"><input type="checkbox" id="home-meditation-done" /> I practised this today</label>
       </section>
 
       <section class="schedule-card" id="practice-schedule-card" aria-label="Practice schedule">
@@ -4742,6 +4769,27 @@ function renderTechnique(){
   if(gLink){ gLink.href=guided.url; gLink.textContent="Follow today's guided meditation ↗"; }
 }
 
+const MEDITATION_CLASSROOM_LINK="https://www.skool.com/inner-journey-school/classroom/f3c0fec8?md=797eb261b9974da6889e63e9978a8880";
+function dailyHomeTechnique(){
+  const idx=hashDate("home-technique-"+today())%TECHNIQUE_LIBRARY.length;
+  return TECHNIQUE_LIBRARY[idx];
+}
+function renderHomeMeditation(){
+  const title=$("#home-meditation-title"); if(!title) return;
+  const t=dailyHomeTechnique();
+  const dayN=(hashDate("home-angle-"+today())%TECH_ANGLE_LABELS.length);
+  const date=$("#home-meditation-date");
+  if(date) date.textContent=fmtDate(today());
+  title.textContent=t.name;
+  $("#home-meditation-angle").textContent=TECH_ANGLE_LABELS[dayN];
+  $("#home-meditation-focus").textContent=t.angles[dayN];
+  $("#home-meditation-why").textContent=t.why;
+  const link=$("#home-meditation-link");
+  if(link){ link.href=MEDITATION_CLASSROOM_LINK; link.textContent="Open this meditation lesson ↗"; }
+  const done=$("#home-meditation-done");
+  if(done) done.checked=safeGet("ijs_home_meditation_"+today())==="1";
+}
+
 /* ══════════ LOVE · FOCUS · SURRENDER (daily reminder + prayer) ══════════ */
 const ATT_REMINDERS=[
   "Love opens the sit. Begin by wishing yourself well before you ask anything of your attention.",
@@ -4953,7 +5001,7 @@ function initBegin(){
 function renderAll(){
   renderStrip(); renderCurriculumTrack(); renderAvatar();
   renderOrientation(); renderPracticeSchedule(); renderPracticeOfWeek(); renderPracticesTab(); renderSixGrid();
-  renderRails(); renderTechnique(); renderAttitudes();
+  renderRails(); renderTechnique(); renderHomeMeditation(); renderAttitudes();
   renderLessonCard(); renderJourney();
   renderYearView(); renderReflectionSearch();
   renderWeeklyLetter(); renderPresence(); renderDailyRitual(); renderDailyReflection(); showGlance();
@@ -5006,6 +5054,10 @@ function initEvents(){
   if(weekClose) weekClose.onclick=()=>setWeekFlip(false);
 
   const dailyReflectionSave=$("#daily-reflection-save");
+  const homeMeditationDone=$("#home-meditation-done");
+  if(homeMeditationDone) homeMeditationDone.onchange=()=>{
+    safeSet("ijs_home_meditation_"+today(),homeMeditationDone.checked?"1":"0");
+  };
   if(dailyReflectionSave) dailyReflectionSave.onclick=async()=>{
     if(!dailyReflectionValues().divineFocus&&!dailyReflectionValues().helped&&!dailyReflectionValues().pulled){
       setDailyReflectionState("Write one honest line before saving.",false); return;
