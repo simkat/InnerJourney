@@ -613,6 +613,11 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 .daily-reflection .sub{margin-bottom:15px}
 .daily-reflection .field{margin-bottom:11px}
 .daily-reflection textarea{min-height:54px}
+.reflection-prompts{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 7px}
+.reflection-prompts button{border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--faint);
+  padding:4px 9px;font:inherit;font-size:11px;cursor:pointer}
+.reflection-prompts button:hover{color:var(--dawn);border-color:var(--dawn-line);background:var(--dawn-soft)}
+.reflection-state{color:var(--faint);font-size:11.5px}
 .daily-reflection-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 @media(max-width:650px){
   .daily-ritual{padding:22px 20px}
@@ -1510,19 +1515,31 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
             <p class="sub">Your weekly practice matters most when it meets ordinary life. A few honest lines are enough.</p>
             <div class="field">
               <label for="daily-divine-focus">Did you find it easier to remain focused on the Divine throughout your day?</label>
-              <textarea id="daily-divine-focus" placeholder="What did you notice?"></textarea>
+              <div class="reflection-prompts" data-target="daily-divine-focus">
+                <button type="button">A little easier</button><button type="button">I remembered briefly</button>
+                <button type="button">I kept forgetting</button><button type="button">I felt no difference</button>
+              </div>
+              <textarea id="daily-divine-focus" placeholder="Start with: “I noticed…”"></textarea>
             </div>
             <div class="field">
               <label for="daily-helped">Was there anything in particular that helped?</label>
-              <textarea id="daily-helped" placeholder="A person, reminder, prayer, pause, or practice…"></textarea>
+              <div class="reflection-prompts" data-target="daily-helped">
+                <button type="button">A pause</button><button type="button">A prayer or mantra</button>
+                <button type="button">A person</button><button type="button">A reminder</button>
+              </div>
+              <textarea id="daily-helped" placeholder="Start with: “It helped when…”"></textarea>
             </div>
             <div class="field">
               <label for="daily-pulled">What regularly pulled your attention away?</label>
-              <textarea id="daily-pulled" placeholder="Share freely — noticing is already part of the practice."></textarea>
+              <div class="reflection-prompts" data-target="daily-pulled">
+                <button type="button">Busyness</button><button type="button">My phone</button>
+                <button type="button">Worry</button><button type="button">Fatigue</button><button type="button">Strong emotions</button>
+              </div>
+              <textarea id="daily-pulled" placeholder="Start with: “I was pulled away by…”"></textarea>
             </div>
             <div class="daily-reflection-actions">
               <button class="btn" id="daily-reflection-save" type="button">Save today’s reflection</button>
-              <span id="daily-reflection-msg" class="okmsg" role="status"></span>
+              <span id="daily-reflection-msg" class="reflection-state" role="status">Your draft saves as you type.</span>
             </div>
           </section>
 
@@ -2580,15 +2597,47 @@ function practiceReflectionForToday(){
   return asg?practiceLogFor(asg.practiceId):null;
 }
 
+const DAILY_REFLECTION_DRAFT="ijs_daily_reflection_";
+let dailyReflectionTimer=0;
+function dailyReflectionValues(){
+  return {
+    divineFocus:($("#daily-divine-focus")||{}).value||"",
+    helped:($("#daily-helped")||{}).value||"",
+    pulled:($("#daily-pulled")||{}).value||""
+  };
+}
+function dailyReflectionDraft(){
+  try{ return JSON.parse(safeGet(DAILY_REFLECTION_DRAFT+today())||"{}"); }
+  catch(e){ return {}; }
+}
+function setDailyReflectionState(text,done){
+  const msg=$("#daily-reflection-msg");
+  if(msg){ msg.textContent=text; msg.className=done?"okmsg":"reflection-state"; }
+}
+async function saveDailyReflection(silent){
+  const wk=practiceWeekNumber(today());
+  if(wk<1) return;
+  const fields=dailyReflectionValues();
+  safeSet(DAILY_REFLECTION_DRAFT+today(),JSON.stringify(fields));
+  if(!fields.divineFocus&&!fields.helped&&!fields.pulled) return;
+  const asg=assignmentFor(wk), dayN=practiceDayNumber(today());
+  const log=practiceLogFor(asg.practiceId);
+  if(log) await updateEntry(log.id,Object.assign(fields,{engaged:true}));
+  else await addEntry({kind:"practice",practiceId:asg.practiceId,date:today(),
+    weekNumber:wk,dayNumber:dayN,engaged:true,practised:false,reflection:"",...fields});
+  safeSet(DAILY_REFLECTION_DRAFT+today(),"");
+  if(!silent) setDailyReflectionState("Saved for today ✓",true);
+}
 function renderDailyReflection(){
   const focus=$("#daily-divine-focus");
   if(!focus) return;
   const log=practiceReflectionForToday();
-  if(document.activeElement!==focus) focus.value=log&&log.divineFocus?log.divineFocus:"";
+  const draft=log?{}:dailyReflectionDraft();
+  if(document.activeElement!==focus) focus.value=log&&log.divineFocus?log.divineFocus:(draft.divineFocus||"");
   const helped=$("#daily-helped");
-  if(helped&&document.activeElement!==helped) helped.value=log&&log.helped?log.helped:"";
+  if(helped&&document.activeElement!==helped) helped.value=log&&log.helped?log.helped:(draft.helped||"");
   const pulled=$("#daily-pulled");
-  if(pulled&&document.activeElement!==pulled) pulled.value=log&&log.pulled?log.pulled:"";
+  if(pulled&&document.activeElement!==pulled) pulled.value=log&&log.pulled?log.pulled:(draft.pulled||"");
 }
 
 /* ---- rotating practice reminder ---- */
@@ -4870,25 +4919,26 @@ function initEvents(){
 
   const dailyReflectionSave=$("#daily-reflection-save");
   if(dailyReflectionSave) dailyReflectionSave.onclick=async()=>{
-    const wk=practiceWeekNumber(today());
-    if(wk<1){ toast("The weekly practice has not started yet."); return; }
-    const asg=assignmentFor(wk), dayN=practiceDayNumber(today());
-    const fields={
-      divineFocus:$("#daily-divine-focus").value.trim(),
-      helped:$("#daily-helped").value.trim(),
-      pulled:$("#daily-pulled").value.trim()
-    };
-    if(!fields.divineFocus&&!fields.helped&&!fields.pulled){
-      toast("Write one honest line before saving.");
-      return;
+    if(!dailyReflectionValues().divineFocus&&!dailyReflectionValues().helped&&!dailyReflectionValues().pulled){
+      setDailyReflectionState("Write one honest line before saving.",false); return;
     }
-    const log=practiceLogFor(asg.practiceId);
-    if(log) await updateEntry(log.id,Object.assign(fields,{engaged:true}));
-    else await addEntry({kind:"practice",practiceId:asg.practiceId,date:today(),
-      weekNumber:wk,dayNumber:dayN,engaged:true,practised:false,reflection:"",...fields});
-    const msg=$("#daily-reflection-msg");
-    if(msg){ msg.textContent="Saved for today ✓"; setTimeout(()=>{msg.textContent="";},2200); }
+    await saveDailyReflection(false);
   };
+  $$(".daily-reflection textarea").forEach(area=>area.oninput=()=>{
+    const values=dailyReflectionValues();
+    safeSet(DAILY_REFLECTION_DRAFT+today(),JSON.stringify(values));
+    setDailyReflectionState("Draft saved locally — keep adding whenever you return.",false);
+    clearTimeout(dailyReflectionTimer);
+    dailyReflectionTimer=setTimeout(()=>saveDailyReflection(true),900);
+  });
+  $$(".reflection-prompts button").forEach(button=>button.onclick=()=>{
+    const target=$("#"+button.parentElement.dataset.target);
+    if(!target) return;
+    const addition=button.textContent.trim();
+    target.value=target.value.trim()?target.value.trim()+" "+addition.toLowerCase()+". ":addition+". ";
+    target.focus();
+    target.dispatchEvent(new Event("input",{bubbles:true}));
+  });
 
   $("#d-save").onclick=async()=>{
     const ls=$("#d-lesson"), lo=ls.options[ls.selectedIndex];
