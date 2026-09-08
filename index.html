@@ -390,12 +390,17 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 .flipwrap:nth-child(2){animation-delay:.09s}
 @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 
-/* scrollbar */
-*::-webkit-scrollbar{width:9px;height:9px}
-*::-webkit-scrollbar-track{background:transparent}
-*::-webkit-scrollbar-thumb{background:var(--line2);border-radius:9px;
-  border:2px solid var(--night)}
-*::-webkit-scrollbar-thumb:hover{background:var(--faint)}
+/* Custom Soft Scrollbar for Webkit (Chrome, Safari, Edge) */
+.custom-scrollbar::-webkit-scrollbar{width:4px}
+.custom-scrollbar::-webkit-scrollbar-track{background:transparent}
+.custom-scrollbar::-webkit-scrollbar-thumb{
+  background-color:rgba(236,72,153,.2);
+  border-radius:10px;
+}
+.custom-scrollbar:hover::-webkit-scrollbar-thumb{background-color:rgba(236,72,153,.6)}
+
+/* Firefox fallback */
+.custom-scrollbar{scrollbar-width:thin;scrollbar-color:rgba(236,72,153,.2) transparent}
 
 @media(prefers-reduced-motion:reduce){
   .dotrow .d,.flipwrap,.pill-check.done{animation:none}
@@ -1233,7 +1238,7 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-height:1.7}
 </style>
 </head>
-<body>
+<body class="custom-scrollbar">
 <!-- quiet mode: everything falls away but the sit -->
 <div class="quiet" id="quiet" aria-hidden="true">
   <aside class="q-rail q-rail-left" aria-label="The three sacred attitudes">
@@ -1313,6 +1318,7 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
 
   <nav class="tabs" role="tablist">
     <button class="tab active" data-view="today">Today</button>
+    <button class="tab" data-view="meditation">Meditation</button>
     <button class="tab" data-view="insights">Insights</button>
     <button class="tab" data-view="questions">Questions</button>
     <button class="tab" data-view="practices">Practices</button>
@@ -1461,6 +1467,12 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
                 <div class="b-label">Why we practise it</div>
                 <div class="b-text" id="tech-why"></div>
               </div>
+              <div class="cm-block">
+                <div class="b-label">Today's guided meditation</div>
+                <div class="b-text" id="guided-title"></div>
+                <div class="b-text" id="guided-note" style="margin-top:6px; opacity:.9;"></div>
+                <a class="lessonlink" id="guided-link" target="_blank" rel="noopener">Follow today's guided meditation ↗</a>
+              </div>
               <div class="med-framework">
                 <div class="med-framework-head">Three stages of meditation</div>
                 <div class="med-stage">
@@ -1488,6 +1500,10 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
                   <label class="aar-item" id="aar-acknowledgement">
                     <input type="checkbox" id="aar-acknowledgement-cb" />
                     <div class="aar-item-text"><strong>Acknowledgement</strong> Meet it without judgement and thank it for the test.<small>Without distractions, there would be no opportunity to develop the mind.</small></div>
+                  </label>
+                  <label class="aar-item" id="aar-label">
+                    <input type="checkbox" id="aar-label-cb" />
+                    <div class="aar-item-text"><strong>Label</strong> Name the sound or thought: "sound," "planning," "memory," "urge," or "restlessness."<small>Simple naming helps the mind stop chasing and start witnessing.</small></div>
                   </label>
                   <label class="aar-item" id="aar-return">
                     <input type="checkbox" id="aar-return-cb" />
@@ -1647,6 +1663,99 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
 
       <!-- floating tooltip for both rails -->
       <div class="railtip" id="railtip" role="tooltip" aria-hidden="true"></div>
+    </div>
+  </section>
+
+
+  <!-- MEDITATION REFERENCE -->
+  <section class="view" id="view-meditation">
+    <div class="card">
+      <h2>The meditation path</h2>
+      <p class="sub">A simple map for arriving, practising, and meeting distraction with strength.</p>
+      <div class="med-framework">
+        <div class="med-framework-head">Three stages of meditation</div>
+        <div class="med-stage">
+          <div class="med-stage-title"><span>1</span>Gather</div>
+          <div class="med-stage-text">Bring attention together before you sit. Use gentle breathwork, ask "Who am I?", read one meaningful page, or move slowly with the breath until the mind has one place to rest.</div>
+        </div>
+        <div class="med-stage">
+          <div class="med-stage-title"><span>2</span>Flow</div>
+          <div class="med-stage-text">Enter the chosen practice fully. Let the breath, mantra, gaze, or other method become steady enough that you are absorbed in doing it rather than watching yourself do it.</div>
+        </div>
+        <div class="med-stage">
+          <div class="med-stage-title"><span>3</span>Merge</div>
+          <div class="med-stage-text">Let the effort soften. The practice, the one practising, and the object of attention are no longer held apart; awareness rests in the experience without needing to control or name it. Remember that you have always been one with the Divine light.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Remember your unity</h2>
+      <p class="sub">Meditation does not create your connection with God. It helps you remember what has always been true.</p>
+      <div class="med-framework">
+        <div class="med-framework-head">A remembrance to carry</div>
+        <div class="med-stage">
+          <div class="med-stage-title"><span>1</span>Already one</div>
+          <div class="med-stage-text">You are one with God at all times. The Divine light is not somewhere you must reach; it is the truth of what you are beneath the noise of thought and ego.</div>
+        </div>
+        <div class="med-stage">
+          <div class="med-stage-title"><span>2</span>Return to remembrance</div>
+          <div class="med-stage-text">When the mind becomes busy, do not conclude that unity has been lost. Notice the thought, let it pass, and gently remember: I am held in the Divine, and the Divine is present here.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Gather attention</h2>
+      <p class="sub">Choose one or two preparations. They are doors into meditation, not tests to pass.</p>
+      <div class="presit">
+        <div class="pi-group-label">Attention</div>
+        <div class="presit-item"><div><div class="pi-text">Breathing exercise</div><div class="pi-sub">Take a few slow breaths and let the body settle.</div></div></div>
+        <div class="presit-item"><div><div class="pi-text">Contemplative inquiry: "Who am I?"</div><div class="pi-sub">Rest with the question without trying to solve it.</div></div></div>
+        <div class="presit-item"><div><div class="pi-text">Read one page slowly</div><div class="pi-sub">Let one meaningful idea gather your attention.</div></div></div>
+        <div class="presit-item"><div><div class="pi-text">Gentle movement or flow</div><div class="pi-sub">Stretch, walk, or move with the breath for a few minutes.</div></div></div>
+        <div class="pi-group-label">Body</div>
+        <div class="presit-item"><div><div class="pi-text">Set the body</div><div class="pi-sub">Tongue gently against the roof of the mouth; hands clasped slightly above the navel.</div></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>AAR: working with distraction</h2>
+      <p class="sub">Distraction is not a failure. It is the training material that helps create an equanimous state of mind.</p>
+      <div class="aar">
+        <div class="aar-head">
+          <div class="aar-title">Awareness · Acknowledgement · Return</div>
+          <div class="aar-sub">AAR practice</div>
+        </div>
+        <div class="aar-note">The strength of mind developed by working with AAR is immense. Every distraction becomes another opportunity to train clarity, steadiness, and freedom.</div>
+        <div class="aar-item"><div class="aar-item-text"><strong>Awareness</strong> Notice: the mind has wandered.<small>Seeing the distraction is already the beginning of clarity.</small></div></div>
+        <div class="aar-item"><div class="aar-item-text"><strong>Acknowledgement</strong> Meet it without judgement and thank it for the test.<small>Without distractions, there would be no opportunity to develop the mind.</small></div></div>
+        <div class="aar-item"><div class="aar-item-text"><strong>Return</strong> Let it go and come back to the meditation.<small>No worry, anger, liking, or disliking. Simply return.</small></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Equanimity: working skillfully with the mind</h2>
+      <p class="sub">The aim is not to fight the mind or obey every thought. It is to develop a firm, calm relationship with it.</p>
+      <div class="med-framework">
+        <div class="med-framework-head">A steady way to practise</div>
+        <div class="med-stage">
+          <div class="med-stage-title"><span>1</span>Firm yet calm</div>
+          <div class="med-stage-text">Guide the mind like a patient adult guiding a child: clear about where to go, gentle about how you get there. Do not wrestle with thoughts; notice them and guide attention back.</div>
+        </div>
+        <div class="med-stage">
+          <div class="med-stage-title"><span>2</span>See the ego's movement</div>
+          <div class="med-stage-text">The ego may wriggle out through planning, judging, remembering, resisting, or seeking a more interesting thought. Recognize the movement without making it an enemy.</div>
+        </div>
+        <div class="med-stage">
+          <div class="med-stage-title"><span>3</span>Practise detachment</div>
+          <div class="med-stage-text">A thought can be present without becoming a command. Let it arise and pass without worry, anger, liking, or disliking. Your work is to remain free to choose where attention rests.</div>
+        </div>
+        <div class="med-stage">
+          <div class="med-stage-title"><span>4</span>Develop equanimity</div>
+          <div class="med-stage-text">Equanimity is the ability to remain unaffected and unbothered by thoughts while still seeing them clearly. Distractions give you the chance to practise this state of mind: each calm return develops greater steadiness, clarity, and freedom.</div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -2348,6 +2457,7 @@ const HIGHLIGHTS = [
   "Inner communion through prayer is not a performance for the Divine. It is a conversation between your deepest self and the source from which it comes.",
   "Open awareness is the sky. Thoughts, feelings, sensations are weather passing through. You are not the weather. You are the sky.",
   "The genuine seeker should not appear, or strive to appear great, which is how greatness itself is achieved. - Deus",
+  "By continuous remembrance of God, man, illuminated by the light of Truth, advances towards his perfect essence - that wondrous sea where each wave breaks with the sound 'I am the Truth'. - Rumi",
 ];
 function todaysHighlight(){
   const base=hashDate(today()+"H");
@@ -2373,6 +2483,44 @@ function daysSinceStart(){
 /* ==================== PRACTICE OF THE WEEK ==================== */
 /* Fixed anchor — never use the app's first-open date for practice weeks. */
 const PRACTICE_ANCHOR = "2026-08-18";
+
+const practiceSchedule = [
+  // Week 1: "I am one with God"
+  {date:"2026-09-07",week:"Week 1",affirmation:"I am one with God"},
+  {date:"2026-09-08",week:"Week 1",affirmation:"I am one with God"},
+  {date:"2026-09-09",week:"Week 1",affirmation:"I am one with God"},
+  {date:"2026-09-10",week:"Week 1",affirmation:"I am one with God"},
+  {date:"2026-09-11",week:"Week 1",affirmation:"I am one with God"},
+  {date:"2026-09-12",week:"Week 1",affirmation:"I am one with God"},
+  {date:"2026-09-13",week:"Week 1",affirmation:"I am one with God"},
+
+  // Week 2: "One with God"
+  {date:"2026-09-14",week:"Week 2",affirmation:"One with God"},
+  {date:"2026-09-15",week:"Week 2",affirmation:"One with God"},
+  {date:"2026-09-16",week:"Week 2",affirmation:"One with God"},
+  {date:"2026-09-17",week:"Week 2",affirmation:"One with God"},
+  {date:"2026-09-18",week:"Week 2",affirmation:"One with God"},
+  {date:"2026-09-19",week:"Week 2",affirmation:"One with God"},
+  {date:"2026-09-20",week:"Week 2",affirmation:"One with God"},
+
+  // Week 3: "With God"
+  {date:"2026-09-21",week:"Week 3",affirmation:"With God"},
+  {date:"2026-09-22",week:"Week 3",affirmation:"With God"},
+  {date:"2026-09-23",week:"Week 3",affirmation:"With God"},
+  {date:"2026-09-24",week:"Week 3",affirmation:"With God"},
+  {date:"2026-09-25",week:"Week 3",affirmation:"With God"},
+  {date:"2026-09-26",week:"Week 3",affirmation:"With God"},
+  {date:"2026-09-27",week:"Week 3",affirmation:"With God"},
+
+  // Week 4: "God"
+  {date:"2026-09-28",week:"Week 4",affirmation:"God"},
+  {date:"2026-09-29",week:"Week 4",affirmation:"God"},
+  {date:"2026-09-30",week:"Week 4",affirmation:"God"},
+  {date:"2026-10-01",week:"Week 4",affirmation:"God"},
+  {date:"2026-10-02",week:"Week 4",affirmation:"God"},
+  {date:"2026-10-03",week:"Week 4",affirmation:"God"},
+  {date:"2026-10-04",week:"Week 4",affirmation:"God"},
+];
 
 const DAY_ANGLES = [
   {n:1, key:"ARRIVE",    label:"Day 1 — Arrive"},
@@ -3230,7 +3378,7 @@ function initPresit(){
     if(divineCb) divineCb.onchange=()=>divineItem.classList.toggle("checked",divineCb.checked);
   }
 
-  ["awareness","acknowledgement","return"].forEach(k=>{
+  ["awareness","acknowledgement","label","return"].forEach(k=>{
     const cb=$("#aar-"+k+"-cb"), item=$("#aar-"+k);
     if(cb&&item) cb.onchange=()=>item.classList.toggle("checked",cb.checked);
   });
@@ -4244,6 +4392,15 @@ const TECHNIQUE_LIBRARY = [
       "Practise with greater steadiness: return the gaze gently each time it wanders.",
       "Notice obstacles: strain is the enemy here. Soft is stronger than hard.",
       "Reflect: has the steadiness of the gaze carried into the sit itself?"] },
+  { techId:"t5", name:"Meditation on a Divine Form",
+    why:"Holding a beloved divine form gently in the mind gives devotion a clear centre. The form is not something to force into focus; it is a presence you return to with love whenever attention wanders.",
+    angles:["Understand the technique: choose a divine form that is meaningful to you and hold its image softly in the heart or mind.",
+      "Notice the experience: which detail of the form appears most naturally — the face, eyes, hands, or the feeling it evokes?",
+      "Refine the practice: let the image be simple and steady rather than trying to make every detail perfect.",
+      "Explore subtlety: notice whether the form feels seen as an image, sensed as a presence, or both.",
+      "Practise with greater steadiness: return to the form with affection each time another thought carries you away.",
+      "Notice obstacles: if the image fades, rest in the feeling of devotion instead of straining to recreate it.",
+      "Reflect: what quality of the divine form — compassion, strength, wisdom, or peace — stayed with you after the sit?"] },
 ];
 const TECH_ANGLE_LABELS=["Understand the technique","Notice the experience","Refine the practice",
   "Explore subtlety","Practise with greater steadiness","Notice obstacles","Reflect"];
@@ -4276,6 +4433,27 @@ function techniqueFor(weekNumber){
   list.push(found); saveTechAssign(list);
   return found;
 }
+const DAILY_GUIDED_MEDITATIONS = [
+  {
+    title:"Guided So-Hum Meditation",
+    url:L1+"fe2e84903e3042bfad9df4798d1f298c",
+    note:"Follow the breath and let 'So' arrive with the inhale, 'Hum' with the exhale."
+  },
+  {
+    title:"Guided Divine Meditation",
+    url:L1+"a9b98c596a574ddc95809c70f8c66740",
+    note:"Hold a gentle divine form in awareness and let devotion soften the mind."
+  },
+  {
+    title:"Guided Open-Awareness Meditation",
+    url:L1+"d8da091260644f32a75d8ee181e6394b",
+    note:"Rest in awareness without grasping, and allow the mind to settle into spaciousness."
+  }
+];
+function dailyGuidedMeditation(){
+  const idx=hashDate("guided-"+today())%DAILY_GUIDED_MEDITATIONS.length;
+  return DAILY_GUIDED_MEDITATIONS[idx];
+}
 function renderTechnique(){
   const nameEl=$("#tech-name"); if(!nameEl) return;
   const wk=Math.max(1,practiceWeekNumber(today()));
@@ -4283,6 +4461,7 @@ function renderTechnique(){
   const t=getTechnique(asg.techId); if(!t) return;
   const dayN=Math.max(1,practiceDayNumber(today()));
   const b=weekBounds(wk);
+  const guided=dailyGuidedMeditation();
   nameEl.textContent=t.name;
   $("#tech-week").textContent="This week's technique · "+fmtRange(b.start,b.end);
   $("#tech-angle-label").textContent=TECH_ANGLE_LABELS[dayN-1];
@@ -4290,6 +4469,12 @@ function renderTechnique(){
   $("#tech-why").textContent=t.why;
   const lk=$("#tech-link");
   if(lk&&t.link){ lk.href=t.link; lk.textContent="↗ open this technique in the classroom"; }
+  const gTitle=$("#guided-title");
+  if(gTitle) gTitle.textContent=guided.title;
+  const gNote=$("#guided-note");
+  if(gNote) gNote.textContent=guided.note;
+  const gLink=$("#guided-link");
+  if(gLink){ gLink.href=guided.url; gLink.textContent="Follow today's guided meditation ↗"; }
 }
 
 /* ══════════ LOVE · FOCUS · SURRENDER (daily reminder + prayer) ══════════ */
