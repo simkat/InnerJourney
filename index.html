@@ -677,6 +677,8 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 .home-med-front{position:relative;z-index:1}
 .home-med-back{position:absolute;inset:0;transform:rotateY(180deg);overflow:auto;padding:20px;background:var(--panel);z-index:2}
 .home-med-back .ritual-top{margin-bottom:13px}
+.home-med-back .home-med-back-top{margin:0 0 16px}
+.home-med-back .home-med-back-top .ritual-flip{margin-top:0}
 .home-med-back .ritual-text{font-size:21px}
 .home-med-back .ritual-grid{display:block}
 .home-med-back .ritual-steps{margin-top:16px}
@@ -689,6 +691,7 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
   padding:4px 8px;font:inherit;font-size:11px;cursor:pointer}
 .med-hints button:hover{color:var(--dawn);border-color:var(--dawn-line);background:var(--dawn-soft)}
 .home-med-back .ritual-flip{margin-top:16px}
+.home-meditation.completed .home-med-front,.home-meditation.completed .home-med-back{display:none}
 #view-today .daily-ritual{display:none}
 #view-today .cw-virtue,#view-today .cw-div{display:none}
 #view-today .cw-practice{width:100%}
@@ -1495,6 +1498,7 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
         <button class="ritual-flip" id="med-record-open" type="button">Record meditation experience ↗</button>
         </div>
         <div class="home-med-back">
+          <div class="home-med-back-top"><button class="ritual-flip" id="home-med-close-top" type="button">Back to meditation ↩</button></div>
           <div class="ritual-top">
             <div class="ritual-eyebrow">Your five-minute ritual</div>
             <div class="ritual-time">Today · <span id="ritual-date"></span></div>
@@ -2709,7 +2713,7 @@ let ritualShuffle=0;
 function renderDailyRitual(){
   const thought=$("#ritual-title");
   if(!thought) return;
-  const card=$(".daily-ritual");
+  const card=$(".home-meditation");
   if(card) card.classList.toggle("completed",safeGet("ijs_ritual_done_"+today())==="1");
   const dateEl=$("#ritual-date");
   if(dateEl) dateEl.textContent=fmtDate(today());
@@ -5095,9 +5099,10 @@ function initEvents(){
     ritualCard.classList.toggle("flipped",flipped);
     ritualCard.setAttribute("aria-label",flipped?"Five-minute ritual guidance":"Daily inspiration");
   };
-  const ritualFlip=$("#home-med-open"), ritualFlipBack=$("#home-med-close");
+  const ritualFlip=$("#home-med-open"), ritualFlipBack=$("#home-med-close"), ritualFlipBackTop=$("#home-med-close-top");
   if(ritualFlip) ritualFlip.onclick=()=>setRitualFlip(true);
   if(ritualFlipBack) ritualFlipBack.onclick=()=>setRitualFlip(false);
+  if(ritualFlipBackTop) ritualFlipBackTop.onclick=()=>setRitualFlip(false);
   const ritualComplete=$("#ritual-complete"), ritualReopen=null;
   if(ritualComplete) ritualComplete.onclick=()=>{
     safeSet("ijs_ritual_done_"+today(),"1");
