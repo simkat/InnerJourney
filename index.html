@@ -639,6 +639,15 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 .reflection-prompts button:hover{color:var(--dawn);border-color:var(--dawn-line);background:var(--dawn-soft)}
 .reflection-state{color:var(--faint);font-size:11.5px}
 .daily-reflection-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.week-card-flip{perspective:1200px}
+.week-card-inner{position:relative;transition:transform .55s cubic-bezier(.2,.75,.25,1);transform-style:preserve-3d}
+.week-card-flip.flipped .week-card-inner{transform:rotateY(180deg)}
+.week-card-face{backface-visibility:hidden}
+.week-card-back{position:absolute;inset:0;transform:rotateY(180deg);overflow:auto;padding:20px;background:var(--panel)}
+.week-card-back .daily-reflection{margin:0;border:0;padding:0;background:transparent}
+.week-card-back .daily-reflection h3{margin-top:0}
+.week-card-back .daily-reflection-actions{margin-bottom:2px}
+.week-reflection-toggle{margin-top:13px}
 @media(max-width:650px){
   .daily-ritual{padding:22px 20px}
   .ritual-grid{grid-template-columns:1fr;gap:20px}
@@ -1473,7 +1482,9 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
         <main class="centre">
 
           <!-- 1. THIS WEEK: virtue + practice, one card -->
-          <section class="card-week">
+          <section class="card-week week-card-flip" id="week-card">
+            <div class="week-card-inner">
+            <div class="week-card-face">
             <div class="cw-cap">This week</div>
             <div class="cw-split">
               <div class="cw-half cw-virtue">
@@ -1544,38 +1555,43 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
               </div>
               <div class="potw-week-review" id="potw-week-review" style="display:none"></div>
             </div>
-          </section>
-
-          <section class="daily-reflection" aria-labelledby="daily-reflection-title">
-            <h3 id="daily-reflection-title">A small reflection for today</h3>
-            <p class="sub">Your weekly practice matters most when it meets ordinary life. A few honest lines are enough.</p>
-            <div class="field">
-              <label for="daily-divine-focus">Did you find it easier to remain focused on the Divine throughout your day?</label>
-              <div class="reflection-prompts" data-target="daily-divine-focus">
-                <button type="button">A little easier</button><button type="button">I remembered briefly</button>
-                <button type="button">I kept forgetting</button><button type="button">I felt no difference</button>
-              </div>
-              <textarea id="daily-divine-focus" placeholder="Start with: “I noticed…”"></textarea>
+            <button class="ghostlink week-reflection-toggle" id="week-reflection-open" type="button">Reflect on today ↗</button>
             </div>
-            <div class="field">
-              <label for="daily-helped">Was there anything in particular that helped?</label>
-              <div class="reflection-prompts" data-target="daily-helped">
-                <button type="button">A pause</button><button type="button">A prayer or mantra</button>
-                <button type="button">A person</button><button type="button">A reminder</button>
-              </div>
-              <textarea id="daily-helped" placeholder="Start with: “It helped when…”"></textarea>
+            <div class="week-card-back">
+              <section class="daily-reflection" aria-labelledby="daily-reflection-title">
+                <h3 id="daily-reflection-title">A small reflection for today</h3>
+                <p class="sub">Your weekly practice matters most when it meets ordinary life. A few honest lines are enough.</p>
+                <div class="field">
+                  <label for="daily-divine-focus">Did you find it easier to remain focused on the Divine throughout your day?</label>
+                  <div class="reflection-prompts" data-target="daily-divine-focus">
+                    <button type="button">A little easier</button><button type="button">I remembered briefly</button>
+                    <button type="button">I kept forgetting</button><button type="button">I felt no difference</button>
+                  </div>
+                  <textarea id="daily-divine-focus" placeholder="Start with: “I noticed…”"></textarea>
+                </div>
+                <div class="field">
+                  <label for="daily-helped">Was there anything in particular that helped?</label>
+                  <div class="reflection-prompts" data-target="daily-helped">
+                    <button type="button">A pause</button><button type="button">A prayer or mantra</button>
+                    <button type="button">A person</button><button type="button">A reminder</button>
+                  </div>
+                  <textarea id="daily-helped" placeholder="Start with: “It helped when…”"></textarea>
+                </div>
+                <div class="field">
+                  <label for="daily-pulled">What regularly pulled your attention away?</label>
+                  <div class="reflection-prompts" data-target="daily-pulled">
+                    <button type="button">Busyness</button><button type="button">My phone</button>
+                    <button type="button">Worry</button><button type="button">Fatigue</button><button type="button">Strong emotions</button>
+                  </div>
+                  <textarea id="daily-pulled" placeholder="Start with: “I was pulled away by…”"></textarea>
+                </div>
+                <div class="daily-reflection-actions">
+                  <button class="btn" id="daily-reflection-save" type="button">Save today’s reflection</button>
+                  <span id="daily-reflection-msg" class="reflection-state" role="status">Your draft saves as you type.</span>
+                </div>
+                <button class="ghostlink week-reflection-toggle" id="week-reflection-close" type="button">Back to this week ↩</button>
+              </section>
             </div>
-            <div class="field">
-              <label for="daily-pulled">What regularly pulled your attention away?</label>
-              <div class="reflection-prompts" data-target="daily-pulled">
-                <button type="button">Busyness</button><button type="button">My phone</button>
-                <button type="button">Worry</button><button type="button">Fatigue</button><button type="button">Strong emotions</button>
-              </div>
-              <textarea id="daily-pulled" placeholder="Start with: “I was pulled away by…”"></textarea>
-            </div>
-            <div class="daily-reflection-actions">
-              <button class="btn" id="daily-reflection-save" type="button">Save today’s reflection</button>
-              <span id="daily-reflection-msg" class="reflection-state" role="status">Your draft saves as you type.</span>
             </div>
           </section>
 
@@ -4975,6 +4991,15 @@ function initEvents(){
   const ritualFlip=$("#ritual-flip"), ritualFlipBack=$("#ritual-flip-back");
   if(ritualFlip) ritualFlip.onclick=()=>setRitualFlip(true);
   if(ritualFlipBack) ritualFlipBack.onclick=()=>setRitualFlip(false);
+  const weekCard=$("#week-card");
+  const setWeekFlip=(flipped)=>{
+    if(!weekCard) return;
+    weekCard.classList.toggle("flipped",flipped);
+    weekCard.setAttribute("aria-label",flipped?"Today’s weekly-practice reflection":"This week’s practice");
+  };
+  const weekOpen=$("#week-reflection-open"), weekClose=$("#week-reflection-close");
+  if(weekOpen) weekOpen.onclick=()=>setWeekFlip(true);
+  if(weekClose) weekClose.onclick=()=>setWeekFlip(false);
 
   const dailyReflectionSave=$("#daily-reflection-save");
   if(dailyReflectionSave) dailyReflectionSave.onclick=async()=>{
