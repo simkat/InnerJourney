@@ -167,9 +167,20 @@ section.view.active{display:block}
 .schedule-card{margin:0 0 16px;padding:16px 18px;border:1px solid var(--dawn-line);border-radius:var(--r);background:var(--dawn-soft)}
 .schedule-card h2{font-family:'Spectral',serif;font-size:18px;font-weight:500;margin:0 0 10px}
 .schedule-current{color:var(--dawn);font-size:15px;font-weight:600}
-.schedule-list{display:flex;flex-wrap:wrap;gap:7px 16px;margin-top:11px;color:var(--dim);font-size:13px}
-.schedule-list span{white-space:nowrap}
-.schedule-list .current{color:var(--mist);font-weight:600}
+.schedule-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:14px}
+.week-slide{position:relative;min-height:105px;padding:12px 12px 10px;border:1px solid var(--line);
+  border-radius:12px;background:rgba(17,21,42,.48);color:var(--dim);overflow:hidden}
+.week-slide.current{border-color:var(--dawn-line);background:rgba(230,178,90,.13);color:var(--mist);box-shadow:0 0 0 1px rgba(230,178,90,.08)}
+.week-slide.current::before{content:"NOW";position:absolute;right:9px;top:9px;color:var(--dawn);font-size:9px;letter-spacing:.14em}
+.week-slide .ws-week{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.week-slide.current .ws-week{color:var(--dawn)}
+.week-slide .ws-date{margin-top:8px;font-size:12px;color:var(--dim)}
+.week-slide .ws-title{margin-top:7px;font-family:'Spectral',serif;font-size:16px;line-height:1.15;color:var(--mist)}
+.week-slide .ws-days{display:flex;gap:4px;margin-top:11px}
+.week-slide .ws-day{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.12)}
+.week-slide .ws-day.today{background:var(--dawn);box-shadow:0 0 0 3px rgba(230,178,90,.14)}
+.week-slide .ws-day.past{background:rgba(131,184,160,.55)}
+@media(max-width:650px){.schedule-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 
 /* ══════════ REDESIGN: zones, hero flip cards, meditation stages ══════════ */
@@ -639,7 +650,7 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 #view-today .rail-six{display:none}
 #view-today #today-full{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
 #view-today .orient{grid-column:1 / -1}
-#view-today .schedule-card{display:none}
+#view-today .schedule-card{display:block;grid-column:1 / -1;grid-row:3}
 #view-today .triptych{display:block;grid-column:2;grid-row:2}
 #view-today .centre{max-width:none;margin:0}
 #view-today .card-week{margin-top:0}
@@ -2728,14 +2739,28 @@ function renderPracticeSchedule(){
   const todayEntry=scheduledPracticeFor(today());
   const weeks=[];
   practiceSchedule.forEach(item=>{
-    if(!weeks.some(week=>week.week===item.week)) weeks.push(item);
+    let week=weeks.find(x=>x.week===item.week);
+    if(!week){ week={week:item.week,items:[]}; weeks.push(week); }
+    week.items.push(item);
   });
   current.textContent=todayEntry
-    ? todayEntry.week+" (this week's practice): "+todayEntry.affirmation
+    ? todayEntry.week+" · "+fmtDate(todayEntry.date)+" · "+todayEntry.affirmation
     : "No scheduled practice for today.";
-  list.innerHTML=weeks.map(item=>
-    `<span class="${todayEntry&&item.week===todayEntry.week?"current":""}">${esc(item.week)}: ${esc(item.affirmation)}</span>`
-  ).join("");
+  list.innerHTML=weeks.map(week=>{
+    const first=week.items[0], last=week.items[week.items.length-1];
+    const active=todayEntry&&week.week===todayEntry.week;
+    const dots=week.items.map(item=>{
+      const past=item.date<today()?" past":"";
+      const now=item.date===today()?" today":"";
+      return `<span class="ws-day${past}${now}" title="${esc(fmtDate(item.date))}"></span>`;
+    }).join("");
+    return `<div class="week-slide${active?" current":""}">
+      <div class="ws-week">${esc(week.week)}</div>
+      <div class="ws-date">${esc(fmtDate(first.date))} – ${esc(fmtDate(last.date))}</div>
+      <div class="ws-title">${esc(first.affirmation)}</div>
+      <div class="ws-days" aria-label="${esc(week.week)} practice days">${dots}</div>
+    </div>`;
+  }).join("");
 }
 
 const DAY_ANGLES = [
