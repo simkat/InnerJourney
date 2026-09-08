@@ -4693,6 +4693,16 @@ const TECHNIQUE_LIBRARY = [
       "Practise with greater steadiness: return to the form with affection each time another thought carries you away.",
       "Notice obstacles: if the image fades, rest in the feeling of devotion instead of straining to recreate it.",
       "Reflect: what quality of the divine form — compassion, strength, wisdom, or peace — stayed with you after the sit?"] },
+  { techId:"t6", name:"School meditation practice",
+    link:"https://www.skool.com/inner-journey-school/classroom/f3c0fec8?md=3a85ee535b6e4176af51ec7dcab1f89f",
+    why:"A practice from the Inner Journey School classroom. Open the lesson and receive the teacher's instruction directly, letting the day’s meditation be guided rather than forced.",
+    angles:["Open the classroom lesson and receive the practice instructions before you begin.",
+      "Notice what changes when you follow the teacher's guidance one step at a time.",
+      "Refine the practice by keeping the body relaxed and the attention sincere.",
+      "Explore the quiet space between instruction and experience.",
+      "Practise with steadiness, returning to the lesson whenever the mind wanders.",
+      "Notice what regularly pulls your attention away, without judging it.",
+      "Reflect on what the classroom practice opened in you today."] },
 ];
 const TECH_ANGLE_LABELS=["Understand the technique","Notice the experience","Refine the practice",
   "Explore subtlety","Practise with greater steadiness","Notice obstacles","Reflect"];
@@ -4785,7 +4795,7 @@ function renderHomeMeditation(){
   $("#home-meditation-focus").textContent=t.angles[dayN];
   $("#home-meditation-why").textContent=t.why;
   const link=$("#home-meditation-link");
-  if(link){ link.href=MEDITATION_CLASSROOM_LINK; link.textContent="Open this meditation lesson ↗"; }
+  if(link){ link.href=t.link||MEDITATION_CLASSROOM_LINK; link.textContent="Open this meditation lesson ↗"; }
   const done=$("#home-meditation-done");
   if(done) done.checked=safeGet("ijs_home_meditation_"+today())==="1";
 }
