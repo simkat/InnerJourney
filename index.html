@@ -642,8 +642,9 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 .week-card-flip{perspective:1200px}
 .week-card-inner{position:relative;transition:transform .55s cubic-bezier(.2,.75,.25,1);transform-style:preserve-3d}
 .week-card-flip.flipped .week-card-inner{transform:rotateY(180deg)}
-.week-card-face{backface-visibility:hidden}
-.week-card-back{position:absolute;inset:0;transform:rotateY(180deg);overflow:auto;padding:20px;background:var(--panel)}
+.week-card-face,.week-card-back{backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.week-card-face{position:relative;z-index:1}
+.week-card-back{position:absolute;inset:0;transform:rotateY(180deg);overflow:auto;padding:20px;background:var(--panel);z-index:2}
 .week-card-back .daily-reflection{margin:0;border:0;padding:0;background:transparent}
 .week-card-back .daily-reflection h3{margin-top:0}
 .week-card-back .daily-reflection-actions{margin-bottom:2px}
@@ -1522,7 +1523,7 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
                   <label class="pill-check" id="potw-check-wrap">
                     <input type="checkbox" id="potw-check" /> <span id="potw-check-label">Practised</span>
                   </label>
-                  <button class="ghostlink" id="potw-expand">Practise →</button>
+                  <button class="ghostlink" id="potw-expand">Reflect & record →</button>
                 </div>
               </div>
             </div>
@@ -3652,10 +3653,12 @@ function initPresit(){
   };
 
   const pexp=$("#potw-expand"), pmore=$("#potw-more");
-  if(pexp&&pmore) pexp.onclick=()=>{
-    pmore.hidden=!pmore.hidden;
-    pexp.textContent=pmore.hidden?"Practise →":"Close ↑";
-    if(!pmore.hidden) setTimeout(()=>pmore.scrollIntoView({behavior:"smooth",block:"nearest"}),60);
+  if(pexp) pexp.onclick=()=>{
+    if(weekCard) setWeekFlip(true);
+    else if(pmore) {
+      pmore.hidden=!pmore.hidden;
+      pexp.textContent=pmore.hidden?"Reflect & record →":"Close ↑";
+    }
   };
   const jtog=$("#lesson-journey-toggle"), jbox=$("#journey");
   if(jtog&&jbox) jtog.onclick=()=>{
