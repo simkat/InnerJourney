@@ -966,6 +966,20 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 .med-stage-title{font-family:'Spectral',serif;font-size:17px;color:var(--mist);margin:1px 0 3px}
 .med-stage-title span{display:none}
 .med-stage-text{font-size:13px;color:var(--dim);line-height:1.55}
+.view#view-meditation .med-framework{margin-top:16px;padding-top:12px}
+.view#view-meditation .med-framework-head{margin-bottom:10px}
+.view#view-meditation .med-stage{display:block;min-height:76px;margin:9px 0;padding:14px 16px;border:1px solid var(--line2);border-radius:14px;background:linear-gradient(135deg,rgba(255,255,255,.035),rgba(184,160,255,.045));cursor:pointer;transition:transform .25s ease,border-color .25s ease,background .25s ease}
+.view#view-meditation .med-stage:not(:last-child)::before{display:none}
+.view#view-meditation .med-stage:hover{transform:translateY(-2px);border-color:var(--dawn-line)}
+.view#view-meditation .med-stage::after{content:"Tap to unfold ↗";display:block;margin-top:10px;color:var(--faint);font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+.view#view-meditation .med-stage.flipped{background:linear-gradient(135deg,rgba(240,201,126,.1),rgba(184,160,255,.08));border-color:rgba(240,201,126,.42)}
+.view#view-meditation .med-stage.flipped::after{content:"Tap to fold ↩"}
+.view#view-meditation .med-stage-mark{display:inline-flex;width:25px;height:25px;margin-right:8px;vertical-align:middle;box-shadow:none}
+.view#view-meditation .med-stage-title span{display:inline-flex;align-items:center;justify-content:center;width:25px;height:25px;margin-right:8px;border:1px solid rgba(240,201,126,.7);border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(240,201,126,.3),rgba(20,20,32,.96) 68%);font-size:10px;vertical-align:middle}
+.view#view-meditation .med-stage-title{display:inline;font-size:19px;vertical-align:middle}
+.view#view-meditation .med-stage-text{display:none;margin-top:12px;padding-top:11px;border-top:1px solid var(--line);animation:medStageReveal .3s ease}
+.view#view-meditation .med-stage.flipped .med-stage-text{display:block}
+@keyframes medStageReveal{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
 .aar{margin-top:15px;padding:13px 14px;border:1px solid var(--line2);border-radius:12px;background:var(--night)}
 .aar-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px}
 .aar-title{font-family:'Spectral',serif;font-size:17px;color:var(--mist)}
@@ -5065,6 +5079,22 @@ function initBegin(){
   if(meditationToggle) meditationToggle.onclick=()=>toggleMeditation(true);
   const meditationToggleBack=$("#meditation-toggle-back");
   if(meditationToggleBack) meditationToggleBack.onclick=()=>toggleMeditation(false);
+  $$("#view-meditation .med-stage").forEach(stage=>{
+    stage.setAttribute("role","button");
+    stage.setAttribute("tabindex","0");
+    stage.setAttribute("aria-expanded","false");
+    const toggleStage=()=>{
+      const flipped=stage.classList.toggle("flipped");
+      stage.setAttribute("aria-expanded",String(flipped));
+    };
+    stage.onclick=toggleStage;
+    stage.onkeydown=event=>{
+      if(event.key==="Enter"||event.key===" "){
+        event.preventDefault();
+        toggleStage();
+      }
+    };
+  });
   const b=$("#begin-med");
   if(b) b.onclick=beginSit;
   const ex=$("#q-exit");
