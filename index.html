@@ -639,6 +639,9 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 .ritual-reopen{margin-top:17px;padding:0;border:0;background:none;color:var(--faint);font:inherit;font-size:12px;cursor:pointer}
 .ritual-reopen:hover{color:var(--dawn)}
 .challenge-card{margin:20px 0;padding:20px;border:1px solid rgba(230,178,90,.32);border-radius:20px;background:linear-gradient(135deg,rgba(230,178,90,.08),rgba(184,160,255,.06));box-shadow:0 18px 42px rgba(0,0,0,.08)}
+.challenge-card,.home-meditation,.schedule-card{cursor:pointer;transition:grid-column .28s ease,transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+.challenge-card:hover,.home-meditation:hover,.schedule-card:hover{transform:translateY(-2px);box-shadow:0 22px 48px rgba(0,0,0,.14)}
+.challenge-card.is-expanded,.home-meditation.is-expanded,.schedule-card.is-expanded{grid-column:1 / -1;cursor:default;transform:none;box-shadow:0 24px 60px rgba(0,0,0,.2);border-color:var(--dawn-line)}
 .challenge-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}
 .challenge-kicker{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--dawn)}
 .challenge-card h2{margin:5px 0 0;font-size:16px}
@@ -738,13 +741,13 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 /* Today is a landing page; the full library remains in its tabs. */
 #view-today .strip,#view-today .curr-track,#view-today .card-lesson,#view-today .card-med,
 #view-today .rail-six,#view-today .rail-virtue{display:none}
-#view-today #today-full{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+#view-today #today-full{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;align-items:start}
 #view-today .orient{grid-column:1 / -1}
-#view-today .challenge-card{grid-column:1 / -1;grid-row:2}
-#view-today .schedule-card{display:block;grid-column:1 / -1;grid-row:3}
-#view-today .daily-ritual{grid-column:1 / -1;grid-row:5}
-#view-today .triptych{display:block;grid-column:2;grid-row:4}
-#view-today .home-meditation{grid-column:1;grid-row:4}
+#view-today .challenge-card{grid-column:auto;grid-row:2}
+#view-today .schedule-card{display:block;grid-column:auto;grid-row:2}
+#view-today .home-meditation{grid-column:auto;grid-row:2}
+#view-today .daily-ritual{grid-column:1 / -1;grid-row:4}
+#view-today .triptych{display:block;grid-column:1 / -1;grid-row:3}
 #view-today .centre{max-width:none;margin:0}
 #view-today .card-week{margin-top:0}
 #view-today .cw-more{display:none!important}
@@ -753,6 +756,7 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 @media(max-width:850px){
   #view-today #today-full{display:block}
   #view-today .triptych{margin-top:20px}
+  #view-today .challenge-card,.home-meditation,.schedule-card{margin-top:20px}
 }
 
 
@@ -5390,6 +5394,32 @@ function initEvents(){
   const weekOpen=$("#week-reflection-open"), weekClose=$("#week-reflection-close");
   if(weekOpen) weekOpen.onclick=()=>setWeekFlip(true);
   if(weekClose) weekClose.onclick=()=>setWeekFlip(false);
+
+  const shelfCards=[$("#meditation-challenge-card"),$(".home-meditation"),$("#practice-schedule-card")].filter(Boolean);
+  const shelfInteractive="a,button,input,textarea,select,label,summary";
+  shelfCards.forEach(card=>{
+    card.setAttribute("role","button");
+    card.setAttribute("tabindex","0");
+    card.setAttribute("aria-expanded","false");
+    const toggle=()=>{
+      const expanded=card.classList.toggle("is-expanded");
+      shelfCards.filter(other=>other!==card).forEach(other=>{
+        other.classList.remove("is-expanded");
+        other.setAttribute("aria-expanded","false");
+      });
+      card.setAttribute("aria-expanded",String(expanded));
+    };
+    card.addEventListener("click",event=>{
+      if(event.target.closest(shelfInteractive)) return;
+      toggle();
+    });
+    card.addEventListener("keydown",event=>{
+      if(event.key==="Enter"||event.key===" "){
+        event.preventDefault();
+        toggle();
+      }
+    });
+  });
 
   const dailyReflectionSave=$("#daily-reflection-save");
   const homeMeditationDone=$("#home-meditation-done");
