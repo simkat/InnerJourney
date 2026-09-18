@@ -5560,7 +5560,12 @@ const BELIEF_PATTERNS=[
   {id:"belonging",name:"Belonging requires shrinking",hint:"The shape-shifter",match:/people|like me|disappoint|too much|burden|fit in|approval|alone/i,newBelief:"I belong most deeply where I can be honest. My real shape is not a problem to solve.",practice:"Let one sentence today be slightly more true than convenient."},
   {id:"scarcity",name:"There is never enough",hint:"The scarcity alarm",match:/never|always|enough|late|miss|lose|time|money|chance/i,newBelief:"This moment may be limited, but it is not empty. I can notice what is here and choose from there.",practice:"Name three resources already present: time, care, skill, breath, support, or choice."},
   {id:"lovability",name:"Love must be performed for",hint:"The devoted achiever",match:/love|lovable|deserve|useful|need me|alone|rejected/i,newBelief:"Love is not a wage for usefulness. I can receive care without first exhausting myself.",practice:"Receive one small kindness without deflecting it. A simple “thank you” is enough."},
-  {id:"separation",name:"I am carrying this alone",hint:"The lone traveller",match:/alone|nobody|myself|only me|no one|isolated/i,newBelief:"I can be with myself and still be connected. Support can begin with one honest reach outward.",practice:"Send one unpolished message: “I’m having a tender day. Could we connect soon?”"}
+  {id:"separation",name:"I am carrying this alone",hint:"The lone traveller",match:/alone|nobody|myself|only me|no one|isolated/i,newBelief:"I can be with myself and still be connected. Support can begin with one honest reach outward.",practice:"Send one unpolished message: “I’m having a tender day. Could we connect soon?”"},
+  {id:"responsibility",name:"Everything rests on me",hint:"The over-responsible one",match:/my fault|responsible|fix|everyone|depend|hold it together/i,newBelief:"I can care deeply without carrying every outcome. Other people and life have their own weight to hold.",practice:"Before stepping in, ask: “Is this truly mine to carry?”"},
+  {id:"conflict",name:"Conflict means rupture",hint:"The peacekeeper",match:/conflict|argue|angry|upset|fight|tension/i,newBelief:"Disagreement can be a place of honesty, not abandonment. I can stay connected while holding my truth.",practice:"Practise one calm boundary: “I see it differently, and I still care about us.”"},
+  {id:"productivity",name:"Rest must be justified",hint:"The relentless doer",match:/productive|rest|busy|work|waste|doing|achieve/i,newBelief:"Rest is part of a living rhythm, not a reward for depletion. I am still valuable when I pause.",practice:"Take a ten-minute pause without turning it into preparation for more work."},
+  {id:"trust",name:"I must do it all myself",hint:"The self-reliant protector",match:/myself|help|trust|rely|need anyone/i,newBelief:"Self-reliance and support can live together. Letting someone in is a form of strength.",practice:"Ask for one small, specific thing instead of silently managing it alone."},
+  {id:"visibility",name:"Being seen is risky",hint:"The hidden self",match:/seen|notice|attention|invisible|hide|exposed/i,newBelief:"I can choose safe, gradual visibility. Being known by the right people does not erase my safety.",practice:"Allow one small preference, idea, or feeling to be visible today."}
 ];
 function loadBeliefMirror(){
   try{const all=JSON.parse(safeGet(LS_BELIEF_MIRROR)||"{}");return all[me]&&all[me][today()]||{thought:"",selected:""};}catch(e){return {thought:"",selected:""};}
@@ -5579,7 +5584,8 @@ function saveBeliefMirror(record){
 function suggestBeliefs(thought){
   const ranked=BELIEF_PATTERNS.map((pattern,index)=>({pattern,score:(thought.match(new RegExp(pattern.match.source,"ig"))||[]).length,index})).sort((a,b)=>b.score-a.score||a.index-b.index);
   const relevant=ranked.filter(item=>item.score>0).map(item=>item.pattern);
-  return (relevant.length?relevant:ranked.map(item=>item.pattern)).slice(0,4);
+  const ordered=[...relevant,...ranked.map(item=>item.pattern)].filter((pattern,index,list)=>list.indexOf(pattern)===index);
+  return ordered.slice(0,6);
 }
 function renderBeliefMirror(){
   const wrap=$("#belief-lab");if(!wrap)return;
