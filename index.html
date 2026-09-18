@@ -816,8 +816,9 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 .belief-cap{display:flex;align-items:center;gap:9px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#c7b8f5}.belief-cap i{width:8px;height:8px;border-radius:50%;background:var(--lotus);box-shadow:0 0 14px var(--lotus)}
 .belief-head{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin:10px 0 17px}.belief-title{font-family:'Spectral',serif;font-size:29px;font-weight:500;line-height:1.13;color:var(--mist);margin:0}.belief-sub{color:var(--dim);font-size:13px;line-height:1.6;max-width:50ch;margin:7px 0 0}.belief-date{color:var(--faint);font-size:11px;white-space:nowrap;padding-top:7px}
 .belief-input{min-height:76px;background:rgba(10,13,30,.32);border-color:rgba(184,160,255,.3);font-family:'Spectral',serif;font-size:17px;line-height:1.55}.belief-input::placeholder{color:#8582a4}.belief-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:11px}.belief-actions .btn{border-color:rgba(184,160,255,.6);background:rgba(184,160,255,.14);color:#e3dcff}.belief-actions .btn:hover{background:rgba(184,160,255,.25)}.belief-hint{font-size:11.5px;color:var(--faint)}
-.belief-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:19px}.belief-option{appearance:none;width:100%;padding:13px;text-align:left;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.025);color:var(--mist);font:inherit;cursor:pointer;transition:transform .2s ease,border-color .2s ease,background .2s ease}.belief-option:hover{transform:translateY(-2px);border-color:rgba(230,178,90,.55);background:rgba(230,178,90,.09)}.belief-option.selected{border-color:var(--dawn-line);background:rgba(230,178,90,.12)}.belief-option strong{display:block;font-family:'Spectral',serif;font-weight:500;font-size:16px;color:#f2dba8}.belief-option span{display:block;margin-top:4px;font-size:11.5px;color:var(--dim);line-height:1.45}.belief-option em{display:block;margin-top:8px;font-size:10px;font-style:normal;letter-spacing:.12em;text-transform:uppercase;color:var(--dawn)}
+.belief-options-label{margin-top:18px;color:var(--faint);font-size:10px;letter-spacing:.15em;text-transform:uppercase}.belief-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:8px}.belief-option{appearance:none;width:100%;padding:13px;text-align:left;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.025);color:var(--mist);font:inherit;cursor:pointer;transition:transform .2s ease,border-color .2s ease,background .2s ease}.belief-option:hover{transform:translateY(-2px);border-color:rgba(230,178,90,.55);background:rgba(230,178,90,.09)}.belief-option.selected{border-color:var(--dawn-line);background:rgba(230,178,90,.12)}.belief-option strong{display:block;font-family:'Spectral',serif;font-weight:500;font-size:16px;color:#f2dba8}.belief-option span{display:block;margin-top:4px;font-size:11.5px;color:var(--dim);line-height:1.45}.belief-option em{display:block;margin-top:8px;font-size:10px;font-style:normal;letter-spacing:.12em;text-transform:uppercase;color:var(--dawn)}
 .belief-back .belief-cap{color:var(--leaf)}.belief-back .belief-cap i{background:var(--leaf);box-shadow:0 0 14px var(--leaf)}.belief-then{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin:22px 0 6px}.belief-old{font-family:'Spectral',serif;font-size:20px;font-style:italic;line-height:1.45;color:#d8b4c1;max-width:70ch}.belief-arrow{display:flex;align-items:center;gap:10px;margin:17px 0;color:var(--leaf);font-size:12px}.belief-arrow::before{content:"";height:1px;width:55px;background:linear-gradient(90deg,var(--lotus),var(--leaf))}.belief-new{padding:18px 20px;border:1px solid rgba(131,184,160,.42);border-radius:15px;background:rgba(131,184,160,.09);font-family:'Spectral',serif;font-size:24px;line-height:1.35;color:#d4f0e4;max-width:42ch}.belief-practice{margin-top:17px;color:var(--dim);font-size:13px;line-height:1.6;max-width:68ch}.belief-practice b{color:var(--dawn);font-size:10px;letter-spacing:.14em;text-transform:uppercase}.belief-back-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:20px}.belief-status{color:var(--leaf);font-size:12px}
+.belief-patterns{margin-top:17px;padding-top:14px;border-top:1px solid var(--line)}.belief-patterns-head{display:flex;justify-content:space-between;gap:10px;color:var(--faint);font-size:10px;letter-spacing:.14em;text-transform:uppercase}.belief-patterns-empty{margin-top:8px;color:var(--dim);font-size:12px}.belief-pattern-row{display:grid;grid-template-columns:minmax(130px,180px) 1fr auto;gap:9px;align-items:center;margin-top:8px;font-size:12px}.belief-pattern-row strong{font-family:'Spectral',serif;font-size:14px;font-weight:500;color:#e7d9f4}.belief-pattern-bar{height:6px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}.belief-pattern-bar span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--lotus),var(--dawn))}.belief-pattern-count{color:var(--dawn);font-size:11px}@media(max-width:550px){.belief-pattern-row{grid-template-columns:1fr auto}.belief-pattern-bar{grid-column:1/-1;grid-row:2}}
 @media(max-width:650px){.belief-face{padding:20px}.belief-head{display:block}.belief-date{padding-top:8px}.belief-title{font-size:25px}.belief-options{grid-template-columns:1fr}.belief-lab,.belief-lab-inner,.belief-face{min-height:570px}.belief-new{font-size:21px}}
 
 
@@ -5564,6 +5565,13 @@ const BELIEF_PATTERNS=[
 function loadBeliefMirror(){
   try{const all=JSON.parse(safeGet(LS_BELIEF_MIRROR)||"{}");return all[me]&&all[me][today()]||{thought:"",selected:""};}catch(e){return {thought:"",selected:""};}
 }
+function beliefPatternCounts(){
+  try{
+    const all=JSON.parse(safeGet(LS_BELIEF_MIRROR)||"{}"), days=all[me]||{}, counts={};
+    Object.values(days).forEach(record=>{if(record&&record.selected)counts[record.selected]=(counts[record.selected]||0)+1;});
+    return Object.entries(counts).map(([id,count])=>({pattern:BELIEF_PATTERNS.find(item=>item.id===id),count})).filter(item=>item.pattern).sort((a,b)=>b.count-a.count);
+  }catch(e){return [];}
+}
 function saveBeliefMirror(record){
   let all={};try{all=JSON.parse(safeGet(LS_BELIEF_MIRROR)||"{}");}catch(e){}
   all[me]=all[me]||{};all[me][today()]=Object.assign({savedAt:new Date().toISOString()},record);safeSet(LS_BELIEF_MIRROR,JSON.stringify(all));
@@ -5571,11 +5579,12 @@ function saveBeliefMirror(record){
 function suggestBeliefs(thought){
   const ranked=BELIEF_PATTERNS.map((pattern,index)=>({pattern,score:(thought.match(new RegExp(pattern.match.source,"ig"))||[]).length,index})).sort((a,b)=>b.score-a.score||a.index-b.index);
   const relevant=ranked.filter(item=>item.score>0).map(item=>item.pattern);
-  return (relevant.length?relevant:ranked.map(item=>item.pattern)).slice(0,3);
+  return (relevant.length?relevant:ranked.map(item=>item.pattern)).slice(0,4);
 }
 function renderBeliefMirror(){
   const wrap=$("#belief-lab");if(!wrap)return;
-  const record=loadBeliefMirror(), options=suggestBeliefs(record.thought), chosen=BELIEF_PATTERNS.find(pattern=>pattern.id===record.selected)||options[0];
+  const record=loadBeliefMirror(), options=suggestBeliefs(record.thought), chosen=BELIEF_PATTERNS.find(pattern=>pattern.id===record.selected)||options[0], patternCounts=beliefPatternCounts(), peak=patternCounts[0]?patternCounts[0].count:1;
+  const patternSummary=patternCounts.length?`<div class="belief-patterns"><div class="belief-patterns-head"><span>Your recurring belief patterns</span><span>Private summary</span></div>${patternCounts.slice(0,3).map(item=>`<div class="belief-pattern-row"><strong>${esc(item.pattern.name)}</strong><div class="belief-pattern-bar"><span style="width:${Math.round(item.count/peak*100)}%"></span></div><span class="belief-pattern-count">${item.count}×</span></div>`).join("")}</div>`:`<div class="belief-patterns"><div class="belief-patterns-head"><span>Your recurring belief patterns</span><span>Private summary</span></div><div class="belief-patterns-empty">Choose a belief lens over a few days and your recurring patterns will take shape here.</div></div>`;
   // Reset before replacing the faces, then let the new inner panel make the turn.
   // This keeps the choice feeling like a real card flip rather than a content swap.
   wrap.classList.remove("flipped");
@@ -5585,7 +5594,7 @@ function renderBeliefMirror(){
       <div class="belief-head"><div><h2 class="belief-title">What story is quietly steering today?</h2><p class="belief-sub">Write the thought exactly as it arrived. We will offer a few possible underlying beliefs—not labels, just doorways to try on.</p></div><div class="belief-date">${esc(fmtDate(today()))}</div></div>
       <textarea class="belief-input" id="belief-thought" placeholder="For example: “If I slow down, everything will fall apart.”">${esc(record.thought)}</textarea>
       <div class="belief-actions"><button class="btn" id="belief-listen" type="button">Refresh the lenses →</button><span class="belief-hint">Suggestions appear as you write · private on this device.</span></div>
-      <div class="belief-options" id="belief-options">${options.map(pattern=>`<button class="belief-option ${record.selected===pattern.id?"selected":""}" data-belief-choice="${pattern.id}" type="button"><strong>${esc(pattern.name)}</strong><span>${esc(pattern.hint)}</span><em>Try this lens →</em></button>`).join("")}</div>
+      <div class="belief-options-label">Possible belief systems · choose the one that resonates</div><div class="belief-options" id="belief-options">${options.map(pattern=>`<button class="belief-option ${record.selected===pattern.id?"selected":""}" data-belief-choice="${pattern.id}" type="button"><strong>${esc(pattern.name)}</strong><span>${esc(pattern.hint)}</span><em>Choose this lens →</em></button>`).join("")}</div>${patternSummary}
     </div>
     <div class="belief-face belief-back">
       <div class="belief-cap"><i></i>A new way to hold it</div>
@@ -5609,7 +5618,7 @@ function renderBeliefMirror(){
   });
   const refreshLenses=()=>{
     const liveOptions=suggestBeliefs(thought.value);
-    $("#belief-options").innerHTML=liveOptions.map(pattern=>`<button class="belief-option ${record.selected===pattern.id?"selected":""}" data-belief-choice="${pattern.id}" type="button"><strong>${esc(pattern.name)}</strong><span>${esc(pattern.hint)}</span><em>Try this lens →</em></button>`).join("");
+    $("#belief-options").innerHTML=liveOptions.map(pattern=>`<button class="belief-option ${record.selected===pattern.id?"selected":""}" data-belief-choice="${pattern.id}" type="button"><strong>${esc(pattern.name)}</strong><span>${esc(pattern.hint)}</span><em>Choose this lens →</em></button>`).join("");
     bindChoices();
   };
   $("#belief-listen").onclick=()=>{saveBeliefMirror({thought:thought.value.trim(),selected:record.selected});beliefViewBack=false;refreshLenses();};
