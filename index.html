@@ -174,6 +174,7 @@ section.view.active{display:block}
 .potw-meta{font-size:12.5px;color:var(--faint);margin-top:3px}
 .potw-affirmation{margin-top:10px;color:var(--dawn);font-family:'Spectral',serif;font-style:italic;font-size:15px}
 .schedule-card{margin:0 0 16px;padding:11px 15px;border:1px solid var(--dawn-line);border-radius:var(--r);background:var(--dawn-soft)}
+.schedule-card[hidden]{display:none!important}
 .schedule-card h2{font-family:'Spectral',serif;font-size:17px;font-weight:500;margin:0 0 6px}
 .schedule-current{color:var(--dawn);font-size:13px;font-weight:600;text-align:right;white-space:nowrap}
 .schedule-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-top:8px}
@@ -3106,6 +3107,15 @@ const practiceSchedule = [
 function scheduledPracticeFor(dateStr){
   return practiceSchedule.find(item=>item.date===dateStr)||null;
 }
+let practiceSchedulePulse=0;
+function initPracticeSchedulePulse(){
+  if(practiceSchedulePulse) return;
+  const card=$("#practice-schedule-card");if(!card) return;
+  practiceSchedulePulse=setInterval(()=>{
+    card.hidden=!card.hidden;
+    card.setAttribute("aria-hidden",String(card.hidden));
+  },30000);
+}
 function renderPracticeSchedule(){
   const card=$("#practice-schedule-card"), current=$("#schedule-current"), list=$("#schedule-list");
   if(!card||!current||!list) return;
@@ -3133,6 +3143,7 @@ function renderPracticeSchedule(){
       <div class="ws-title">${esc(first.affirmation)}</div>
     </div>`;
   }).join("");
+  initPracticeSchedulePulse();
 }
 function renderDailyPracticeCard(){
   const card=$("#daily-practice-card"); if(!card) return;
@@ -5555,6 +5566,7 @@ function initBegin(){
 const LS_BELIEF_MIRROR="ijs_belief_mirror_v1";
 const LS_BELIEF_REFRAIMES="ijs_belief_reframes_v1";
 let beliefViewBack=false;
+let beliefSuggestionTimer=0;
 const BELIEF_PATTERNS=[
   {id:"worth",name:"Worth must be earned",hint:"The inner scorekeeper",match:/not enough|fail|behind|prove|perfect|worth|should have|lazy|good enough/i,newBelief:"My worth is not on trial. I can grow without making myself a project to fix.",practice:"When the scorekeeper speaks, place a hand on your chest and say: “I am allowed to learn at a human pace.”"},
   {id:"safety",name:"Safety lives in control",hint:"The watchful protector",match:/control|what if|worry|safe|mistake|wrong|plan|certain|anxious/i,newBelief:"I can meet uncertainty one small step at a time. I do not need every answer to be safe in this moment.",practice:"Ask: “What is the next kind, concrete thing?” Then do only that—not the whole imagined future."},
@@ -5605,6 +5617,7 @@ function suggestBeliefs(thought){
 }
 function renderBeliefMirror(){
   const wrap=$("#belief-lab");if(!wrap)return;
+  clearTimeout(beliefSuggestionTimer);
   const record=loadBeliefMirror(), options=suggestBeliefs(record.thought), chosen=BELIEF_PATTERNS.find(pattern=>pattern.id===record.selected)||options[0], patternCounts=beliefPatternCounts(), peak=patternCounts[0]?patternCounts[0].count:1;
   const leadPattern=patternCounts[0]&&patternCounts[0].pattern, savedReframe=loadBeliefReframe(), suggestedReframe=dailyAffirmationFor(leadPattern);
   const reframe=`<div class="belief-reframe"><div class="belief-reframe-label">Your daily new way of thinking</div><div class="belief-reframe-title">${leadPattern?"For “"+esc(leadPattern.name)+"”":"A sentence to carry"}</div><textarea id="belief-daily-reframe" aria-label="Daily affirmation">${esc(savedReframe||suggestedReframe)}</textarea><div class="belief-reframe-foot"><button class="btn" id="belief-reframe-save" type="button">Save my affirmation</button><span id="belief-reframe-status">Say it slowly. Let it become familiar.</span></div></div>`;
@@ -5618,7 +5631,7 @@ function renderBeliefMirror(){
       <div class="belief-head"><div><h2 class="belief-title">What story is quietly steering today?</h2><p class="belief-sub">Write the thought exactly as it arrived. We will offer a few possible underlying beliefs—not labels, just doorways to try on.</p></div><div class="belief-date">${esc(fmtDate(today()))}</div></div>
       <textarea class="belief-input" id="belief-thought" placeholder="For example: “If I slow down, everything will fall apart.”">${esc(record.thought)}</textarea>
       <div class="belief-actions"><button class="btn" id="belief-listen" type="button">Refresh the lenses →</button><span class="belief-hint">Suggestions appear as you write · private on this device.</span></div>
-      <div class="belief-options-label">Possible belief systems · choose the one that resonates</div><div class="belief-options" id="belief-options">${options.map(pattern=>`<button class="belief-option ${record.selected===pattern.id?"selected":""}" data-belief-choice="${pattern.id}" type="button"><strong>${esc(pattern.name)}</strong><span>${esc(pattern.hint)}</span><em>Choose this lens →</em></button>`).join("")}</div>${patternSummary}
+      <div id="belief-suggestions" hidden><div class="belief-options-label">Possible belief systems · choose the one that resonates</div><div class="belief-options" id="belief-options">${options.map(pattern=>`<button class="belief-option ${record.selected===pattern.id?"selected":""}" data-belief-choice="${pattern.id}" type="button"><strong>${esc(pattern.name)}</strong><span>${esc(pattern.hint)}</span><em>Choose this lens →</em></button>`).join("")}</div></div>${patternSummary}
     </div>
     <div class="belief-face belief-back">
       <div class="belief-cap"><i></i>A new way to hold it</div>
@@ -5645,8 +5658,13 @@ function renderBeliefMirror(){
     $("#belief-options").innerHTML=liveOptions.map(pattern=>`<button class="belief-option ${record.selected===pattern.id?"selected":""}" data-belief-choice="${pattern.id}" type="button"><strong>${esc(pattern.name)}</strong><span>${esc(pattern.hint)}</span><em>Choose this lens →</em></button>`).join("");
     bindChoices();
   };
-  $("#belief-listen").onclick=()=>{saveBeliefMirror({thought:thought.value.trim(),selected:record.selected});beliefViewBack=false;refreshLenses();};
-  thought.oninput=()=>{saveBeliefMirror({thought:thought.value,selected:record.selected});refreshLenses();};
+  const showSuggestions=()=>{
+    const suggestions=$("#belief-suggestions");if(!thought.value.trim()){suggestions.hidden=true;return;}
+    suggestions.hidden=false;clearTimeout(beliefSuggestionTimer);
+    beliefSuggestionTimer=setTimeout(()=>{if(suggestions)suggestions.hidden=true;},60000);
+  };
+  $("#belief-listen").onclick=()=>{saveBeliefMirror({thought:thought.value.trim(),selected:record.selected});beliefViewBack=false;refreshLenses();showSuggestions();};
+  thought.oninput=()=>{saveBeliefMirror({thought:thought.value,selected:record.selected});refreshLenses();showSuggestions();};
   bindChoices();
   const reframeInput=$("#belief-daily-reframe"), reframeSave=$("#belief-reframe-save");
   if(reframeSave)reframeSave.onclick=()=>{saveBeliefReframe(reframeInput.value.trim());const status=$("#belief-reframe-status");if(status)status.textContent="Your daily affirmation is saved privately ✓";};
