@@ -749,13 +749,13 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 /* Today is a landing page; the full library remains in its tabs. */
 #view-today .strip,#view-today .curr-track,#view-today .card-lesson,#view-today .card-med,
 #view-today .rail-six,#view-today .rail-virtue{display:none}
-#view-today #today-full{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;align-items:start}
+#view-today #today-full{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start}
 #view-today .orient{grid-column:1 / -1}
 #view-today .schedule-card{display:block;grid-column:1 / -1;grid-row:2}
-#view-today .challenge-card{grid-column:1 / -1;grid-row:3}
-#view-today .home-meditation{grid-column:1;grid-row:4}
+#view-today .challenge-card{grid-column:1;grid-row:3}
+#view-today .home-meditation{grid-column:1 / -1;grid-row:4}
 #view-today .home-meditation.challenge-hidden{display:none}
-#view-today .triptych{display:block;grid-column:2 / -1;grid-row:4;margin:0}
+#view-today .triptych{display:block;grid-column:2;grid-row:3;margin:0}
 #view-today .triptych .centre{width:100%}
 #view-today .daily-ritual{grid-column:1 / -1;grid-row:5}
 #view-today .centre{max-width:none;margin:0}
@@ -770,8 +770,6 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 }
 @media(max-width:1100px) and (min-width:851px){
   #view-today #today-full{grid-template-columns:repeat(2,minmax(0,1fr))}
-  #view-today .triptych{grid-column:1 / -1;grid-row:5;margin-top:0}
-  #view-today .daily-ritual{grid-row:6}
 }
 
 
