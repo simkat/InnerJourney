@@ -124,7 +124,8 @@
 
         <label class="check"><input id="metadata" type="checkbox" checked> Embed title and thumbnail metadata</label>
         <div class="actions">
-          <button id="copy" type="button">Copy command</button>
+          <button id="download" type="button">Download audio</button>
+          <button id="copy" class="secondary" type="button">Copy command</button>
           <button id="reset" class="secondary" type="button">Reset</button>
         </div>
       </section>
@@ -176,9 +177,15 @@
       }
     }
 
+    async function downloadAudio() {
+      await copyCommand();
+      status.textContent = 'Command copied. Paste it into Terminal or PowerShell to start the download.';
+    }
+
     [url, format, quality, filename, metadata].forEach(input => input.addEventListener('input', buildCommand));
     [format, quality, metadata].forEach(input => input.addEventListener('change', buildCommand));
     document.querySelector('#copy').addEventListener('click', copyCommand);
+    document.querySelector('#download').addEventListener('click', downloadAudio);
     document.querySelector('#copy-alt').addEventListener('click', copyCommand);
     document.querySelector('#reset').addEventListener('click', () => {
       url.value = '';
