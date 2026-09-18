@@ -768,12 +768,11 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 #view-today .orient{grid-column:1 / -1}
 #view-today .schedule-card{display:block;grid-column:1 / -1;grid-row:2}
 #view-today .challenge-card{grid-column:1;grid-row:3}
-#view-today .daily-practice-card{grid-column:1;grid-row:4}
-#view-today .home-meditation{grid-column:1 / -1;grid-row:5}
+#view-today .home-meditation{grid-column:1 / -1;grid-row:4}
 #view-today .home-meditation.challenge-hidden{display:none}
 #view-today .triptych{display:block;grid-column:2;grid-row:3 / span 2;margin:0}
 #view-today .triptych .centre{width:100%}
-#view-today .daily-ritual{grid-column:1 / -1;grid-row:6}
+#view-today .daily-ritual{grid-column:1 / -1;grid-row:5}
 #view-today .centre{max-width:none;margin:0}
 #view-today .card-week{margin-top:0}
 #view-today .cw-more{display:none!important}
@@ -1567,7 +1566,6 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
       </div>
 
       <section class="challenge-card" id="meditation-challenge-card" aria-label="28 day meditation challenge"></section>
-      <section class="daily-practice-card" id="daily-practice-card" aria-label="Daily practice history"></section>
 
       <section class="home-meditation" aria-labelledby="home-meditation-title">
         <div class="home-meditation-inner">
@@ -5435,7 +5433,7 @@ function initBegin(){
 
 function renderAll(){
   renderStrip(); renderCurriculumTrack(); renderAvatar();
-  renderOrientation(); renderPracticeSchedule(); renderMeditationChallenge(); renderDailyPracticeCard(); renderJourneyProgress(); renderPracticeOfWeek(); renderPracticesTab(); renderSixGrid();
+  renderOrientation(); renderPracticeSchedule(); renderMeditationChallenge(); renderJourneyProgress(); renderPracticeOfWeek(); renderPracticesTab(); renderSixGrid();
   renderRails(); renderTechnique(); renderHomeMeditation(); renderAttitudes();
   renderLessonCard(); renderJourney();
   renderYearView(); renderReflectionSearch();
