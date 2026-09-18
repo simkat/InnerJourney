@@ -648,7 +648,8 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 .challenge-meta{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--dim);margin-bottom:12px}
 .challenge-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
 .challenge-day{appearance:none;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.02);padding:9px 8px;display:flex;flex-direction:column;gap:4px;align-items:flex-start;cursor:pointer;transition:transform .15s,border-color .15s,background .15s,box-shadow .15s;color:var(--dim)}
-.challenge-day input{width:auto;margin:0 0 2px;accent-color:var(--leaf);cursor:pointer}
+.challenge-day input{width:auto;margin:0 0 2px;accent-color:var(--leaf);cursor:pointer;opacity:0;transition:opacity .16s}
+.challenge-day:hover input,.challenge-day:focus-within input{opacity:1}
 .challenge-day.future{opacity:.48;cursor:not-allowed}
 .challenge-day:hover{transform:translateY(-1px);border-color:var(--dawn-line);background:var(--dawn-soft)}
 .challenge-day.current{border-color:rgba(230,178,90,.7);box-shadow:0 0 0 1px rgba(230,178,90,.25)}
