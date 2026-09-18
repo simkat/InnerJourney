@@ -642,6 +642,15 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 .ritual-reopen{margin-top:17px;padding:0;border:0;background:none;color:var(--faint);font:inherit;font-size:12px;cursor:pointer}
 .ritual-reopen:hover{color:var(--dawn)}
 .challenge-card{margin:20px 0;padding:20px;border:1px solid rgba(230,178,90,.32);border-radius:20px;background:linear-gradient(135deg,rgba(230,178,90,.08),rgba(184,160,255,.06));box-shadow:0 18px 42px rgba(0,0,0,.08)}
+.challenge-card{perspective:1200px;overflow:hidden}
+.challenge-card-inner{position:relative;min-height:250px;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.2,.75,.25,1)}
+.challenge-card.flipped .challenge-card-inner{transform:rotateY(180deg)}
+.challenge-face{backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.challenge-front{position:relative;z-index:1}
+.challenge-back{position:absolute;inset:0;transform:rotateY(180deg);overflow:auto;padding:20px;background:var(--panel);z-index:2}
+.challenge-back h3{font-family:'Spectral',serif;font-size:20px;font-weight:500;margin:0 0 4px}
+.challenge-back .sub{font-size:12px;color:var(--dim);margin:0 0 11px}
+.challenge-back textarea{min-height:52px}
 .daily-practice-card{margin:20px 0;padding:16px;border:1px solid rgba(131,184,160,.35);border-radius:20px;background:linear-gradient(135deg,rgba(131,184,160,.08),rgba(230,178,90,.05))}
 .daily-practice-weeks{display:grid;gap:8px;margin-top:12px}
 .daily-practice-week{padding:10px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.02)}
@@ -3094,7 +3103,7 @@ function renderMeditationChallenge(){
     const p=journeyChallengeProgress(item,journey);
     return `<div class="journey-step ${index<activeJourney?"done":(index===activeJourney?"active":"")}"><div class="j-title">${index<activeJourney?"✓ ":""}${esc(item.label)}</div><div class="j-count">${esc(p.label)}</div></div>`;
   }).join("");
-  wrap.innerHTML=`<div class="challenge-head">
+  wrap.innerHTML=`<div class="challenge-card-inner"><div class="challenge-face challenge-front"><div class="challenge-head">
     <div>
       <div class="challenge-kicker">28-day meditation</div>
       <h2>Daily practice challenge</h2>
@@ -3118,7 +3127,43 @@ function renderMeditationChallenge(){
       <span class="challenge-day-number">${day.day}</span>
       <span class="challenge-day-date">${esc(day.short)}</span>
     </label>`;
-  }).join("")}</div>`;
+  }).join("")}</div>
+  <button class="ritual-flip challenge-reflect-open" type="button">Record challenge experience ↗</button>
+  </div><div class="challenge-face challenge-back">
+    <button class="ritual-flip challenge-reflect-close" type="button">Back to challenge ↩</button>
+    <h3>Record challenge experience</h3>
+    <p class="sub">A few honest words help you notice how the practice is changing you.</p>
+    <div class="field"><label for="challenge-experience">What did you notice?</label>
+      <div class="med-hints" data-target="challenge-experience"><button type="button">More settled</button><button type="button">Scattered at first</button><button type="button">A moment of stillness</button></div>
+      <textarea id="challenge-experience" placeholder="A sensation, thought, feeling, or moment…"></textarea>
+    </div>
+    <div class="field"><label for="challenge-helped">What helped you return?</label>
+      <div class="med-hints" data-target="challenge-helped"><button type="button">The breath</button><button type="button">The mantra</button><button type="button">A gentle return</button></div>
+      <textarea id="challenge-helped" placeholder="What supported your attention?"></textarea>
+    </div>
+    <div class="daily-reflection-actions"><button class="btn" id="challenge-record-save" type="button">Save challenge experience</button><span class="reflection-state" id="challenge-record-msg">Your draft saves as you type.</span></div>
+  </div></div>`;
+  const reflection=state.entries.filter(e=>e.person===me&&e.kind==="challenge-reflection"&&e.date===today()).slice(-1)[0];
+  const experience=$("#challenge-experience"), helped=$("#challenge-helped");
+  if(experience) experience.value=reflection?reflection.medExperience||"":"";
+  if(helped) helped.value=reflection?reflection.medHelped||"":"";
+  const open=wrap.querySelector(".challenge-reflect-open"), close=wrap.querySelector(".challenge-reflect-close");
+  if(open) open.onclick=()=>wrap.classList.add("flipped");
+  if(close) close.onclick=()=>wrap.classList.remove("flipped");
+  wrap.querySelectorAll(".challenge-back .med-hints button").forEach(button=>button.onclick=()=>{
+    const target=$("#"+button.parentElement.dataset.target); if(!target) return;
+    target.value=target.value.trim()?target.value.trim()+" "+button.textContent.toLowerCase()+". ":button.textContent+". ";
+    target.focus();
+  });
+  const save=wrap.querySelector("#challenge-record-save");
+  if(save) save.onclick=async()=>{
+    const medExperience=experience?experience.value.trim():"", medHelped=helped?helped.value.trim():"";
+    if(!medExperience&&!medHelped){toast("Add one honest line before saving.");return;}
+    const existing=state.entries.find(e=>e.person===me&&e.kind==="challenge-reflection"&&e.date===today());
+    if(existing) await updateEntry(existing.id,{medExperience,medHelped,text:medExperience});
+    else await addEntry({kind:"challenge-reflection",date:today(),medExperience,medHelped,text:medExperience});
+    const msg=$("#challenge-record-msg"); if(msg){msg.textContent="Saved for today ✓";msg.className="okmsg";}
+  };
   const startInput=$("#challenge-start-date");
   if(startInput) startInput.onchange=()=>{
     if(!startInput.value) return;
