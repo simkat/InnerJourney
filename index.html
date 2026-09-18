@@ -4290,9 +4290,9 @@ function renderPracticeOfWeek(){
       const date=isoDate(addDays(new Date(b.start+"T12:00:00"),a.n-1));
       const log=practiceLogFor(p.practiceId,date);
       const done=!!(log&&log.practised), future=date>today();
-      return `<label class="potw-day-check${done?" done":""}${future?" future":""}">
-        <input type="checkbox" data-practice-date="${date}" ${done?"checked":""} ${future?"disabled":""}>
-        <span>${a.n}</span>
+      return `<label class="potw-day-check${done?" done":""}${future?" future":""}" title="Are you reining your mind back?">
+        <input type="checkbox" data-practice-date="${date}" aria-label="Day ${a.n}: Are you reining your mind back?" ${done?"checked":""} ${future?"disabled":""}>
+        <span>Day ${a.n} · Are you reining your mind back?</span>
       </label>`;
     }).join("");
     dailyChecks.querySelectorAll("[data-practice-date]").forEach(cb=>cb.onchange=async()=>{
