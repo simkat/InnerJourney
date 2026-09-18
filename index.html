@@ -52,6 +52,9 @@ header.top{position:relative;display:flex;flex-wrap:wrap;gap:14px;align-items:fl
 .brand p{margin:3px 0 0;color:var(--dim);font-size:13px}
 .who{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .who label{color:var(--faint);font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+.person-tabs{display:inline-flex;gap:3px;padding:3px;border:1px solid var(--line);border-radius:999px;background:rgba(0,0,0,.15)}
+.person-tab{border:0;border-radius:999px;padding:7px 12px;background:transparent;color:var(--dim);font:inherit;font-size:12px;cursor:pointer;transition:background .2s,color .2s,box-shadow .2s}
+.person-tab:hover{color:var(--mist)}.person-tab.active{background:linear-gradient(135deg,rgba(230,178,90,.24),rgba(217,138,166,.18));color:var(--mist);box-shadow:0 1px 8px rgba(0,0,0,.24)}
 select,input,textarea{
   background:var(--panel);color:var(--mist);border:1px solid var(--line2);
   border-radius:10px;padding:9px 11px;font:inherit;font-size:14px;outline:none;width:100%;
@@ -63,6 +66,12 @@ textarea{resize:vertical;min-height:70px}
 .banner{margin:14px 0 0;padding:10px 13px;border-radius:10px;font-size:13px;display:none}
 .banner.warn{display:block;background:rgba(224,133,127,.12);border:1px solid rgba(224,133,127,.35);color:#f0b8b3}
 .banner.ok{display:block;background:rgba(131,184,160,.12);border:1px solid rgba(131,184,160,.35);color:#bfe3d4}
+
+/* local passcode gate — the practice opens deliberately */
+.site-lock{position:fixed;z-index:9999;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(900px 500px at 50% 0%,#273160 0%,rgba(39,49,96,.18) 58%),var(--night)}
+.site-lock[hidden]{display:none}.lock-card{position:relative;overflow:hidden;width:min(440px,100%);padding:34px 32px 30px;border:1px solid rgba(230,178,90,.38);border-radius:24px;background:linear-gradient(145deg,rgba(32,39,73,.98),rgba(20,25,49,.98));box-shadow:0 30px 90px rgba(0,0,0,.42)}
+.lock-card::before{content:"";position:absolute;width:260px;height:260px;right:-120px;top:-155px;border:1px solid rgba(230,178,90,.2);border-radius:50%;box-shadow:0 0 0 22px rgba(230,178,90,.035)}
+.lock-mark{position:relative;font-size:30px;margin-bottom:14px}.lock-card h1{position:relative;font-family:'Spectral',serif;font-size:30px;font-weight:500;margin:0;color:var(--mist)}.lock-card p{position:relative;margin:8px 0 21px;color:var(--dim);font-size:14px;line-height:1.6}.lock-card label{position:relative;display:block;margin:12px 0 6px;color:var(--faint);font-size:10px;letter-spacing:.14em;text-transform:uppercase}.lock-card input{position:relative;background:rgba(9,12,28,.45);font-size:18px;letter-spacing:.16em}.lock-actions{position:relative;display:flex;align-items:center;gap:12px;margin-top:16px}.lock-error{position:relative;min-height:18px;margin-top:11px;color:#efb1ac;font-size:12px}.lock-note{position:relative;margin-top:18px!important;padding-top:13px;border-top:1px solid var(--line);color:var(--faint)!important;font-size:11px!important}
 
 /* streak strip */
 .strip{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 4px}
@@ -1485,6 +1494,20 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
 </style>
 </head>
 <body class="custom-scrollbar">
+  <section class="site-lock" id="site-lock" aria-labelledby="lock-title">
+    <div class="lock-card">
+      <div class="lock-mark">◌</div>
+      <h1 id="lock-title">A private inner space</h1>
+      <p id="lock-copy">Enter your passcode to open Inner Journey.</p>
+      <label for="lock-passcode" id="lock-passcode-label">Passcode</label>
+      <input id="lock-passcode" type="password" inputmode="numeric" autocomplete="current-password" aria-describedby="lock-error" />
+      <label for="lock-confirm" id="lock-confirm-label" hidden>Confirm passcode</label>
+      <input id="lock-confirm" type="password" inputmode="numeric" autocomplete="new-password" hidden />
+      <div class="lock-actions"><button class="btn" id="lock-submit" type="button">Open Inner Journey</button></div>
+      <div class="lock-error" id="lock-error" role="alert"></div>
+      <p class="lock-note">Your passcode stays on this device. It protects this local app, not a synced account.</p>
+    </div>
+  </section>
 <!-- quiet mode: everything falls away but the sit -->
 <div class="quiet" id="quiet" aria-hidden="true">
   <aside class="q-rail q-rail-left" aria-label="The three sacred attitudes">
@@ -1547,8 +1570,8 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
         <div class="avatar" id="avatar-circle">S</div>
         <span class="stage-badge" id="stage-badge">Stage 1</span>
       </div>
-      <label for="person-select">Practising as</label>
-      <select id="person-select" aria-label="Choose practitioner"></select>
+      <span class="sr-only">Practising as</span>
+      <div class="person-tabs" id="person-tabs" role="tablist" aria-label="Choose practitioner"></div>
       <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false">Sun theme</button>
     </div>
   </header>
@@ -2497,6 +2520,7 @@ const LS_THEME="ijs_theme_v1";
 const LS_MEDITATION_CHALLENGE="ijs_meditation_challenge_v1";
 const LS_JOURNEY="ijs_journey_v1";
 const LS_PERSON="ijs_person_v1";
+const LS_PASSCODE_HASH="ijs_passcode_hash_v1";
 let state={ entries:[] };
 let me="Smriti";
 let people=[];
@@ -2524,18 +2548,25 @@ function initTheme(){
 
 function loadLocal(){
   try{ state.entries = JSON.parse(safeGet(LS_KEY)||"[]"); }catch(e){ state.entries=[]; }
-  try{ people = JSON.parse(safeGet(LS_PEOPLE)||"null") || ["Smriti","Sim"]; }catch(e){ people=["Smriti","Sim"]; }
+  // The original profile name was Sim. Preserve every record, but present it as Shruti.
+  state.entries.forEach(entry=>{if(entry.person==="Sim")entry.person="Shruti";});
+  try{ people = JSON.parse(safeGet(LS_PEOPLE)||"null") || ["Smriti","Shruti"]; }catch(e){ people=["Smriti","Shruti"]; }
+  people=people.map(person=>person==="Sim"?"Shruti":person).filter((person,index,list)=>list.indexOf(person)===index);
   if(!people.includes("Smriti")) people.unshift("Smriti");
-  if(!people.includes("Sim")) people.push("Sim");
+  if(!people.includes("Shruti")) people.push("Shruti");
   savePeople();
-  me = people.includes(safeGet(LS_PERSON)) ? safeGet(LS_PERSON) : "Smriti";
+  const savedPerson=safeGet(LS_PERSON)==="Sim"?"Shruti":safeGet(LS_PERSON);
+  me = people.includes(savedPerson) ? savedPerson : "Smriti";
+  saveLocal();
 }
 function saveLocal(){ safeSet(LS_KEY, JSON.stringify(state.entries)); }
 function savePeople(){ safeSet(LS_PEOPLE, JSON.stringify(people)); }
 function renderPersonSelect(){
-  const select=$("#person-select"); if(!select) return;
-  select.innerHTML=people.map(person=>`<option value="${esc(person)}">${esc(person)}</option>`).join("");
-  select.value=me;
+  const tabs=$("#person-tabs"); if(!tabs) return;
+  tabs.innerHTML=people.map(person=>`<button class="person-tab ${person===me?"active":""}" type="button" role="tab" aria-selected="${person===me}" data-person="${esc(person)}">${esc(person)}</button>`).join("");
+  tabs.querySelectorAll("[data-person]").forEach(tab=>tab.onclick=()=>{
+    me=tab.dataset.person; safeSet(LS_PERSON,me); beliefViewBack=false; renderPersonSelect(); renderAll();
+  });
 }
 
 /* ==================== 4) SYNC (Apps Script) ==================== */
@@ -2582,6 +2613,7 @@ function normalizeRow(row){
   const o={};
   ["id","createdAt","person","kind","date","phase","lessonTitle","lessonUrl","formalDone","minutes","rating","daytimeText","daytimeUrl","reflection","text","status","virtueKey","virtueName","practiceId","weekNumber","dayNumber","engaged","practised","divineFocus","helped","pulled","medExperience","medHelped"]
     .forEach(k=>o[k]=row[k]!==undefined?row[k]:"");
+  if(o.person==="Sim") o.person="Shruti";
   // booleans arrive from Sheets as strings
   o.engaged=(o.engaged===true||o.engaged==="true"||o.engaged==="TRUE");
   o.practised=(o.practised===true||o.practised==="true"||o.practised==="TRUE");
@@ -5562,12 +5594,6 @@ function renderAll(){
 
 /* ==================== 7) EVENTS ==================== */
 function initEvents(){
-  const personSelect=$("#person-select");
-  if(personSelect) personSelect.onchange=()=>{
-    me=personSelect.value;
-    safeSet(LS_PERSON,me);
-    renderAll();
-  };
   $$(".tab").forEach(t=>t.onclick=()=>{
     $$(".tab").forEach(x=>x.classList.remove("active")); t.classList.add("active");
     $$(".view").forEach(v=>v.classList.remove("active"));
@@ -5776,7 +5802,36 @@ function toCSV(rows){
 }
 
 /* ==================== 8) BOOT ==================== */
-function boot(){
+async function hashPasscode(value){
+  const bytes=new TextEncoder().encode(value);
+  const digest=await crypto.subtle.digest("SHA-256",bytes);
+  return Array.from(new Uint8Array(digest)).map(byte=>byte.toString(16).padStart(2,"0")).join("");
+}
+function initPasscodeGate(){
+  const gate=$("#site-lock"), pass=$("#lock-passcode"), confirm=$("#lock-confirm"), confirmLabel=$("#lock-confirm-label"), copy=$("#lock-copy"), submit=$("#lock-submit"), error=$("#lock-error");
+  const stored=safeGet(LS_PASSCODE_HASH), creating=!stored;
+  if(creating){
+    copy.textContent="Create a passcode for this device before entering your private practice space.";
+    pass.autocomplete="new-password"; pass.placeholder="Choose at least 4 characters";
+    confirm.hidden=false; confirmLabel.hidden=false; submit.textContent="Create passcode & open";
+  }
+  const open=async()=>{
+    const value=pass.value;
+    error.textContent="";
+    if(value.length<4){error.textContent="Use at least 4 characters for your passcode.";pass.focus();return;}
+    if(creating){
+      if(value!==confirm.value){error.textContent="Those passcodes do not match.";confirm.focus();return;}
+      safeSet(LS_PASSCODE_HASH,await hashPasscode(value));
+    }else if(await hashPasscode(value)!==stored){
+      error.textContent="That passcode does not match. Try again.";pass.value="";pass.focus();return;
+    }
+    gate.hidden=true; bootApp();
+  };
+  submit.onclick=open;
+  [pass,confirm].forEach(input=>input.onkeydown=event=>{if(event.key==="Enter")open();});
+  pass.focus();
+}
+function bootApp(){
   initTheme();
   loadLocal();
   renderPersonSelect();
@@ -5790,7 +5845,7 @@ function boot(){
     ? "Live store: your shared Google Sheet. Backups here are extra copies of this device's cache."
     : "No sync configured yet — everything is on this device only until you set CONFIG.ENDPOINT.";
 }
-boot();
+initPasscodeGate();
 
 /* install as an app + work offline */
 if("serviceWorker" in navigator && location.protocol.startsWith("http")){
