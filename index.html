@@ -776,12 +776,13 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 #view-today #today-full{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start}
 #view-today .orient{grid-column:1 / -1}
 #view-today .schedule-card{display:block;grid-column:1 / -1;grid-row:2}
-#view-today .challenge-card{grid-column:1;grid-row:3}
-#view-today .home-meditation{grid-column:1 / -1;grid-row:4}
+#view-today .belief-lab{grid-column:1 / -1;grid-row:3}
+#view-today .challenge-card{grid-column:1;grid-row:4}
+#view-today .home-meditation{grid-column:1 / -1;grid-row:5}
 #view-today .home-meditation.challenge-hidden{display:none}
-#view-today .triptych{display:block;grid-column:2;grid-row:3 / span 2;margin:0}
+#view-today .triptych{display:block;grid-column:2;grid-row:4 / span 2;margin:0}
 #view-today .triptych .centre{width:100%}
-#view-today .daily-ritual{grid-column:1 / -1;grid-row:5}
+#view-today .daily-ritual{grid-column:1 / -1;grid-row:6}
 #view-today .centre{max-width:none;margin:0}
 #view-today .card-week{margin-top:0}
 #view-today .cw-more{display:none!important}
@@ -795,6 +796,20 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 @media(max-width:1100px) and (min-width:851px){
   #view-today #today-full{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+
+/* ── belief mirror: a daily thought becomes a chosen lens ── */
+.belief-lab{position:relative;overflow:hidden;min-height:430px;perspective:1600px;border:1px solid rgba(184,160,255,.38);border-radius:22px;background:linear-gradient(125deg,rgba(184,160,255,.13),rgba(217,138,166,.08) 48%,rgba(131,184,160,.09));box-shadow:0 22px 62px rgba(0,0,0,.18)}
+.belief-lab::before{content:"";position:absolute;width:460px;height:460px;right:-170px;top:-320px;border:1px solid rgba(230,178,90,.2);border-radius:50%;box-shadow:0 0 0 32px rgba(230,178,90,.025),0 0 0 68px rgba(184,160,255,.025);pointer-events:none}
+.belief-lab-inner{position:relative;min-height:430px;transform-style:preserve-3d;transition:transform .68s cubic-bezier(.22,.8,.22,1)}
+.belief-lab.flipped .belief-lab-inner{transform:rotateY(180deg)}
+.belief-face{width:100%;min-height:430px;padding:25px 28px;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.belief-front{position:relative;z-index:1}.belief-back{position:absolute;inset:0;transform:rotateY(180deg);overflow:auto;background:linear-gradient(135deg,rgba(20,25,49,.96),rgba(30,39,68,.98))}
+.belief-cap{display:flex;align-items:center;gap:9px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#c7b8f5}.belief-cap i{width:8px;height:8px;border-radius:50%;background:var(--lotus);box-shadow:0 0 14px var(--lotus)}
+.belief-head{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin:10px 0 17px}.belief-title{font-family:'Spectral',serif;font-size:29px;font-weight:500;line-height:1.13;color:var(--mist);margin:0}.belief-sub{color:var(--dim);font-size:13px;line-height:1.6;max-width:50ch;margin:7px 0 0}.belief-date{color:var(--faint);font-size:11px;white-space:nowrap;padding-top:7px}
+.belief-input{min-height:76px;background:rgba(10,13,30,.32);border-color:rgba(184,160,255,.3);font-family:'Spectral',serif;font-size:17px;line-height:1.55}.belief-input::placeholder{color:#8582a4}.belief-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:11px}.belief-actions .btn{border-color:rgba(184,160,255,.6);background:rgba(184,160,255,.14);color:#e3dcff}.belief-actions .btn:hover{background:rgba(184,160,255,.25)}.belief-hint{font-size:11.5px;color:var(--faint)}
+.belief-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:19px}.belief-option{appearance:none;width:100%;padding:13px;text-align:left;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.025);color:var(--mist);font:inherit;cursor:pointer;transition:transform .2s ease,border-color .2s ease,background .2s ease}.belief-option:hover{transform:translateY(-2px);border-color:rgba(230,178,90,.55);background:rgba(230,178,90,.09)}.belief-option.selected{border-color:var(--dawn-line);background:rgba(230,178,90,.12)}.belief-option strong{display:block;font-family:'Spectral',serif;font-weight:500;font-size:16px;color:#f2dba8}.belief-option span{display:block;margin-top:4px;font-size:11.5px;color:var(--dim);line-height:1.45}.belief-option em{display:block;margin-top:8px;font-size:10px;font-style:normal;letter-spacing:.12em;text-transform:uppercase;color:var(--dawn)}
+.belief-back .belief-cap{color:var(--leaf)}.belief-back .belief-cap i{background:var(--leaf);box-shadow:0 0 14px var(--leaf)}.belief-then{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin:22px 0 6px}.belief-old{font-family:'Spectral',serif;font-size:20px;font-style:italic;line-height:1.45;color:#d8b4c1;max-width:70ch}.belief-arrow{display:flex;align-items:center;gap:10px;margin:17px 0;color:var(--leaf);font-size:12px}.belief-arrow::before{content:"";height:1px;width:55px;background:linear-gradient(90deg,var(--lotus),var(--leaf))}.belief-new{padding:18px 20px;border:1px solid rgba(131,184,160,.42);border-radius:15px;background:rgba(131,184,160,.09);font-family:'Spectral',serif;font-size:24px;line-height:1.35;color:#d4f0e4;max-width:42ch}.belief-practice{margin-top:17px;color:var(--dim);font-size:13px;line-height:1.6;max-width:68ch}.belief-practice b{color:var(--dawn);font-size:10px;letter-spacing:.14em;text-transform:uppercase}.belief-back-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:20px}.belief-status{color:var(--leaf);font-size:12px}
+@media(max-width:650px){.belief-face{padding:20px}.belief-head{display:block}.belief-date{padding-top:8px}.belief-title{font-size:25px}.belief-options{grid-template-columns:1fr}.belief-lab,.belief-lab-inner,.belief-face{min-height:570px}.belief-new{font-size:21px}}
 
 
 /* ── quiet-mode rails: attitudes left · posture right ── */
@@ -1633,6 +1648,8 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
         </div>
         <div class="schedule-list" id="schedule-list"></div>
       </section>
+
+      <section class="belief-lab" id="belief-lab" aria-label="Daily belief mirror"></section>
 
       <!-- THREE-COLUMN JOURNEY -->
       <div class="triptych">
@@ -5476,9 +5493,64 @@ function initBegin(){
   if(ex){ ex.textContent="I'm done"; ex.onclick=endSit; }
 }
 
+const LS_BELIEF_MIRROR="ijs_belief_mirror_v1";
+let beliefViewBack=false;
+const BELIEF_PATTERNS=[
+  {id:"worth",name:"Worth must be earned",hint:"The inner scorekeeper",match:/not enough|fail|behind|prove|perfect|worth|should have|lazy|good enough/i,newBelief:"My worth is not on trial. I can grow without making myself a project to fix.",practice:"When the scorekeeper speaks, place a hand on your chest and say: “I am allowed to learn at a human pace.”"},
+  {id:"safety",name:"Safety lives in control",hint:"The watchful protector",match:/control|what if|worry|safe|mistake|wrong|plan|certain|anxious/i,newBelief:"I can meet uncertainty one small step at a time. I do not need every answer to be safe in this moment.",practice:"Ask: “What is the next kind, concrete thing?” Then do only that—not the whole imagined future."},
+  {id:"belonging",name:"Belonging requires shrinking",hint:"The shape-shifter",match:/people|like me|disappoint|too much|burden|fit in|approval|alone/i,newBelief:"I belong most deeply where I can be honest. My real shape is not a problem to solve.",practice:"Let one sentence today be slightly more true than convenient."},
+  {id:"scarcity",name:"There is never enough",hint:"The scarcity alarm",match:/never|always|enough|late|miss|lose|time|money|chance/i,newBelief:"This moment may be limited, but it is not empty. I can notice what is here and choose from there.",practice:"Name three resources already present: time, care, skill, breath, support, or choice."},
+  {id:"lovability",name:"Love must be performed for",hint:"The devoted achiever",match:/love|lovable|deserve|useful|need me|alone|rejected/i,newBelief:"Love is not a wage for usefulness. I can receive care without first exhausting myself.",practice:"Receive one small kindness without deflecting it. A simple “thank you” is enough."},
+  {id:"separation",name:"I am carrying this alone",hint:"The lone traveller",match:/alone|nobody|myself|only me|no one|isolated/i,newBelief:"I can be with myself and still be connected. Support can begin with one honest reach outward.",practice:"Send one unpolished message: “I’m having a tender day. Could we connect soon?”"}
+];
+function loadBeliefMirror(){
+  try{const all=JSON.parse(safeGet(LS_BELIEF_MIRROR)||"{}");return all[me]&&all[me][today()]||{thought:"",selected:""};}catch(e){return {thought:"",selected:""};}
+}
+function saveBeliefMirror(record){
+  let all={};try{all=JSON.parse(safeGet(LS_BELIEF_MIRROR)||"{}");}catch(e){}
+  all[me]=all[me]||{};all[me][today()]=Object.assign({savedAt:new Date().toISOString()},record);safeSet(LS_BELIEF_MIRROR,JSON.stringify(all));
+}
+function suggestBeliefs(thought){
+  const ranked=BELIEF_PATTERNS.map((pattern,index)=>({pattern,score:(thought.match(new RegExp(pattern.match.source,"ig"))||[]).length,index})).sort((a,b)=>b.score-a.score||a.index-b.index);
+  const relevant=ranked.filter(item=>item.score>0).map(item=>item.pattern);
+  return (relevant.length?relevant:ranked.map(item=>item.pattern)).slice(0,3);
+}
+function renderBeliefMirror(){
+  const wrap=$("#belief-lab");if(!wrap)return;
+  const record=loadBeliefMirror(), options=suggestBeliefs(record.thought), chosen=BELIEF_PATTERNS.find(pattern=>pattern.id===record.selected)||options[0];
+  // Reset before replacing the faces, then let the new inner panel make the turn.
+  // This keeps the choice feeling like a real card flip rather than a content swap.
+  wrap.classList.remove("flipped");
+  wrap.innerHTML=`<div class="belief-lab-inner">
+    <div class="belief-face belief-front">
+      <div class="belief-cap"><i></i>Daily belief mirror</div>
+      <div class="belief-head"><div><h2 class="belief-title">What story is quietly steering today?</h2><p class="belief-sub">Write the thought exactly as it arrived. We will offer a few possible underlying beliefs—not labels, just doorways to try on.</p></div><div class="belief-date">${esc(fmtDate(today()))}</div></div>
+      <textarea class="belief-input" id="belief-thought" placeholder="For example: “If I slow down, everything will fall apart.”">${esc(record.thought)}</textarea>
+      <div class="belief-actions"><button class="btn" id="belief-listen" type="button">Listen beneath the thought →</button><span class="belief-hint">Your words stay private on this device.</span></div>
+      <div class="belief-options" id="belief-options">${options.map(pattern=>`<button class="belief-option ${record.selected===pattern.id?"selected":""}" data-belief-choice="${pattern.id}" type="button"><strong>${esc(pattern.name)}</strong><span>${esc(pattern.hint)}</span><em>Try this lens →</em></button>`).join("")}</div>
+    </div>
+    <div class="belief-face belief-back">
+      <div class="belief-cap"><i></i>A new way to hold it</div>
+      <div class="belief-then">The old story you noticed</div><div class="belief-old">“${esc(record.thought||"This thought has not been written yet.")}”</div>
+      <div class="belief-arrow">chosen with care, not forced with pressure</div>
+      <div class="belief-then">A belief to practise now</div><div class="belief-new">${esc(chosen.newBelief)}</div>
+      <div class="belief-practice"><b>Try this today</b><br>${esc(chosen.practice)}</div>
+      <div class="belief-back-actions"><button class="ritual-flip" id="belief-back" type="button">↩ Return to the mirror</button><span class="belief-status">Saved as today’s chosen lens ✦</span></div>
+    </div></div>`;
+  const thought=$("#belief-thought");
+  $("#belief-listen").onclick=()=>{saveBeliefMirror({thought:thought.value.trim(),selected:record.selected});beliefViewBack=false;renderBeliefMirror();};
+  thought.oninput=()=>saveBeliefMirror({thought:thought.value,selected:record.selected});
+  wrap.querySelectorAll("[data-belief-choice]").forEach(button=>button.onclick=()=>{
+    const thoughtValue=thought.value.trim();if(!thoughtValue){thought.focus();thought.placeholder="First give the thought a few honest words…";return;}
+    saveBeliefMirror({thought:thoughtValue,selected:button.dataset.beliefChoice});beliefViewBack=true;renderBeliefMirror();
+  });
+  const back=$("#belief-back");if(back)back.onclick=()=>{beliefViewBack=false;renderBeliefMirror();};
+  if(record.selected&&beliefViewBack)requestAnimationFrame(()=>wrap.classList.add("flipped"));
+}
+
 function renderAll(){
   renderStrip(); renderCurriculumTrack(); renderAvatar();
-  renderOrientation(); renderPracticeSchedule(); renderMeditationChallenge(); renderJourneyProgress(); renderPracticeOfWeek(); renderPracticesTab(); renderSixGrid();
+  renderOrientation(); renderPracticeSchedule(); renderBeliefMirror(); renderMeditationChallenge(); renderJourneyProgress(); renderPracticeOfWeek(); renderPracticesTab(); renderSixGrid();
   renderRails(); renderTechnique(); renderHomeMeditation(); renderAttitudes();
   renderLessonCard(); renderJourney();
   renderYearView(); renderReflectionSearch();
