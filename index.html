@@ -702,6 +702,11 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 .week-card-back .daily-reflection h3{margin-top:0}
 .week-card-back .daily-reflection-actions{margin-bottom:2px}
 .week-reflection-toggle{margin-top:13px}
+.potw-daily-checks{display:flex;flex-wrap:wrap;gap:6px;margin:9px 0 2px}
+.potw-day-check{display:inline-flex;align-items:center;gap:4px;padding:4px 7px;border:1px solid var(--line);border-radius:999px;color:var(--faint);font-size:10px}
+.potw-day-check input{width:auto;margin:0;accent-color:var(--leaf)}
+.potw-day-check.done{border-color:rgba(131,184,160,.5);color:var(--leaf);background:rgba(131,184,160,.08)}
+.potw-day-check.future{opacity:.45}
 .home-meditation{grid-column:1;grid-row:3;background:linear-gradient(160deg,rgba(131,184,160,.11),rgba(184,160,255,.07));
   border:1px solid rgba(131,184,160,.35);border-radius:var(--r);padding:20px;min-height:100%}
 .home-meditation .hm-cap{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--leaf)}
@@ -1661,6 +1666,7 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
                   <div class="ft-text" id="pb-invitation"></div>
                 </div>
                 <div class="dotrow" id="potw-week"></div>
+                <div class="potw-daily-checks" id="potw-daily-checks" aria-label="Daily practice checkboxes"></div>
                 <div class="face-explored" id="potw-explored"></div>
                 <div class="cw-act">
                   <label class="pill-check" id="potw-check-wrap">
@@ -4278,6 +4284,25 @@ function renderPracticeOfWeek(){
     if(a.n===dayN) cls+=" now";
     return `<span class="d ${cls}" title="Day ${a.n} — ${a.key}"></span>`;
   }).join("");
+  const dailyChecks=$("#potw-daily-checks");
+  if(dailyChecks){
+    dailyChecks.innerHTML=DAY_ANGLES.map(a=>{
+      const date=isoDate(addDays(new Date(b.start+"T12:00:00"),a.n-1));
+      const log=practiceLogFor(p.practiceId,date);
+      const done=!!(log&&log.practised), future=date>today();
+      return `<label class="potw-day-check${done?" done":""}${future?" future":""}">
+        <input type="checkbox" data-practice-date="${date}" ${done?"checked":""} ${future?"disabled":""}>
+        <span>${a.n}</span>
+      </label>`;
+    }).join("");
+    dailyChecks.querySelectorAll("[data-practice-date]").forEach(cb=>cb.onchange=async()=>{
+      const date=cb.dataset.practiceDate;
+      const dayNumber=DAY_ANGLES.findIndex(a=>isoDate(addDays(new Date(b.start+"T12:00:00"),a.n-1))===date)+1;
+      const existing=practiceLogFor(p.practiceId,date);
+      if(existing) await updateEntry(existing.id,{practised:cb.checked,engaged:true});
+      else await addEntry({kind:"practice",practiceId:p.practiceId,date,weekNumber:wk,dayNumber,engaged:true,practised:cb.checked,reflection:""});
+    });
+  }
   const explored=logs.filter(l=>l.engaged||l.practised).length;
   $("#potw-explored").textContent = explored===0
     ? "Not yet explored this week."
