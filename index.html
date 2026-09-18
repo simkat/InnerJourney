@@ -638,6 +638,38 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 .ritual-complete:hover{background:rgba(131,184,160,.17)}
 .ritual-reopen{margin-top:17px;padding:0;border:0;background:none;color:var(--faint);font:inherit;font-size:12px;cursor:pointer}
 .ritual-reopen:hover{color:var(--dawn)}
+.challenge-card{margin:20px 0;padding:20px;border:1px solid rgba(230,178,90,.32);border-radius:20px;background:linear-gradient(135deg,rgba(230,178,90,.08),rgba(184,160,255,.06));box-shadow:0 18px 42px rgba(0,0,0,.08)}
+.challenge-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}
+.challenge-kicker{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--dawn)}
+.challenge-card h2{margin:5px 0 0;font-size:16px}
+.challenge-meta{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--dim);margin-bottom:12px}
+.challenge-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+.challenge-day{appearance:none;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.02);padding:9px 8px;display:flex;flex-direction:column;gap:4px;align-items:flex-start;cursor:pointer;transition:transform .15s,border-color .15s,background .15s,box-shadow .15s;color:var(--dim)}
+.challenge-day:hover{transform:translateY(-1px);border-color:var(--dawn-line);background:var(--dawn-soft)}
+.challenge-day.current{border-color:rgba(230,178,90,.7);box-shadow:0 0 0 1px rgba(230,178,90,.25)}
+.challenge-day.done{border-color:rgba(131,184,160,.68);background:rgba(131,184,160,.12);color:var(--mist)}
+.challenge-day-number{font-weight:600;font-size:12px}
+.challenge-day-date{font-size:10px;color:inherit;opacity:.9}
+.journey-progress{margin:20px 0;padding:20px;border:1px solid var(--line);border-radius:20px;background:var(--panel)}
+.journey-track{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:15px 0 12px}
+.journey-step{position:relative;padding:11px 10px;border:1px solid var(--line);border-radius:12px;color:var(--faint);font-size:11px}
+.journey-step.active{border-color:var(--dawn-line);background:var(--dawn-soft);color:var(--dawn)}
+.journey-step.done{border-color:rgba(131,184,160,.55);background:rgba(131,184,160,.08);color:var(--leaf)}
+.journey-step .j-title{font-size:12px;font-weight:600;color:inherit;margin-bottom:4px}
+.journey-step .j-count{font-size:10px;color:var(--dim)}
+.journey-line{height:7px;border-radius:7px;background:var(--line2);overflow:hidden}
+.journey-line span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--dawn),var(--lotus),var(--leaf));transition:width .3s}
+.journey-status{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--dim);font-size:12px}
+.journey-modules{display:grid;gap:7px;margin-top:14px}
+.journey-module{display:flex;align-items:center;gap:9px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;font-size:12px;color:var(--dim)}
+.journey-module.done{color:var(--mist);border-color:rgba(131,184,160,.38)}
+.journey-module input{width:auto;accent-color:var(--leaf)}
+.journey-optional{margin-top:13px;border-top:1px solid var(--line);padding-top:12px}
+.journey-optional summary{cursor:pointer;color:var(--faint);font-size:12px}
+.journey-qa{display:grid;gap:5px;margin-top:10px}
+.journey-qa a{font-size:11px;color:var(--dim)}
+@media(max-width:700px){.challenge-days{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:700px){.journey-track{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .daily-reflection{margin:16px 0 18px;padding:20px;border:1px solid var(--line2);border-radius:16px;background:var(--panel)}
 .daily-reflection h3{font-family:'Spectral',serif;font-size:20px;font-weight:500;margin:0 0 5px}
 .daily-reflection .sub{margin-bottom:15px}
@@ -1549,6 +1581,8 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
         </div>
       </section>
 
+      <section class="challenge-card" id="meditation-challenge-card" aria-label="28 day meditation challenge"></section>
+
       <section class="schedule-card" id="practice-schedule-card" aria-label="Practice schedule">
         <h2>This month's practice</h2>
         <div class="schedule-current" id="schedule-current"></div>
@@ -2180,6 +2214,7 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
   </section>
 
   <section class="view" id="view-progress">
+    <div class="journey-progress" id="journey-progress-card"></div>
     <div class="card">
       <h2>The year</h2>
       <p class="sub">Fifty-two weeks of inner work. Each square is a week, coloured by its practice — deeper colour where you practised more.</p>
@@ -2396,6 +2431,8 @@ const LS_PEOPLE="ijs_people_v1";
 const LS_ASSIGN="ijs_practice_assignments_v1";
 const LS_PRACTICES="ijs_practices_v1";
 const LS_THEME="ijs_theme_v1";
+const LS_MEDITATION_CHALLENGE="ijs_meditation_challenge_v1";
+const LS_JOURNEY="ijs_journey_v1";
 let state={ entries:[] };
 let me="Smriti";
 let people=[];
@@ -2485,7 +2522,85 @@ const $$=(s,el=document)=>[...el.querySelectorAll(s)];
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const esc=s=>String(s==null?"":s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
 const today=()=>new Date().toISOString().slice(0,10);
+function addDays(date, days){ const next=new Date(date); next.setDate(next.getDate()+days); return next; }
+function isoDate(date){ return new Date(date.getTime() - date.getTimezoneOffset()*60000).toISOString().slice(0,10); }
 function fmtDate(d){ if(!d) return ""; const x=new Date(d); return isNaN(x)?d:x.toLocaleDateString(undefined,{weekday:"short",day:"numeric",month:"short"}); }
+function loadChallengeState(){
+  try{
+    const raw=safeGet(LS_MEDITATION_CHALLENGE);
+    const saved=raw ? JSON.parse(raw) : {};
+    if(saved.startDate) return saved;
+    const fresh={startDate:isoDate(addDays(new Date(),1)),days:{}};
+    saveChallengeState(fresh);
+    return fresh;
+  }catch(e){ return {startDate:isoDate(addDays(new Date(),1)),days:{}}; }
+}
+function saveChallengeState(challenge){ safeSet(LS_MEDITATION_CHALLENGE, JSON.stringify(challenge)); }
+function buildMeditationChallengeDays(){
+  const start=new Date(loadChallengeState().startDate+"T12:00:00");
+  return Array.from({length:28}, (_,i)=>{
+    const date=addDays(start,i);
+    return {
+      day:i+1,
+      date:isoDate(date),
+      short:date.toLocaleDateString(undefined,{month:"short",day:"numeric"})
+    };
+  });
+}
+function loadJourneyState(){
+  try{ const raw=safeGet(LS_JOURNEY); return raw?JSON.parse(raw):{}; }catch(e){ return {}; }
+}
+function saveJourneyState(value){ safeSet(LS_JOURNEY,JSON.stringify(value)); }
+const JOURNEY_CHALLENGES=[
+  {key:"meditation",label:"28-day meditation",kind:"days"},
+  {key:"attunement",label:"Attunement",kind:"modules",modules:[
+    ["Start Here: How Attunement Works","https://www.skool.com/inner-journey-school/classroom/ed5053ed?md=eb09bd7f5d54483aaf0bbe02fb7d70b8"],
+    ["Week 1: Turning","https://www.skool.com/inner-journey-school/classroom/ed5053ed?md=f639e427de324a24a10cea9c9dc687df"],
+    ["Week 2: Developing Sensitivity","https://www.skool.com/inner-journey-school/classroom/ed5053ed?md=70b1fe7709b149acbaf031dc9895a9a9"],
+    ["Week 3: Surrendering","https://www.skool.com/inner-journey-school/classroom/ed5053ed?md=2bd96dd8c1b4474496faa516117df4be"],
+    ["Week 4: Living in Divine Connection","https://www.skool.com/inner-journey-school/classroom/ed5053ed?md=d5c2ff2716dd47bfb6aed2feec9ffeb7"]
+  ]},
+  {key:"mastery",label:"Inner Mastery",kind:"modules",modules:[
+    ["Start Here: How Inner Mastery Works","https://www.skool.com/inner-journey-school/classroom/02738f3d?md=17ae9b79294a4fb2b0530c86dddc0274"],
+    ["Week 1: No Mind","https://www.skool.com/inner-journey-school/classroom/02738f3d?md=87a101706a49440ebe89cabd3f29f994"],
+    ["Week 2: Meticulous Attention","https://www.skool.com/inner-journey-school/classroom/02738f3d?md=a21dd2f7915045a0a017d2ca9878c08a"],
+    ["Week 3: Effortless Awareness","https://www.skool.com/inner-journey-school/classroom/02738f3d?md=33514c3154a24f93a32b4ef1980a8784"]
+  ]}
+];
+const OPTIONAL_QA=[
+  ["14th September 2026","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=0f1058e7399c402c9c765a0e3c95ce0d"],
+  ["7th September 2026","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=a2cb1763fa1c4506836390538902b747"],
+  ["31st August 2026","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=0014b4b8c7b84fc59447b42f85024fda"],
+  ["24th August 2026","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=02b923394f494875bc486981616c3bc9"],
+  ["10th August 2026 Q&A","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=557c3c3307f24801b0e0164e917d8cba"],
+  ["3rd August 2026","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=156e6b3b750d468c8e1c3a44e45734cd"],
+  ["9th February 2026","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=422040ecd8024f2785dd6c2b768f415f"],
+  ["29th December 2025","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=e6c26c5339b64649aea992f02c3a1bb3"],
+  ["22nd December 2025","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=651fb6bd58a64d59b1825b4dfb3c6ad7"],
+  ["18th November 2025","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=b426738ac9164c769a66167c270f17aa"],
+  ["24th October 2025","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=cc6c215c78244fa1872fcf006e39c264"],
+  ["8th October 2025","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=dc95ce2511664ef6b4d83dbc81b8bd60"],
+  ["24th September 2025","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=4d5d5fc050984d518a0caf9cf3edd3d1"],
+  ["10th September 2025","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=9c01366dbc9d451c866591c5b8afbec9"],
+  ["31st July 2025","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=0ba043b42a794c9b8483b74f3c4cdb9c"],
+  ["2nd July 2025","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=a35eff9d99a5433b821680ebfbacee38"],
+  ["18th June 2025","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=eafad93d14d543e4b6b470544180f6b7"],
+  ["3rd June 2025","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=f2dffe67fc3d42c294f4b5941d69799e"],
+  ["19th May 2025","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=2c839d2d546740d3827bddca9db2c324"],
+  ["1st May 2025","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=2f570444867e4815a9e25e28fd6b798b"],
+  ["24th April 2025","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=9bcf4730ba9f456fbcbebfd9f345b53d"],
+  ["18th April 2025","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=66348a8edc6643d2b0df0bbf00fa4457"],
+  ["3rd April 2025","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=2523166e668c4bf99b34045565b0bbf7"],
+  ["28th March 2025","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=26b9dd9c42654471897513392acab6ad"],
+  ["20th March 2025","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=1f4c6a9a549a49c7b5ca83ee4969f114"],
+  ["13th March 2025","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=d39fb1f7d9f94bd5a5f247b02fa1bb0b"],
+  ["7th March 2025","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=262c4b6d2e9d49d6829cb1b75a9d2e6f"],
+  ["6th February 2025","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=00964f2f4c7841e5ab71d4d7962787c1"],
+  ["28th February 2025 (Part 2)","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=40a16aa7f44143159ad7911fccec5e78"],
+  ["28th February 2025 (Part 1)","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=0b1308ba58494b4d8519feb587d15e81"],
+  ["20th February 2025","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=34e860cc513f4ece8643b1bd20b61923"],
+  ["27th January 2025","https://www.skool.com/inner-journey-school/classroom/eff56ac2?md=2b267993d4604856b2f18715953401f3"]
+];
 
 function setBanner(type,msg){
   const b=$("#banner"); b.className="banner "+type; b.textContent=msg;
@@ -2883,6 +2998,98 @@ function renderPracticeSchedule(){
       <div class="ws-days" aria-label="${esc(week.week)} practice days">${dots}</div>
     </div>`;
   }).join("");
+}
+function renderMeditationChallenge(){
+  const wrap=$("#meditation-challenge-card");
+  if(!wrap) return;
+  const challenge=loadChallengeState(), progress=challenge.days||{};
+  const days=buildMeditationChallengeDays();
+  const completed=days.filter(day=>progress[day.date]).length;
+  const activeDate = days.find(day=>day.date===today());
+  const summary = activeDate ? `Day ${activeDate.day} is active` : (today()<days[0].date ? "Starts tomorrow" : "Challenge window complete");
+  const journey=loadJourneyState();
+  const activeJourney=journeyActiveIndex();
+  const journeySteps=JOURNEY_CHALLENGES.map((item,index)=>{
+    const p=journeyChallengeProgress(item,journey);
+    return `<div class="journey-step ${index<activeJourney?"done":(index===activeJourney?"active":"")}"><div class="j-title">${index<activeJourney?"✓ ":""}${esc(item.label)}</div><div class="j-count">${esc(p.label)}</div></div>`;
+  }).join("");
+  wrap.innerHTML=`<div class="challenge-head">
+    <div>
+      <div class="challenge-kicker">28-day meditation</div>
+      <h2>Daily practice challenge</h2>
+    </div>
+    <a class="ghostlink" href="https://www.skool.com/inner-journey-school/classroom/a3018d87?md=c875ca5009b4405588116797d493e0a4" target="_blank" rel="noopener">Open classroom ↗</a>
+  </div>
+  <div class="challenge-meta">
+    <span>${esc(summary)} · begins ${esc(fmtDate(challenge.startDate))}</span>
+    <span>${completed}/28 complete</span>
+  </div>
+  <div class="journey-line"><span style="width:${Math.round(completed/28*100)}%"></span></div>
+  <div class="journey-track">${journeySteps}</div>
+  <div class="challenge-days">${days.map(day=>{
+    const done=!!progress[day.date];
+    return `<button type="button" class="challenge-day ${done?"done":""} ${day.date===today()?"current":""}" data-challenge-date="${day.date}" aria-label="Mark day ${day.day} complete">
+      <span class="challenge-day-number">${day.day}</span>
+      <span class="challenge-day-date">${esc(day.short)}</span>
+    </button>`;
+  }).join("")}</div>`;
+}
+function journeyChallengeProgress(challenge, journey){
+  if(challenge.kind==="days"){
+    const days=buildMeditationChallengeDays(), done=days.filter(day=>(journey.meditation||{})[day.date]).length;
+    return {done,total:28,label:`${done}/28 days`};
+  }
+  const done=(journey[challenge.key]||{}).modules||{};
+  return {done:Object.values(done).filter(Boolean).length,total:challenge.modules.length,label:`${Object.values(done).filter(Boolean).length}/${challenge.modules.length} lessons`};
+}
+function journeyActiveIndex(){
+  const challenge=loadChallengeState(), journey=loadJourneyState();
+  const meditation=journeyChallengeProgress(JOURNEY_CHALLENGES[0],journey);
+  if(meditation.done<meditation.total) return 0;
+  for(let i=1;i<JOURNEY_CHALLENGES.length;i++){
+    const p=journeyChallengeProgress(JOURNEY_CHALLENGES[i],journey);
+    if(p.done<p.total) return i;
+  }
+  return JOURNEY_CHALLENGES.length-1;
+}
+function renderJourneyProgress(){
+  const wrap=$("#journey-progress-card"); if(!wrap) return;
+  const challenge=loadChallengeState(), journey=loadJourneyState(), active=journeyActiveIndex();
+  const progresses=JOURNEY_CHALLENGES.map(c=>journeyChallengeProgress(c,journey));
+  const total=progresses.reduce((sum,p)=>sum+p.total,0), done=progresses.reduce((sum,p)=>sum+p.done,0);
+  const current=JOURNEY_CHALLENGES[active];
+  const modules=current.kind==="modules" ? current.modules.map(([title,url],i)=>{
+    const unlocked=i<=Math.max(0,progresses[active].done-1);
+    const locked=i>active;
+    const checked=!!((journey[current.key]||{}).modules||{})[i];
+    return `<label class="journey-module${checked?" done":""}${locked?" locked":""}"><input type="checkbox" data-journey-key="${current.key}" data-journey-module="${i}" ${checked?"checked":""} ${locked?"disabled":""}><span>${esc(title)}</span><a href="${esc(url)}" target="_blank" rel="noopener">Open ↗</a></label>`;
+  }).join("") : `<div class="journey-module"><span>Daily meditation is tracked above. Complete all 28 days to unlock Attunement.</span></div>`;
+  const qa=OPTIONAL_QA.map(([title,url],i)=>`<label class="journey-module"><input type="checkbox" data-qa-index="${i}" ${journey.qa&&journey.qa[i]?"checked":""}><a href="${esc(url)}" target="_blank" rel="noopener">${esc(title)} ↗</a></label>`).join("");
+  wrap.innerHTML=`<div class="challenge-kicker">Your full journey</div>
+    <h2>Level 3 · follow the next doorway</h2>
+    <div class="journey-status"><span>Current: <strong>${esc(current.label)}</strong></span><span>${done}/${total} core steps complete</span></div>
+    <div class="journey-line"><span style="width:${Math.round(done/total*100)}%"></span></div>
+    <div class="journey-track">${JOURNEY_CHALLENGES.map((c,i)=>{
+      const p=progresses[i], cls=i<active?"done":(i===active?"active":"locked");
+      return `<div class="journey-step ${cls}"><div class="j-title">${i<active?"✓ ":""}${esc(c.label)}</div><div class="j-count">${esc(p.label)}${i>active?" · locked until prior step":(i===active?" · current":" · complete")}</div></div>`;
+    }).join("")}</div>
+    <div class="journey-modules">${modules}</div>
+    <details class="journey-optional"><summary>Optional Q&amp;A library · ${OPTIONAL_QA.length} sessions</summary><div class="journey-qa">${qa}</div></details>`;
+  wrap.querySelectorAll("[data-journey-key]").forEach(cb=>{
+    cb.onchange=()=>{
+      const currentChallenge = JOURNEY_CHALLENGES[active];
+      const index = Number(cb.dataset.journeyModule);
+      if (currentChallenge.key !== cb.dataset.journeyKey || index > active) return;
+      const next=loadJourneyState(), key=cb.dataset.journeyKey;
+      next[key]=next[key]||{modules:{}};
+      next[key].modules[index]=cb.checked;
+      saveJourneyState(next); renderJourneyProgress();
+    };
+  });
+  wrap.querySelectorAll("[data-qa-index]").forEach(cb=>cb.onchange=()=>{
+    const next=loadJourneyState(); next.qa=next.qa||{}; next.qa[cb.dataset.qaIndex]=cb.checked;
+    saveJourneyState(next); renderJourneyProgress();
+  });
 }
 
 const DAY_ANGLES = [
@@ -5103,7 +5310,7 @@ function initBegin(){
 
 function renderAll(){
   renderStrip(); renderCurriculumTrack(); renderAvatar();
-  renderOrientation(); renderPracticeSchedule(); renderPracticeOfWeek(); renderPracticesTab(); renderSixGrid();
+  renderOrientation(); renderPracticeSchedule(); renderMeditationChallenge(); renderJourneyProgress(); renderPracticeOfWeek(); renderPracticesTab(); renderSixGrid();
   renderRails(); renderTechnique(); renderHomeMeditation(); renderAttitudes();
   renderLessonCard(); renderJourney();
   renderYearView(); renderReflectionSearch();
@@ -5233,6 +5440,18 @@ function initEvents(){
     await addEntry({kind:"question",date:today(),text:t,status:"open"}); $("#q-text").value="";
   };
   document.body.addEventListener("click",e=>{
+    const c=e.target.closest("[data-challenge-date]");
+    if(c){
+      const challenge=loadChallengeState(), stateMap=challenge.days||{};
+      const iso=c.dataset.challengeDate;
+      if(iso>today()){ toast("That day has not arrived yet. Return tomorrow for the next meditation."); return; }
+      stateMap[iso]=!stateMap[iso];
+      challenge.days=stateMap; saveChallengeState(challenge);
+      const journey=loadJourneyState(); journey.meditation=stateMap; saveJourneyState(journey);
+      renderMeditationChallenge();
+      renderJourneyProgress();
+      return;
+    }
     const a=e.target.closest("[data-answer]"); const r=e.target.closest("[data-reopen]"); const d=e.target.closest("[data-del]");
     if(a){ const ans=prompt("Add the answer / resolution (optional):")||""; updateEntry(a.dataset.answer,{status:"answered",reflection:ans}); }
     if(r){ updateEntry(r.dataset.reopen,{status:"open"}); }
