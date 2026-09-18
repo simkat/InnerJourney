@@ -52,9 +52,9 @@ header.top{position:relative;display:flex;flex-wrap:wrap;gap:14px;align-items:fl
 .brand p{margin:3px 0 0;color:var(--dim);font-size:13px}
 .who{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .who label{color:var(--faint);font-size:12px;text-transform:uppercase;letter-spacing:.08em}
-.person-tabs{display:inline-flex;gap:3px;padding:3px;border:1px solid var(--line);border-radius:999px;background:rgba(0,0,0,.15)}
-.person-tab{border:0;border-radius:999px;padding:7px 12px;background:transparent;color:var(--dim);font:inherit;font-size:12px;cursor:pointer;transition:background .2s,color .2s,box-shadow .2s}
-.person-tab:hover{color:var(--mist)}.person-tab.active{background:linear-gradient(135deg,rgba(230,178,90,.24),rgba(217,138,166,.18));color:var(--mist);box-shadow:0 1px 8px rgba(0,0,0,.24)}
+.person-switcher{display:flex;align-items:center;justify-content:center;gap:13px;flex-wrap:wrap;margin:-5px 0 20px;padding:12px 16px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(90deg,rgba(230,178,90,.07),rgba(184,160,255,.08),rgba(217,138,166,.06))}
+.person-switcher-label{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}.person-tabs{display:inline-flex;gap:6px;padding:4px;border:1px solid var(--line2);border-radius:999px;background:rgba(0,0,0,.18)}
+.person-tab{border:1px solid transparent;border-radius:999px;padding:9px 18px;background:transparent;color:var(--dim);font:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:transform .2s,background .2s,color .2s,box-shadow .2s}.person-tab:hover{color:var(--mist);transform:translateY(-1px)}.person-tab[data-person="Smriti"]{color:#eab1c8}.person-tab[data-person="Shruti"]{color:#a9d9c4}.person-tab[data-person="Smriti"].active{color:#ffe0eb;border-color:rgba(217,138,166,.62);background:linear-gradient(135deg,rgba(217,138,166,.35),rgba(184,160,255,.2));box-shadow:0 2px 14px rgba(217,138,166,.2)}.person-tab[data-person="Shruti"].active{color:#dcfff0;border-color:rgba(131,184,160,.62);background:linear-gradient(135deg,rgba(131,184,160,.34),rgba(101,175,212,.18));box-shadow:0 2px 14px rgba(131,184,160,.2)}.person-active-note{font-size:12px;color:var(--dim)}.person-active-note b{color:var(--mist);font-weight:600}@media(max-width:550px){.person-switcher{justify-content:flex-start;gap:8px}.person-active-note{width:100%}.person-tab{padding:8px 14px}}
 select,input,textarea{
   background:var(--panel);color:var(--mist);border:1px solid var(--line2);
   border-radius:10px;padding:9px 11px;font:inherit;font-size:14px;outline:none;width:100%;
@@ -1574,8 +1574,6 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
         <div class="avatar" id="avatar-circle">S</div>
         <span class="stage-badge" id="stage-badge">Stage 1</span>
       </div>
-      <span class="sr-only">Practising as</span>
-      <div class="person-tabs" id="person-tabs" role="tablist" aria-label="Choose practitioner"></div>
       <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false">Sun theme</button>
     </div>
   </header>
@@ -1602,6 +1600,12 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
     <button class="tab" data-view="everyone">Together</button>
     <button class="tab" data-view="data">Backup</button>
   </nav>
+
+  <section class="person-switcher" aria-label="Current practitioner">
+    <span class="person-switcher-label">Your practice space</span>
+    <div class="person-tabs" id="person-tabs" role="tablist" aria-label="Choose practitioner"></div>
+    <span class="person-active-note">You are viewing <b id="person-active-name"></b>’s journey</span>
+  </section>
 
   <!-- TODAY -->
   <section class="view active" id="view-today">
@@ -2558,6 +2562,7 @@ function loadLocal(){
   savePeople();
   const savedPerson=safeGet(LS_PERSON)==="Sim"?"Shruti":safeGet(LS_PERSON);
   me = people.includes(savedPerson) ? savedPerson : "Smriti";
+  safeSet(LS_PERSON,me);
   saveLocal();
 }
 function saveLocal(){ safeSet(LS_KEY, JSON.stringify(state.entries)); }
@@ -2565,6 +2570,7 @@ function savePeople(){ safeSet(LS_PEOPLE, JSON.stringify(people)); }
 function renderPersonSelect(){
   const tabs=$("#person-tabs"); if(!tabs) return;
   tabs.innerHTML=people.map(person=>`<button class="person-tab ${person===me?"active":""}" type="button" role="tab" aria-selected="${person===me}" data-person="${esc(person)}">${esc(person)}</button>`).join("");
+  const activeName=$("#person-active-name");if(activeName)activeName.textContent=me;
   tabs.querySelectorAll("[data-person]").forEach(tab=>tab.onclick=()=>{
     me=tab.dataset.person; safeSet(LS_PERSON,me); beliefViewBack=false; renderPersonSelect(); renderAll();
   });
@@ -2838,7 +2844,7 @@ function renderEveryone(){
   };
   const personCard=(person,isYou)=>{const p=profile(person);return `<div class="together-person ${isYou?"you":""}"><div class="together-person-name">${esc(person)}${isYou?"<span>You</span>":""}</div><div class="together-person-meta">${p.sittingToday?"✦ showed up today":"a new day, a new beginning"}</div><div class="together-stats"><div class="together-stat"><strong>${p.recent}</strong><span>days this week</span></div><div class="together-stat"><strong>${p.days}</strong><span>all-time sits</span></div><div class="together-stat"><strong>${p.insights}</strong><span>insights</span></div></div></div>`;};
   const sharedThought=state.entries.filter(entry=>entry.person===partner&&entry.kind!=="encouragement"&&(entry.reflection||entry.text)).sort((a,b)=>(b.createdAt||"").localeCompare(a.createdAt||""))[0];
-  const thought=sharedThought?(sharedThought.reflection||sharedThought.text):"When a reflection is shared, it will appear here as a small window into their practice.";
+  const thought=sharedThought?(sharedThought.kind==="belief-lens"?sharedThought.text:(sharedThought.reflection||sharedThought.text)):"When a reflection or chosen belief is shared, it will appear here as a small window into their practice.";
   const cheers=state.entries.filter(entry=>entry.kind==="encouragement"&&entry.status===me).sort((a,b)=>(b.createdAt||"").localeCompare(a.createdAt||"")).slice(0,4);
   wrap.innerHTML=`<section class="together" aria-label="Shared practice room"><div class="together-cap">Practice together · both paths visible</div><h2>Two people, one gentle rhythm.</h2><p class="together-sub">Notice the effort, celebrate the returning, and let each other’s consistency make the path feel more possible.</p><div class="together-people">${personCard(me,true)}<div class="together-link">↔</div>${personCard(partner,false)}</div><div class="together-inspire"><div class="together-panel"><h3>${esc(partner)}’s latest note</h3><p>A glimpse, not a scorecard.</p><div class="together-quote">“${esc(thought)}”</div></div><div class="together-panel"><h3>Send ${esc(partner)} a spark</h3><p>One sincere line can make a quiet practice feel seen.</p><div class="together-compose"><input id="together-message" maxlength="280" placeholder="I noticed your effort…" aria-label="Encouragement for ${esc(partner)}"><button class="btn" id="together-send" type="button">Send ✦</button></div></div></div><div class="together-feed"><div class="together-feed-title">Notes for you</div>${cheers.length?cheers.map(entry=>`<div class="together-cheer"><span class="together-cheer-mark">✦</span><div><b>From ${esc(entry.person)} · ${esc(fmtDate(entry.date||entry.createdAt))}</b><p>${esc(entry.text)}</p></div></div>`).join(""):`<div class="together-cheer"><span class="together-cheer-mark">◌</span><div><b>The space is open</b><p>${esc(partner)}’s encouragement will arrive here.</p></div></div>`}</div></section>`;
   const send=$("#together-send"), message=$("#together-message");
@@ -5541,6 +5547,7 @@ let beliefViewBack=false;
 const BELIEF_PATTERNS=[
   {id:"worth",name:"Worth must be earned",hint:"The inner scorekeeper",match:/not enough|fail|behind|prove|perfect|worth|should have|lazy|good enough/i,newBelief:"My worth is not on trial. I can grow without making myself a project to fix.",practice:"When the scorekeeper speaks, place a hand on your chest and say: “I am allowed to learn at a human pace.”"},
   {id:"safety",name:"Safety lives in control",hint:"The watchful protector",match:/control|what if|worry|safe|mistake|wrong|plan|certain|anxious/i,newBelief:"I can meet uncertainty one small step at a time. I do not need every answer to be safe in this moment.",practice:"Ask: “What is the next kind, concrete thing?” Then do only that—not the whole imagined future."},
+  {id:"endurance",name:"Ease feels unfamiliar or unsafe",hint:"The seasoned survivor",match:/uncomfortable|comfort|pain|hard|endure|suffer|struggle|difficult|survive/i,newBelief:"I learned how to survive discomfort. I am also allowed to recognise ease, safety, and care without needing to earn them.",practice:"When something gentle arrives, pause before bracing. Take one breath and let yourself stay with the ease for ten seconds."},
   {id:"belonging",name:"Belonging requires shrinking",hint:"The shape-shifter",match:/people|like me|disappoint|too much|burden|fit in|approval|alone/i,newBelief:"I belong most deeply where I can be honest. My real shape is not a problem to solve.",practice:"Let one sentence today be slightly more true than convenient."},
   {id:"scarcity",name:"There is never enough",hint:"The scarcity alarm",match:/never|always|enough|late|miss|lose|time|money|chance/i,newBelief:"This moment may be limited, but it is not empty. I can notice what is here and choose from there.",practice:"Name three resources already present: time, care, skill, breath, support, or choice."},
   {id:"lovability",name:"Love must be performed for",hint:"The devoted achiever",match:/love|lovable|deserve|useful|need me|alone|rejected/i,newBelief:"Love is not a wage for usefulness. I can receive care without first exhausting myself.",practice:"Receive one small kindness without deflecting it. A simple “thank you” is enough."},
@@ -5569,7 +5576,7 @@ function renderBeliefMirror(){
       <div class="belief-cap"><i></i>Daily belief mirror</div>
       <div class="belief-head"><div><h2 class="belief-title">What story is quietly steering today?</h2><p class="belief-sub">Write the thought exactly as it arrived. We will offer a few possible underlying beliefs—not labels, just doorways to try on.</p></div><div class="belief-date">${esc(fmtDate(today()))}</div></div>
       <textarea class="belief-input" id="belief-thought" placeholder="For example: “If I slow down, everything will fall apart.”">${esc(record.thought)}</textarea>
-      <div class="belief-actions"><button class="btn" id="belief-listen" type="button">Listen beneath the thought →</button><span class="belief-hint">Your words stay private on this device.</span></div>
+      <div class="belief-actions"><button class="btn" id="belief-listen" type="button">Refresh the lenses →</button><span class="belief-hint">Suggestions appear as you write · private on this device.</span></div>
       <div class="belief-options" id="belief-options">${options.map(pattern=>`<button class="belief-option ${record.selected===pattern.id?"selected":""}" data-belief-choice="${pattern.id}" type="button"><strong>${esc(pattern.name)}</strong><span>${esc(pattern.hint)}</span><em>Try this lens →</em></button>`).join("")}</div>
     </div>
     <div class="belief-face belief-back">
@@ -5578,15 +5585,28 @@ function renderBeliefMirror(){
       <div class="belief-arrow">chosen with care, not forced with pressure</div>
       <div class="belief-then">A belief to practise now</div><div class="belief-new">${esc(chosen.newBelief)}</div>
       <div class="belief-practice"><b>Try this today</b><br>${esc(chosen.practice)}</div>
-      <div class="belief-back-actions"><button class="ritual-flip" id="belief-back" type="button">↩ Return to the mirror</button><span class="belief-status">Saved as today’s chosen lens ✦</span></div>
+      <div class="belief-back-actions"><button class="ritual-flip" id="belief-back" type="button">↩ Return to the mirror</button><span class="belief-status">Chosen lens shared · original thought stays private ✦</span></div>
     </div></div>`;
   const thought=$("#belief-thought");
-  $("#belief-listen").onclick=()=>{saveBeliefMirror({thought:thought.value.trim(),selected:record.selected});beliefViewBack=false;renderBeliefMirror();};
-  thought.oninput=()=>saveBeliefMirror({thought:thought.value,selected:record.selected});
-  wrap.querySelectorAll("[data-belief-choice]").forEach(button=>button.onclick=()=>{
+  const shareChosenLens=async pattern=>{
+    // The private thought never leaves local storage. Only the deliberately chosen lens is shared.
+    const existing=state.entries.find(entry=>entry.person===me&&entry.kind==="belief-lens"&&entry.date===today());
+    const shared={text:pattern.newBelief,reflection:"Chosen belief lens: "+pattern.name,status:pattern.id};
+    if(existing)await updateEntry(existing.id,shared);else await addEntry(Object.assign({kind:"belief-lens",date:today()},shared));
+  };
+  const bindChoices=()=>wrap.querySelectorAll("[data-belief-choice]").forEach(button=>button.onclick=async()=>{
     const thoughtValue=thought.value.trim();if(!thoughtValue){thought.focus();thought.placeholder="First give the thought a few honest words…";return;}
-    saveBeliefMirror({thought:thoughtValue,selected:button.dataset.beliefChoice});beliefViewBack=true;renderBeliefMirror();
+    const pattern=BELIEF_PATTERNS.find(item=>item.id===button.dataset.beliefChoice);if(!pattern)return;
+    saveBeliefMirror({thought:thoughtValue,selected:pattern.id});beliefViewBack=true;await shareChosenLens(pattern);
   });
+  const refreshLenses=()=>{
+    const liveOptions=suggestBeliefs(thought.value);
+    $("#belief-options").innerHTML=liveOptions.map(pattern=>`<button class="belief-option ${record.selected===pattern.id?"selected":""}" data-belief-choice="${pattern.id}" type="button"><strong>${esc(pattern.name)}</strong><span>${esc(pattern.hint)}</span><em>Try this lens →</em></button>`).join("");
+    bindChoices();
+  };
+  $("#belief-listen").onclick=()=>{saveBeliefMirror({thought:thought.value.trim(),selected:record.selected});beliefViewBack=false;refreshLenses();};
+  thought.oninput=()=>{saveBeliefMirror({thought:thought.value,selected:record.selected});refreshLenses();};
+  bindChoices();
   const back=$("#belief-back");if(back)back.onclick=()=>{beliefViewBack=false;renderBeliefMirror();};
   if(record.selected&&beliefViewBack)requestAnimationFrame(()=>wrap.classList.add("flipped"));
 }
