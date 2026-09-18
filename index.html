@@ -751,6 +751,7 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 #view-today .schedule-card{display:block;grid-column:1 / -1;grid-row:2}
 #view-today .challenge-card{grid-column:1;grid-row:3}
 #view-today .home-meditation{grid-column:2;grid-row:3}
+#view-today .home-meditation.challenge-hidden{display:none}
 #view-today .triptych{display:block;grid-column:3;grid-row:3;margin:0}
 #view-today .triptych .centre{width:100%}
 #view-today .daily-ritual{grid-column:1 / -1;grid-row:4}
@@ -2562,6 +2563,11 @@ function buildMeditationChallengeDays(){
       short:date.toLocaleDateString(undefined,{month:"short",day:"numeric"})
     };
   });
+}
+function meditationChallengeActive(){
+  const challenge=loadChallengeState(), days=buildMeditationChallengeDays();
+  const completed=days.filter(day=>(challenge.days||{})[day.date]).length;
+  return today()>=days[0].date && today()<=days[days.length-1].date && completed<days.length;
 }
 function loadJourneyState(){
   try{ const raw=safeGet(LS_JOURNEY); return raw?JSON.parse(raw):{}; }catch(e){ return {}; }
@@ -5102,7 +5108,13 @@ function dailyHomeTechnique(){
   return TECHNIQUE_LIBRARY[idx];
 }
 function renderHomeMeditation(){
-  const title=$("#home-meditation-title"); if(!title) return;
+  const card=$(".home-meditation"), title=$("#home-meditation-title"); if(!title) return;
+  const challengeActive=meditationChallengeActive();
+  if(card){
+    card.classList.toggle("challenge-hidden",challengeActive);
+    card.setAttribute("aria-hidden",String(challengeActive));
+  }
+  if(challengeActive) return;
   const t=dailyHomeTechnique();
   const dayN=(hashDate("home-angle-"+today())%TECH_ANGLE_LABELS.length);
   const date=$("#home-meditation-date");
