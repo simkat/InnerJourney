@@ -740,10 +740,11 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 #view-today .rail-six,#view-today .rail-virtue{display:none}
 #view-today #today-full{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
 #view-today .orient{grid-column:1 / -1}
-#view-today .schedule-card{display:block;grid-column:1 / -1;grid-row:2}
-#view-today .daily-ritual{grid-column:1 / -1;grid-row:4}
-#view-today .triptych{display:block;grid-column:2;grid-row:3}
-#view-today .home-meditation{grid-column:1;grid-row:3}
+#view-today .challenge-card{grid-column:1 / -1;grid-row:2}
+#view-today .schedule-card{display:block;grid-column:1 / -1;grid-row:3}
+#view-today .daily-ritual{grid-column:1 / -1;grid-row:5}
+#view-today .triptych{display:block;grid-column:2;grid-row:4}
+#view-today .home-meditation{grid-column:1;grid-row:4}
 #view-today .centre{max-width:none;margin:0}
 #view-today .card-week{margin-top:0}
 #view-today .cw-more{display:none!important}
@@ -1531,6 +1532,8 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
         <div class="presence" id="presence" style="display:none"></div>
       </div>
 
+      <section class="challenge-card" id="meditation-challenge-card" aria-label="28 day meditation challenge"></section>
+
       <section class="home-meditation" aria-labelledby="home-meditation-title">
         <div class="home-meditation-inner">
         <div class="home-med-front">
@@ -1580,8 +1583,6 @@ footer{color:var(--faint);font-size:12px;text-align:center;margin-top:26px;line-
         </div>
         </div>
       </section>
-
-      <section class="challenge-card" id="meditation-challenge-card" aria-label="28 day meditation challenge"></section>
 
       <section class="schedule-card" id="practice-schedule-card" aria-label="Practice schedule">
         <h2>This month's practice</h2>
