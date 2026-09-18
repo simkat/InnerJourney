@@ -646,6 +646,8 @@ select,input,textarea{transition:border-color .18s,box-shadow .18s,background .1
 .challenge-kicker{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--dawn)}
 .challenge-card h2{margin:5px 0 0;font-size:16px}
 .challenge-meta{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--dim);margin-bottom:12px}
+.challenge-start{display:inline-flex;align-items:center;gap:7px;color:var(--faint);font-size:11px}
+.challenge-start input{border:1px solid var(--line);border-radius:8px;background:var(--night);color:var(--mist);padding:5px 7px;font:inherit;font-size:11px}
 .challenge-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
 .challenge-day{appearance:none;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.02);padding:9px 8px;display:flex;flex-direction:column;gap:4px;align-items:flex-start;cursor:pointer;transition:transform .15s,border-color .15s,background .15s,box-shadow .15s;color:var(--dim)}
 .challenge-day input{width:auto;margin:0 0 2px;accent-color:var(--leaf);cursor:pointer;opacity:0;transition:opacity .16s}
@@ -3038,6 +3040,9 @@ function renderMeditationChallenge(){
     <span>${esc(summary)} · begins ${esc(fmtDate(challenge.startDate))}</span>
     <span>${completed}/28 complete</span>
   </div>
+  <label class="challenge-start">Start date
+    <input type="date" id="challenge-start-date" value="${esc(challenge.startDate)}" aria-label="28-day challenge start date">
+  </label>
   <div class="journey-line"><span style="width:${Math.round(completed/28*100)}%"></span></div>
   <div class="journey-track">${journeySteps}</div>
   <div class="challenge-days">${days.map(day=>{
@@ -3049,6 +3054,18 @@ function renderMeditationChallenge(){
       <span class="challenge-day-date">${esc(day.short)}</span>
     </label>`;
   }).join("")}</div>`;
+  const startInput=$("#challenge-start-date");
+  if(startInput) startInput.onchange=()=>{
+    if(!startInput.value) return;
+    const next=loadChallengeState();
+    next.startDate=startInput.value;
+    saveChallengeState(next);
+    const journey=loadJourneyState();
+    journey.meditation=next.days||{};
+    saveJourneyState(journey);
+    renderMeditationChallenge();
+    renderJourneyProgress();
+  };
 }
 function journeyChallengeProgress(challenge, journey){
   if(challenge.kind==="days"){
